@@ -29,7 +29,7 @@ We were able to set up the git repository on Github and set up the directory str
 - Charles: I helped draw an ER diagram for the app at a high level, and I made a (Mongo) DB schema based on that ER diagram. I also learned a bit about Spark Java and using Mongo in Java, since those are likely to be used in the project in the future. No implementation so far.
 - Devi: I helped set the meetings for the git setup and project discussion. I also made changes on the requirement document based on Apollo's feedback. I attended a backend team meeting.
 - Ricky: I helped make some fixes for our living document based on the feedback that we had received. Also, I spent some time learning a bit about the front-end framework we plan to use to create the front-end of the application. An issue/problem we had was that we had initally created our remote repository on gitlab instead of github so we had to move all our work to github.  
-- Caleb: 
+- Caleb: This week I have been researching the best authentication service for our webapp. I helped make changes to our live document based on the feedback. I met with the full team to setup our GitHub repo. One issue has been sorting out the best way to setup routes to the backend, but this will be resolved after a meeting with the front-end team later this week.  
 - Jason: I helped revise and draw an E/R diagram for our major components, fixed some "expected revisions" on our living document, and helped setup GitHub.
 
 ### This week's goals
@@ -37,5 +37,5 @@ We were able to set up the git repository on Github and set up the directory str
 - Charles: Revise the ER diagram and Mongo DB schema if needed, come up with the architecture and design for the backend, get some spec for the backend based on the design, learn some more about SparkJava and using Mongo with Java.
 - Devi: Work on the ER diagram and create an endpoint for the front-end. Start organizing the various databases.
 - Ricky: Help complete our architecture and design milestone which includes: having the login page complete, having API calls to the backend working, and having a page set up that displays the recipes.
-- Caleb: 
+- Caleb: Meet with the front-end team to devise architecture schema. Decide on login page authentication service and setup routes to access backend API.
 - Jason: Learn more about Mongo and transform our E/R diagram into a setup for a database in Mongo. Also work towards users being able to login with an email/username and password.
