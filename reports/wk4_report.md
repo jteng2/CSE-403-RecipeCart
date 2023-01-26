@@ -7,12 +7,12 @@
 
 ### Progress and Issues
 
-
+We were able to set up the git repository on Github and set up the directory structure where we have a front-end, back-end, and reports directory. Additionally, we made our necessary changes to the living document based on our feedback. We learned a good way to set up our file structure which was to have a front-end and back-end file. Furthermore, we added a reports directory for our weekly status reports. For the front-end team, we still are still trying to figure out the login system as well as our recipe page which we would like to display for users.
 
 ### This week's goals
 
 - Back-end (Devi, Charles, Jason):
-- Front-end (Caleb, Ricky): 
+- Front-end (Caleb, Ricky): This week our goal is to complete the architecture and design milestone which is due on 1/31.
 - UI design (Devi, Charles, Jason): 
 
 # Individual Contributions
@@ -28,7 +28,7 @@
 
 - Charles: 
 - Devi: 
-- Ricky: 
+- Ricky: I helped make some fixes for our living document based on the feedback that we had received. Also, I spent some time learning a bit about the front-end framework we plan to use to create the front-end of the application. An issue/problem we had was that we had initally created our remote repository on gitlab instead of github so we had to move all our work to github.  
 - Caleb: 
 - Jason: 
 
@@ -36,6 +36,6 @@
 
 - Charles: 
 - Devi: 
-- Ricky: 
+- Ricky: Help complete our architecture and design milestone which includes: having the login page complete, having API calls to the backend working, and having a page set up that displays the recipes.
 - Caleb: 
 - Jason: 
