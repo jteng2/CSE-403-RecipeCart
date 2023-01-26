@@ -13,7 +13,7 @@ We were able to set up the git repository on Github and set up the directory str
 
 - Back-end (Devi, Charles, Jason):
 - Front-end (Caleb, Ricky): This week our goal is to complete the architecture and design milestone which is due on 1/31.
-- UI design (Devi, Charles, Jason): 
+- UI design (Devi, Charles, Jason):
 
 # Individual Contributions
 
@@ -30,7 +30,7 @@ We were able to set up the git repository on Github and set up the directory str
 - Devi: 
 - Ricky: I helped make some fixes for our living document based on the feedback that we had received. Also, I spent some time learning a bit about the front-end framework we plan to use to create the front-end of the application. An issue/problem we had was that we had initally created our remote repository on gitlab instead of github so we had to move all our work to github.  
 - Caleb: 
-- Jason: 
+- Jason: I helped revise and draw an E/R diagram for our major components, fixed some "expected revisions" on our living document, and helped setup GitHub.
 
 ### This week's goals
 
@@ -38,4 +38,4 @@ We were able to set up the git repository on Github and set up the directory str
 - Devi: 
 - Ricky: Help complete our architecture and design milestone which includes: having the login page complete, having API calls to the backend working, and having a page set up that displays the recipes.
 - Caleb: 
-- Jason: 
+- Jason: Learn more about Mongo and transform our E/R diagram into a setup for a database in Mongo. Also work towards users being able to login with an email/username and password.
