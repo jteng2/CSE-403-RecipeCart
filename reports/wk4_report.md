@@ -11,9 +11,9 @@ We were able to set up the git repository on Github and set up the directory str
 
 ### This week's goals
 
-- Back-end (Devi, Charles, Jason):
+- Back-end (Devi, Charles, Jason): Design/setup database in Mongo and allow users to be able to login using an email/username and password.
 - Front-end (Caleb, Ricky): This week our goal is to complete the architecture and design milestone which is due on 1/31.
-- UI design (Devi, Charles, Jason):
+- UI design (Devi, Charles, Jason): Design the recipe page
 
 # Individual Contributions
 
