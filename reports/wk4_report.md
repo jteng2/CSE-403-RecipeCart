@@ -26,7 +26,7 @@ We were able to set up the git repository on Github and set up the directory str
 
 ### Progress and Issues
 
-- Charles: 
+- Charles: I helped draw an ER diagram for the app at a high level, and I made a (Mongo) DB schema based on that ER diagram. I also learned a bit about Spark Java and using Mongo in Java, since those are likely to be used in the project in the future. No implementation so far.
 - Devi: 
 - Ricky: I helped make some fixes for our living document based on the feedback that we had received. Also, I spent some time learning a bit about the front-end framework we plan to use to create the front-end of the application. An issue/problem we had was that we had initally created our remote repository on gitlab instead of github so we had to move all our work to github.  
 - Caleb: 
@@ -34,7 +34,7 @@ We were able to set up the git repository on Github and set up the directory str
 
 ### This week's goals
 
-- Charles: 
+- Charles: Revise the ER diagram and Mongo DB schema if needed, come up with the architecture and design for the backend, get some spec for the backend based on the design, learn some more about SparkJava and using Mongo with Java.
 - Devi: 
 - Ricky: Help complete our architecture and design milestone which includes: having the login page complete, having API calls to the backend working, and having a page set up that displays the recipes.
 - Caleb: 
