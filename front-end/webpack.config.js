@@ -6,6 +6,12 @@ var HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
 });
 module.exports = {
     entry: __dirname + '/app/index.js',
+    mode: 'development',
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
     module: {
         rules: [
             {
