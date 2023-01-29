@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from 'react-dom';
 
 function App() {
-    render()
     return (
       <div className="App">
         <header className="App-header">
