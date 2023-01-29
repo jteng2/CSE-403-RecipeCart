@@ -1,13 +1,9 @@
 import React from 'react';
-import { render } from 'react-dom';
+import Header from "./Header";
 
 function App() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <p>Hello Recipe Cart!</p>
-        </header>
-      </div>
+      <Header />
     );
   }
   
