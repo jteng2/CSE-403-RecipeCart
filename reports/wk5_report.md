@@ -29,7 +29,7 @@ architecture and design, and setup a server to connect to front-end.
 
 ### Progress and Issues
 
-- Charles:
+- Charles: I went into detail on the architecture and design for the backend (including details what classes there will be, what components they will form, and what has dependencies on what). 
 - Devi:
 - Ricky:
 - Caleb:
@@ -37,7 +37,7 @@ architecture and design, and setup a server to connect to front-end.
 
 ### This week's goals
 
-- Charles:
+- Charles: Set up Gradle for the project, make starter code based on the architecture and design (ideally with javadocs for important methods), help write tests for the backend.
 - Devi:
 - Ricky:
 - Caleb:
