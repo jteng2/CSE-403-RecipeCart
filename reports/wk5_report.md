@@ -7,9 +7,7 @@
 
 ### Progress and Issues
 
-We have done a lot of reserach on auth0 and we think it would be a good choice for our web server for login authentication and for security reasons
-too. Back-end has designed what the software architecture would look like, ___
-
+We have done a lot of reserach on auth0 and we think it would be a good choice for our web server for login authentication through validation tokens for front/back-end and for security reasons too. Back-end has designed what the software architecture would look like and mapping out dependencies and the front-end has been working on the login page and planning out MVC (model view controller).
 
 ### This week's goals
 
@@ -33,7 +31,7 @@ architecture and design, and setup a server to connect to front-end.
 - Devi:
 - Ricky:
 - Caleb:
-- Jason:
+- Jason: I helped turn our ER diagram into a Mongo database schema, added to the living documents explaining our future usage of Google style guidelines for coding and the potential major risks that could halt our progress towards completing this project.
 
 ### This week's goals
 
@@ -41,4 +39,4 @@ architecture and design, and setup a server to connect to front-end.
 - Devi:
 - Ricky:
 - Caleb:
-- Jason:
+- Jason: I want to help setup Gradle and potentially write out the project specs based off of the architeture and design and create tests before we start coding to create the idea of "blackbox" testing.
