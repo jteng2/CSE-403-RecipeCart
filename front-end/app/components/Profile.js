@@ -40,7 +40,7 @@ function Profile() {
       >
         <MenuItem onClick={handleOption}>My Account</MenuItem>
         <MenuItem onClick={handleOption}>Settings</MenuItem>
-        <MenuItem onClick={handleOption}>Login</MenuItem>
+        <MenuItem onClick={handleOption}>Sign Up/Sign In</MenuItem>
         <MenuItem onClick={handleOption}>Logout</MenuItem>
       </Menu>
     </div>
