@@ -1,9 +1,10 @@
+/* (C)2023 */
 package com.gradle.tutorial;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class FizzBuzzTest {
     @Test
