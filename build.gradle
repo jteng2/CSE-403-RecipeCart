@@ -71,6 +71,6 @@ spotless {
 		prettier() // has its own section below
 		// eslint() // has its own section below
 
-		licenseHeader '/* (C) $YEAR */', 'REGEX_TO_DEFINE_TOP_OF_FILE' // or licenseHeaderFile
+		// licenseHeader '/* (C) $YEAR */', '' // or licenseHeaderFile
 	}
 }
