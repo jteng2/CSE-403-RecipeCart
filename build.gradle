@@ -17,6 +17,7 @@ dependencies {
 	implementation 'org.mongodb:mongo-java-driver:3.12.11'
 	implementation 'com.sparkjava:spark-core:2.9.4'
 	implementation 'org.slf4j:slf4j-simple:2.0.5'
+	implementation 'org.jetbrains:annotations:24.0.0'
 }
 
 test {
@@ -64,13 +65,5 @@ spotless {
 		// optionally, Spotless can set copyright years by digging
 		// through git history (see "license" section below)
 		licenseHeader '/* (C)$YEAR */'
-	}
-	javascript {
-		target 'src/**/*.js' // you have to set the target manually
-
-		prettier() // has its own section below
-		// eslint() // has its own section below
-
-		// licenseHeader '/* (C) $YEAR */', '' // or licenseHeaderFile
 	}
 }
