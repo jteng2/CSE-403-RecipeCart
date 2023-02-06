@@ -1,5 +1,5 @@
 /* (C)2023 */
-package usages;
+package com.recipecart.usages;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;

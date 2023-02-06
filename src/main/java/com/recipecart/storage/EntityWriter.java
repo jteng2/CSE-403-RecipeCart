@@ -1,7 +1,7 @@
 /* (C)2023 */
-package storage;
+package com.recipecart.storage;
 
-import entities.*;
+import com.recipecart.entities.*;
 import java.util.Collection;
 import org.jetbrains.annotations.NotNull;
 

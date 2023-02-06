@@ -1,7 +1,7 @@
 /* (C)2023 */
-package usages;
+package com.recipecart.usages;
 
-import entities.Recipe;
+import com.recipecart.entities.Recipe;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;

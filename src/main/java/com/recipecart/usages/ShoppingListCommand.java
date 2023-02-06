@@ -1,7 +1,7 @@
 /* (C)2023 */
-package usages;
+package com.recipecart.usages;
 
-import entities.Ingredient;
+import com.recipecart.entities.Ingredient;
 import java.util.Collections;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;

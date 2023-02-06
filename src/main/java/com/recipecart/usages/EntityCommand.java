@@ -1,9 +1,9 @@
 /* (C)2023 */
-package usages;
+package com.recipecart.usages;
 
+import com.recipecart.storage.EntityStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import storage.EntityStorage;
 
 /** This abstract class represents an action item that represents a use case involving entities. */
 public abstract class EntityCommand {

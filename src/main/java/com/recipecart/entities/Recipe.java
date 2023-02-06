@@ -1,5 +1,5 @@
 /* (C)2023 */
-package entities;
+package com.recipecart.entities;
 
 import java.util.*;
 import org.apache.commons.lang3.NotImplementedException;

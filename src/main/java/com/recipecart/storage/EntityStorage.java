@@ -1,5 +1,5 @@
 /* (C)2023 */
-package storage;
+package com.recipecart.storage;
 
 import org.jetbrains.annotations.NotNull;
 

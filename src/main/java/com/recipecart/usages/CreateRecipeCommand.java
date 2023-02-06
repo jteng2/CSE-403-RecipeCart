@@ -1,7 +1,7 @@
 /* (C)2023 */
-package usages;
+package com.recipecart.usages;
 
-import entities.Recipe;
+import com.recipecart.entities.Recipe;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

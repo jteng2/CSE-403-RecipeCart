@@ -1,5 +1,5 @@
 /* (C)2023 */
-package usages;
+package com.recipecart.usages;
 
 import java.util.Collections;
 import java.util.HashMap;
