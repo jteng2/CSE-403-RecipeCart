@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import Profile from "./Profile"
+import ProfileIcon from "./ProfileIcon"
 
 
 function Header() {
@@ -29,7 +29,7 @@ function Header() {
                     <TextField variant="filled" color="info" focused></TextField>
                 </Grid>
                 <Grid item xs="3">
-                    <Profile />
+                    <ProfileIcon />
                 </Grid>
             </Grid>
             </Toolbar>

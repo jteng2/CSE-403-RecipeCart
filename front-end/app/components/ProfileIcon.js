@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-function Profile() {
+function ProfileIcon() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -47,4 +47,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default ProfileIcon;
