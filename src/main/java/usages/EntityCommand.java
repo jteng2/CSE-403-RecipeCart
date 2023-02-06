@@ -13,13 +13,6 @@ import storage.EntityStorage;
 public abstract class EntityCommand {
     private @Nullable EntityStorage storage = null;
 
-    /**
-     * Executes this EntityCommand, performing the use case represented by the implementing class.
-     *
-     * @return the results of executing this command
-     */
-    @NotNull abstract Result execute();
-
     /** @return the place this EntityCommand saves and loads entities during execution. */
     @Nullable public EntityStorage getStorageSource() {
         return storage;
@@ -30,13 +23,21 @@ public abstract class EntityCommand {
      *
      * @param storage the place to save/load entities
      */
-    void setStorageSource(@Nullable EntityStorage storage) {
+    void setStorageSource(@NotNull EntityStorage storage) {
         this.storage = storage;
     }
+
+    /**
+     * Executes this EntityCommand, performing the use case represented by the implementing class.
+     *
+     * @return the results of executing this command
+     */
+    @NotNull abstract Result execute();
 
     /** This class represents the immutable results from executing a EntityCommand. */
     public static class Result {
         private final boolean success;
+        private final @NotNull String message;
         private final @NotNull List<Tag> tags;
         private final @NotNull List<Ingredient> ingredients;
         private final @NotNull List<Recipe> recipes;
@@ -44,11 +45,13 @@ public abstract class EntityCommand {
 
         private Result(
                 boolean success,
+                @NotNull String message,
                 @NotNull List<Tag> tags,
                 @NotNull List<Ingredient> ingredients,
                 @NotNull List<Recipe> recipes,
                 @NotNull List<User> users) {
             this.success = success;
+            this.message = message;
             this.tags = tags;
             this.ingredients = ingredients;
             this.recipes = recipes;
@@ -60,11 +63,16 @@ public abstract class EntityCommand {
             return success;
         }
 
+        /** @return a message of if the execution was successful, or why it was unsuccessful */
+        @NotNull public String getMessage() {
+            return message;
+        }
+
         /**
          * @return an unmodifiable list with any Tags resulting from any querying this EntityCommand
          *     did. If the EntityCommand did no querying, an empty list is returned.
          */
-        public List<Tag> getTags() {
+        @NotNull public List<Tag> getTags() {
             return Collections.unmodifiableList(tags);
         }
 
@@ -72,7 +80,7 @@ public abstract class EntityCommand {
          * @return an unmodifiable list with any Ingredients resulting from any querying this
          *     EntityCommand did. If the EntityCommand did no querying, an empty list is returned.
          */
-        public List<Ingredient> getIngredients() {
+        @NotNull public List<Ingredient> getIngredients() {
             return Collections.unmodifiableList(ingredients);
         }
 
@@ -80,7 +88,7 @@ public abstract class EntityCommand {
          * @return an unmodifiable list with any Recipes resulting from any querying this
          *     EntityCommand did. If the EntityCommand did no querying, an empty list is returned.
          */
-        public List<Recipe> getRecipes() {
+        @NotNull public List<Recipe> getRecipes() {
             return Collections.unmodifiableList(recipes);
         }
 
@@ -88,7 +96,7 @@ public abstract class EntityCommand {
          * @return an unmodifiable list with any Users resulting from any querying this
          *     EntityCommand did. If the EntityCommand did no querying, an empty list is returned.
          */
-        public List<User> getUsers() {
+        @NotNull public List<User> getUsers() {
             return Collections.unmodifiableList(users);
         }
 
@@ -96,10 +104,11 @@ public abstract class EntityCommand {
          * This class is for incrementally building a Result field-by-field (instead of constructing
          * a User with all fields at once). Not all fields need to be specified when building the
          * Result. Unspecified data structure fields default to empty immutable data structures.
-         * "success" default to false.
+         * "success" default to false. "message" defaults to an empty string.
          */
         static class Builder {
             private boolean success;
+            private @NotNull String message;
             private @NotNull List<Tag> tags;
             private @NotNull List<Ingredient> ingredients;
             private @NotNull List<Recipe> recipes;
@@ -108,6 +117,7 @@ public abstract class EntityCommand {
             /** Initializes all fields to their defaults. */
             Builder() {
                 this.success = false;
+                this.message = "";
                 this.tags = Collections.emptyList();
                 this.ingredients = Collections.emptyList();
                 this.recipes = Collections.emptyList();
@@ -121,6 +131,7 @@ public abstract class EntityCommand {
             Result build() {
                 return new Result(
                         success,
+                        message,
                         new ArrayList<>(tags),
                         new ArrayList<>(ingredients),
                         new ArrayList<>(recipes),
@@ -129,6 +140,11 @@ public abstract class EntityCommand {
 
             Builder setSuccess(boolean success) {
                 this.success = success;
+                return this;
+            }
+
+            Builder setMessage(@NotNull String message) {
+                this.message = message;
                 return this;
             }
 
