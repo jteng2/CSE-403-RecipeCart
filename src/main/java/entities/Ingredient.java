@@ -4,7 +4,10 @@ package entities;
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
-/** This class represents an ingredient that a User can haveRecipe can require some quantity of */
+/**
+ * This class represents an immutable ingredient that many Users can have and many Recipes can
+ * require
+ */
 public final class Ingredient {
     private final @Nullable String name; // EntityStorage's "unique identifier" for Ingredient
     private final @Nullable String units;

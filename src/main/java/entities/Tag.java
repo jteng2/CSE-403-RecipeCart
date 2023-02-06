@@ -5,8 +5,8 @@ import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * This class represents a tag that many Recipes can have. Two Recipes can have a tag in common if
- * they have a Tag with the same name, even if the Tags aren't equal by reference.
+ * This class represents an immutable tag that many Recipes can have. Two Recipes can have a tag in
+ * common if they have a Tag with the same name, even if the Tags aren't equal by reference.
  */
 public final class Tag {
     // EntityStorage's "unique identifier" for Tag
@@ -15,13 +15,12 @@ public final class Tag {
     /**
      * Constructs a Tag with the given name
      *
-     * @param name the name for the Tag
+     * @param name the name associated with this Tag
      */
     public Tag(@Nullable String name) {
         this.name = name;
     }
 
-    /** @return the name associated with this Tag */
     @Nullable public String getName() {
         return name;
     }
