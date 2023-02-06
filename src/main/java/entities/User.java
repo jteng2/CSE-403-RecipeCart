@@ -5,6 +5,9 @@ import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * This class represents an immutable user, that contains various entity-related user information
+ */
 public final class User {
     private final @Nullable String username; // EntityStorage's "unique identifier" for User
     private final @Nullable String emailAddress;

@@ -6,8 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * This class represents a recipe, that contains information for cooking the recipe and information
- * on the resulting food when the recipe is cooked.
+ * This class represents an immutable recipe, that contains information for cooking the recipe and
+ * information on the resulting food when the recipe is cooked.
  */
 public final class Recipe {
     private final @Nullable String name; // EntityStorage's "unique identifier" for Recipe
