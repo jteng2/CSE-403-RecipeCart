@@ -1,21 +1,21 @@
+/* (C)2023 */
 package storage;
 
 import entities.*;
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * This interface represents the place where entities are loaded into the Business Logic Layer,
- * from when they were saved. This interface is implemented by classes outside this layer,
- * where they deal with the underlying data representation of what's "saved" in this layer.
+ * This interface represents the place where entities are loaded into the Business Logic Layer, from
+ * when they were saved. This interface is implemented by classes outside this layer, where they
+ * deal with the underlying data representation of what's "saved" in this layer.
  *
- * Invariant:
- * If an object x representing an entity gets saved (i.e. through EntityUpdateListener),
- * then when an object y representing the same entity gets loaded (i.e. through EntityReader),
- * then x.equals(y) (where x is the most recently saved representation of the entity).
+ * <p>Invariant: If an object x representing an entity gets saved (i.e. through
+ * EntityUpdateListener), then when an object y representing the same entity gets loaded (i.e.
+ * through EntityReader), then x.equals(y) (where x is the most recently saved representation of the
+ * entity).
  */
 public interface EntityReader {
     /**
@@ -26,8 +26,7 @@ public interface EntityReader {
      * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Tag with that name
      */
-    @NotNull
-    List<@NotNull Tag> getTagsByName(@NotNull List<@NotNull String> names) throws IOException;
+    @NotNull List<@NotNull Tag> getTagsByName(@NotNull List<@NotNull String> names) throws IOException;
 
     /**
      * Loads saved Ingredients with the given names.
@@ -37,8 +36,7 @@ public interface EntityReader {
      * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Ingredient with that name
      */
-    @NotNull
-    List<@NotNull Ingredient> getIngredientsByName(@NotNull List<@NotNull String> names)
+    @NotNull List<@NotNull Ingredient> getIngredientsByName(@NotNull List<@NotNull String> names)
             throws IOException;
 
     /**
@@ -49,8 +47,7 @@ public interface EntityReader {
      * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Recipe with that name
      */
-    @NotNull
-    List<@NotNull Recipe> getRecipesByName(@NotNull List<@NotNull String> names) throws IOException;
+    @NotNull List<@NotNull Recipe> getRecipesByName(@NotNull List<@NotNull String> names) throws IOException;
 
     /**
      * Loads saved Users with the given names.
@@ -60,8 +57,7 @@ public interface EntityReader {
      * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved User with that name
      */
-    @NotNull
-    List<@NotNull User> getUsersByName(@NotNull List<@NotNull String> usernames) throws IOException;
+    @NotNull List<@NotNull User> getUsersByName(@NotNull List<@NotNull String> usernames) throws IOException;
 
     /**
      * Searches for saved Tags whose names contain at least one of the given tokens.
@@ -69,8 +65,7 @@ public interface EntityReader {
      * @param tokens the tokens for name-matching
      * @return the saved Tags whose names matched, or an empty Collection if none matched
      */
-    @NotNull
-    Collection<@NotNull Tag> searchTags(@NotNull List<@NotNull String> tokens);
+    @NotNull Collection<@NotNull Tag> searchTags(@NotNull List<@NotNull String> tokens);
 
     /**
      * Searches for saved Ingredients whose names contain at least one of the given tokens.
@@ -78,18 +73,16 @@ public interface EntityReader {
      * @param tokens the tokens for name-matching
      * @return the saved Ingredients whose names matched, or an empty Collection if none matched
      */
-    @NotNull
-    Collection<@NotNull Ingredient> searchIngredients(@NotNull List<@NotNull String> tokens);
+    @NotNull Collection<@NotNull Ingredient> searchIngredients(@NotNull List<@NotNull String> tokens);
 
     /**
-     * Searches for saved Recipes whose names (name or presentationName) contain at least one of
-     *      the given tokens.
+     * Searches for saved Recipes whose names (name or presentationName) contain at least one of the
+     * given tokens.
      *
      * @param tokens the tokens for name-matching
      * @return the saved Recipes whose names matched, or an empty Collection if none matched
      */
-    @NotNull
-    Collection<@NotNull Recipe> searchRecipes(@NotNull List<@NotNull String> tokens);
+    @NotNull Collection<@NotNull Recipe> searchRecipes(@NotNull List<@NotNull String> tokens);
 
     /**
      * Searches for saved Users whose names contain at least one of the given tokens.
@@ -97,6 +90,5 @@ public interface EntityReader {
      * @param tokens the tokens for name-matching
      * @return the saved Users whose names matched, or an empty Collection if none matched
      */
-    @NotNull
-    Collection<@NotNull User> searchUsers(@NotNull List<@NotNull String> tokens);
+    @NotNull Collection<@NotNull User> searchUsers(@NotNull List<@NotNull String> tokens);
 }

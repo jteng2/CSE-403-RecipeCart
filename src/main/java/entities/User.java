@@ -2,7 +2,6 @@
 package entities;
 
 import java.util.*;
-
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -142,8 +141,8 @@ public final class User {
         }
 
         /**
-         * Sets currently-set-to-default fields to the fields of the given User.
-         * Fields set to anything other than the default are left unchanged.
+         * Sets currently-set-to-default fields to the fields of the given User. Fields set to
+         * anything other than the default are left unchanged.
          *
          * @param toCopy the User whose fields to copy
          * @return this
