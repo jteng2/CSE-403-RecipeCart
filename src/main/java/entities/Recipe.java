@@ -2,6 +2,8 @@
 package entities;
 
 import java.util.*;
+
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,8 +14,8 @@ import org.jetbrains.annotations.Nullable;
 public final class Recipe {
     private final @Nullable String name; // EntityStorage's "unique identifier" for Recipe
     private final @Nullable String presentationName;
-    private final @Nullable String prepTime;
-    private final @Nullable String cookTime;
+    private final @Nullable Integer prepTime;
+    private final @Nullable Integer cookTime;
     private final @Nullable String imageUri;
     private final @Nullable Integer numServings;
     private final double avgRating;
@@ -25,8 +27,8 @@ public final class Recipe {
     private Recipe(
             @Nullable String name,
             @Nullable String presentationName,
-            @Nullable String prepTime,
-            @Nullable String cookTime,
+            @Nullable Integer prepTime,
+            @Nullable Integer cookTime,
             @Nullable String imageUri,
             @Nullable Integer numServings,
             double avgRating,
@@ -58,12 +60,12 @@ public final class Recipe {
     }
 
     /** @return the amount of time required to prepare to cook this Recipe */
-    @Nullable public String getPrepTime() {
+    @Nullable public Integer getPrepTime() {
         return prepTime;
     }
 
     /** @return the amount of time required to cook this Recipe */
-    @Nullable public String getCookTime() {
+    @Nullable public Integer getCookTime() {
         return cookTime;
     }
 
@@ -148,8 +150,8 @@ public final class Recipe {
     public static class Builder {
         private @Nullable String name;
         private @Nullable String presentationName;
-        private @Nullable String prepTime;
-        private @Nullable String cookTime;
+        private @Nullable Integer prepTime;
+        private @Nullable Integer cookTime;
         private @Nullable String imageUri;
         private @Nullable Integer numServings;
         private double avgRating = 0;
@@ -186,6 +188,17 @@ public final class Recipe {
         }
 
         /**
+         * Sets currently-set-to-default fields to the fields of the given Recipe.
+         * Fields set to anything other than the default are left unchanged.
+         *
+         * @param toCopy the Recipe whose fields to copy
+         * @return this
+         */
+        public Builder lowPrioritySetFields(Recipe toCopy) {
+            throw new NotImplementedException();
+        }
+
+        /**
          * @return a new Recipe with fields specified via this Builder. Modifying data structures
          *     given to this Builder while specifying fields will not modify the returned Recipe.
          */
@@ -214,12 +227,12 @@ public final class Recipe {
             return this;
         }
 
-        public Builder setPrepTime(@Nullable String prepTime) {
+        public Builder setPrepTime(@Nullable Integer prepTime) {
             this.prepTime = prepTime;
             return this;
         }
 
-        public Builder setCookTime(@Nullable String cookTime) {
+        public Builder setCookTime(@Nullable Integer cookTime) {
             this.cookTime = cookTime;
             return this;
         }
