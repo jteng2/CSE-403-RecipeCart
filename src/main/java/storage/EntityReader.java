@@ -11,11 +11,6 @@ import org.jetbrains.annotations.NotNull;
  * This interface represents the place where entities are loaded into the Business Logic Layer, from
  * when they were saved. This interface is implemented by classes outside this layer, where they
  * deal with the underlying data representation of what's "saved" in this layer.
- *
- * <p>Invariant: If an object x representing an entity gets saved (i.e. through
- * EntityUpdateListener), then when an object y representing the same entity gets loaded (i.e.
- * through EntityReader), then x.equals(y) (where x is the most recently saved representation of the
- * entity).
  */
 public interface EntityReader {
     /**
@@ -60,6 +55,38 @@ public interface EntityReader {
     @NotNull List<@NotNull User> getUsersByName(@NotNull List<@NotNull String> usernames) throws IOException;
 
     /**
+     * Checks if a Tag with the given name exists.
+     *
+     * @throws IllegalArgumentException if name is null
+     * @return true if a saved Tag with the given name exists, false otherwise
+     */
+    boolean tagNameExists(@NotNull String name);
+
+    /**
+     * Checks if an Ingredient with the given name exists.
+     *
+     * @throws IllegalArgumentException if name is null
+     * @return true if a saved Ingredient with the given name exists, false otherwise
+     */
+    boolean ingredientNameExists(@NotNull String name);
+
+    /**
+     * Checks if a Recipe with the given name (not presentation name) exists.
+     *
+     * @throws IllegalArgumentException if name is null
+     * @return true if a saved Recipe with the given name exists, false otherwise
+     */
+    boolean recipeNameExists(@NotNull String name);
+
+    /**
+     * Checks if a User with the given username exists.
+     *
+     * @throws IllegalArgumentException if name is null
+     * @return true if a saved User with the given username exists, false otherwise
+     */
+    boolean usernameExists(@NotNull String name);
+
+    /**
      * Searches for saved Tags whose names contain at least one of the given tokens.
      *
      * @param tokens the tokens for name-matching
@@ -76,8 +103,8 @@ public interface EntityReader {
     @NotNull Collection<@NotNull Ingredient> searchIngredients(@NotNull List<@NotNull String> tokens);
 
     /**
-     * Searches for saved Recipes whose names (name or presentationName) contain at least one of the
-     * given tokens.
+     * Searches for saved Recipes whose names (name or presentation name) contain at least one of
+     * the given tokens.
      *
      * @param tokens the tokens for name-matching
      * @return the saved Recipes whose names matched, or an empty Collection if none matched

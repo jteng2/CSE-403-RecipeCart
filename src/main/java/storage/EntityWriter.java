@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * interface is implemented by classes outside this layer, where they deal with the underlying data
  * representation of what's "saved" in this layer.
  */
-public interface EntityUpdateListener {
+public interface EntityWriter {
 
     /**
      * Performs necessary changes to the underlying data representation to reflect changes in the
@@ -20,7 +20,7 @@ public interface EntityUpdateListener {
      * @throws IllegalArgumentException if tags, any of its elements, or any names of the Tags are
      *     null
      */
-    void onTagsUpdated(@NotNull Collection<@NotNull Tag> tags);
+    void updateTags(@NotNull Collection<@NotNull Tag> tags);
 
     /**
      * Performs necessary changes to the underlying data representation to reflect changes in the
@@ -30,7 +30,7 @@ public interface EntityUpdateListener {
      * @throws IllegalArgumentException if ingredients, any of its elements, or any names of the
      *     Ingredients are null
      */
-    void onIngredientsUpdated(@NotNull Collection<@NotNull Ingredient> ingredients);
+    void updateIngredients(@NotNull Collection<@NotNull Ingredient> ingredients);
 
     /**
      * Performs necessary changes to the underlying data representation to reflect changes in the
@@ -40,7 +40,7 @@ public interface EntityUpdateListener {
      * @throws IllegalArgumentException if recipes, any of its elements, or any names of the Recipes
      *     are null
      */
-    void onRecipesUpdated(@NotNull Collection<@NotNull Recipe> recipes);
+    void updateRecipes(@NotNull Collection<@NotNull Recipe> recipes);
 
     /**
      * Performs necessary changes to the underlying data representation to reflect changes in the
@@ -50,5 +50,5 @@ public interface EntityUpdateListener {
      * @throws IllegalArgumentException if users, any of its elements, or any usernames of the Users
      *     are null
      */
-    void onUsersUpdated(@NotNull Collection<@NotNull User> users);
+    void updateUsers(@NotNull Collection<@NotNull User> users);
 }
