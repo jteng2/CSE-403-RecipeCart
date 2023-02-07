@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 import ProfileButton from "./ProfileButton"
 import ShoppingListButton from "./ShoppingListButton";
 import SavedRecipeButton from "./SavedRecipeButton";
+import LogoButton from "./LogoButton";
 
 function Header() {
     return (
@@ -18,16 +19,7 @@ function Header() {
                         <SavedRecipeButton />
                     </Grid>
                     <Grid item xs="3">
-                        <Box
-                            sx={{
-                                width: 100,
-                                height: 50,
-                                backgroundColor: "#33E3EC",
-                                borderRadius: "6px"
-                            }}
-                        >
-                            <Typography color="black">Recipe Cart</Typography>
-                        </Box>
+                        <LogoButton />
                     </Grid>
                     <Grid item xs="3">
                         <TextField variant="filled" color="info" focused></TextField>
