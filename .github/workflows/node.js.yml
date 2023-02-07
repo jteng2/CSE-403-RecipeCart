@@ -33,3 +33,6 @@ jobs:
     - changes:
       - src/
     runs-on: ubuntu-latest
+
+    steps:
+    - run: echo "Back-end test suite"
