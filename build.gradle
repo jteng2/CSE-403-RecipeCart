@@ -28,7 +28,7 @@ test {
 
 jar {
 	manifest {
-		attributes "Main-Class": "com.gradle.tutorial.FizzBuzzProcessor"
+		attributes "Main-Class": "com.recipecart.Main"
 	}
 
 	from {
@@ -37,7 +37,7 @@ jar {
 }
 
 application {
-	getMainClass().set('com.gradle.tutorial.FizzBuzzProcessor')
+	getMainClass().set('com.recipecart.Main')
 }
 
 spotless {
