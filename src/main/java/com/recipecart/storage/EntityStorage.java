@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
  * for upholding this invariant.
  */
 public class EntityStorage {
-    private final @NotNull EntityWriter saver;
-    private final @NotNull EntityReader loader;
+    private final @NotNull EntitySaver saver;
+    private final @NotNull EntityLoader loader;
 
     /**
      * Creates an EntityStorage that saves and loads entities in the way specified by the
@@ -25,18 +25,18 @@ public class EntityStorage {
      * @param saver what will be used for saving entities
      * @param loader what will be used for loading entities
      */
-    public EntityStorage(@NotNull EntityWriter saver, @NotNull EntityReader loader) {
+    public EntityStorage(@NotNull EntitySaver saver, @NotNull EntityLoader loader) {
         this.saver = saver;
         this.loader = loader;
     }
 
     /** @return the object used for saving entities, for this EntityStorage */
-    @NotNull public EntityWriter getSaver() {
+    @NotNull public EntitySaver getSaver() {
         return saver;
     }
 
     /** @return the object used for loading entities, for this EntityStorage */
-    @NotNull public EntityReader getLoader() {
+    @NotNull public EntityLoader getLoader() {
         return loader;
     }
 }

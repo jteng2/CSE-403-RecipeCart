@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * interface is implemented by classes outside this layer, where they deal with the underlying data
  * representation of what's "saved" in this layer.
  */
-public interface EntityWriter {
+public interface EntitySaver {
 
     /**
      * Performs necessary changes to the underlying data representation to reflect changes in the

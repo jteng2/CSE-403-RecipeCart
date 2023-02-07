@@ -25,16 +25,19 @@ public abstract class EntityCommand implements Command {
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean isFinishedExecuting() {
         throw new NotImplementedException();
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean isSuccessful() {
         throw new NotImplementedException();
     }
 
     /** {@inheritDoc} */
+    @Override
     @NotNull public String getExecutionMessage() {
         throw new NotImplementedException();
     }
@@ -44,5 +47,6 @@ public abstract class EntityCommand implements Command {
      *
      * @throws IllegalStateException if this method has been called before on this command instance.
      */
+    @Override
     public abstract void execute();
 }
