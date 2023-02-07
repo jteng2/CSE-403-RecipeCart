@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-function ProfileIcon() {
+function ProfileButton() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -22,6 +22,7 @@ function ProfileIcon() {
     <div>
       <Button
         id="profile-button"
+        data-testid="profile-button"
         aria-controls={open ? 'profile-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
@@ -31,6 +32,7 @@ function ProfileIcon() {
       </Button>
       <Menu
         id="profile-menu"
+        data-testid="profile-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -47,4 +49,4 @@ function ProfileIcon() {
   );
 }
 
-export default ProfileIcon;
+export default ProfileButton;
