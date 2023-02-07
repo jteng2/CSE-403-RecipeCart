@@ -1,7 +1,8 @@
 /* (C)2023 */
-package com.recipecart.usages;
+package com.recipecart.execution;
 
 import com.recipecart.storage.EntityStorage;
+import com.recipecart.usecases.EntityCommand;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 

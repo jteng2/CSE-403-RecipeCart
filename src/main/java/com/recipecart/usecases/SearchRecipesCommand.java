@@ -1,5 +1,5 @@
 /* (C)2023 */
-package com.recipecart.usages;
+package com.recipecart.usecases;
 
 import com.recipecart.entities.Recipe;
 import java.util.Collection;

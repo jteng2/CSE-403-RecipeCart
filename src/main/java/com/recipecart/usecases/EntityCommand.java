@@ -1,5 +1,5 @@
 /* (C)2023 */
-package com.recipecart.usages;
+package com.recipecart.usecases;
 
 import com.recipecart.storage.EntityStorage;
 import org.apache.commons.lang3.NotImplementedException;
