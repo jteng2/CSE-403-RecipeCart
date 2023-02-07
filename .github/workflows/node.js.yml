@@ -1,12 +1,15 @@
 name: Recipe Cart CI
 
-on: [push, pull_request]
 
 jobs:
   test_front:
-    rules:
-    - changes:
-      - front-end/
+    on:
+      push:
+        paths:
+        - 'front-end/'
+      pull_requests:
+        paths:
+        - 'front-end/'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -28,9 +31,13 @@ jobs:
     - run: npm test
   
   test_back:
-    rules:
-    - changes:
-      - src/
+    on:
+      push:
+        paths:
+        - 'src/'
+      pull_requests:
+        paths:
+        - 'src/'
     runs-on: ubuntu-latest
 
     steps:
