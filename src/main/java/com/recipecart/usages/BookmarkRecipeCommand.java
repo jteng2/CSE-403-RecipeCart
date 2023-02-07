@@ -20,25 +20,24 @@ public final class BookmarkRecipeCommand extends EntityCommand {
         this.recipeName = recipeName;
     }
 
-    /**
-     * Has the user bookmark the recipe. If the user already bookmarked the recipe, this command
-     * will fail.
-     *
-     * @throws IllegalArgumentException if the given username has no associated user, or the given
-     *     recipe name has no associated recipe.
-     * @return a successful Result if the recipe was successfully saved, an unsuccessful one
-     *     otherwise. The return will be a EntityCommand.Result.
-     */
-    @Override
-    @NotNull Result execute() {
-        throw new NotImplementedException();
-    }
-
     @NotNull public String getBookmarkerUsername() {
         return bookmarkerUsername;
     }
 
     @NotNull public String getRecipeName() {
         return recipeName;
+    }
+
+    /**
+     * Has the user bookmark the recipe. If the user already bookmarked the recipe, this command's
+     * execution will be unsuccessful.
+     *
+     * @throws IllegalStateException if this method has been called before on this command instance.
+     * @throws IllegalArgumentException if the given username has no associated user, or the given
+     *     recipe name has no associated recipe.
+     */
+    @Override
+    public void execute() {
+        throw new NotImplementedException();
     }
 }

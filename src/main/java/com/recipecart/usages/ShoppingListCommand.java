@@ -2,9 +2,10 @@
 package com.recipecart.usages;
 
 import com.recipecart.entities.Ingredient;
-import java.util.Collections;
 import java.util.Map;
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This abstract class represents an action item that represents a use case involving a user's
@@ -22,20 +23,14 @@ public abstract class ShoppingListCommand extends EntityCommand {
         return shopperUsername;
     }
 
-    /** This class represents the results of executing a ShoppingListCommand. */
-    public static class ShoppingListResult extends Result {
-        private final @NotNull Map<Ingredient, Double> resultShoppingList;
-
-        ShoppingListResult(
-                boolean success,
-                @NotNull String message,
-                @NotNull Map<Ingredient, Double> resultShoppingList) {
-            super(success, message);
-            this.resultShoppingList = resultShoppingList;
-        }
-
-        @NotNull public Map<Ingredient, Double> getResultShoppingList() {
-            return Collections.unmodifiableMap(resultShoppingList);
-        }
+    /**
+     * Returns the user's updated shopping list as a result of this command's execution.
+     *
+     * @throws IllegalStateException if this command instance hasn't finished executing yet.
+     * @return the (non-null) updated shopping list, if the command successfully updated it; null
+     *     otherwise.
+     */
+    @Nullable public Map<Ingredient, Double> getResultShoppingList() {
+        throw new NotImplementedException();
     }
 }

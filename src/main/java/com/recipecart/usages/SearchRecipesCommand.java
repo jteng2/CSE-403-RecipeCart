@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** This class represents the use case of someone searching for recipes. */
 public final class SearchRecipesCommand extends EntityCommand {
@@ -22,36 +23,30 @@ public final class SearchRecipesCommand extends EntityCommand {
         this.searchTerms = new HashSet<>(searchTerms);
     }
 
-    /**
-     * Searches for recipes that match the given search terms. Only recipes that contain each search
-     * term will be matched.
-     *
-     * @return A result containing a list of all Recipes matched. The result will be successful if
-     *     one or more Recipes matched, unsuccessful otherwise. The return will be a
-     *     SearchRecipesCommand.SearchResult.
-     */
-    @Override
-    @NotNull Result execute() {
-        throw new NotImplementedException();
-    }
-
     @NotNull public Collection<@NotNull String> getSearchTerms() {
         return Collections.unmodifiableCollection(searchTerms);
     }
 
-    /** This class represents the results of executing a SearchRecipesCommand. */
-    public static class SearchResult extends Result {
-        private final @NotNull List<@NotNull Recipe> matches;
+    /**
+     * Returns the recipes that matched with the given search terms when executing this command.
+     *
+     * @throws IllegalStateException if this command instance hasn't finished executing yet.
+     * @return the Recipes that matched. If no recipes matched, then the list will be empty. If the
+     *     search's execution failed, then the list will be null.
+     */
+    @Nullable public List<@NotNull Recipe> getMatches() {
+        throw new NotImplementedException();
+    }
 
-        SearchResult(
-                boolean success, @NotNull String message, @NotNull List<@NotNull Recipe> matches) {
-            super(success, message);
-            this.matches = matches;
-        }
-
-        /** @return the Recipes that matched when executing the SearchRecipesCommand. */
-        @NotNull public List<@NotNull Recipe> getMatches() {
-            return Collections.unmodifiableList(matches);
-        }
+    /**
+     * Searches for recipes that match with the given search terms. Only recipes that contain each
+     * search term will be matched. The command will be successful if the search was successfully
+     * executed, even if no recipes that matched the search terms were found.
+     *
+     * @throws IllegalStateException if this method has been called before on this command instance.
+     */
+    @Override
+    public void execute() {
+        throw new NotImplementedException();
     }
 }

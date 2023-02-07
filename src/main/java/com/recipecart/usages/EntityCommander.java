@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * This class represents the way for things outside the Business Logic Layer to perform Business
  * Logic use cases.
  */
-public class Commander {
+public class EntityCommander {
     private final @NotNull EntityStorage storage;
 
     /**
@@ -17,7 +17,7 @@ public class Commander {
      *
      * @param storage the storage source that executed commands will use
      */
-    public Commander(@NotNull EntityStorage storage) {
+    public EntityCommander(@NotNull EntityStorage storage) {
         this.storage = storage;
     }
 
@@ -29,11 +29,8 @@ public class Commander {
      * Executes the given command.
      *
      * @param command the command to execute
-     * @return the output of executing the command. This return value may have to be cast to a
-     *     subtype in order to see the full output. The documentation for the command's execute
-     *     method will say which type the return will be.
      */
-    @NotNull public EntityCommand.Result execute(@NotNull EntityCommand command) {
+    public void execute(@NotNull EntityCommand command) {
         throw new NotImplementedException();
     }
 }

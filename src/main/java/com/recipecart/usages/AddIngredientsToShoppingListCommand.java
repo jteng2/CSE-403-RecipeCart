@@ -28,21 +28,19 @@ public final class AddIngredientsToShoppingListCommand extends ShoppingListComma
         this.ingredientsToAdd = new HashMap<>(ingredientsToAdd);
     }
 
+    @NotNull public Map<@NotNull String, @NotNull Double> getIngredientsToAdd() {
+        return Collections.unmodifiableMap(ingredientsToAdd);
+    }
+
     /**
      * Have the ingredients be added to the user's shopping list.
      *
+     * @throws IllegalStateException if this method has been called before on this command instance.
      * @throws IllegalArgumentException if the given username has no associated user, or if any of
      *     the ingredient names don't correspond to existing ingredients
-     * @return a successful result if the ingredients were successfully added, that contains an
-     *     updated shopping list of the user; an unsuccessful one otherwise. The return will be a
-     *     ShoppingListCommand.ShoppingListResult.
      */
     @Override
-    @NotNull Result execute() {
+    public void execute() {
         throw new NotImplementedException();
-    }
-
-    @NotNull public Map<@NotNull String, @NotNull Double> getIngredientsToAdd() {
-        return Collections.unmodifiableMap(ingredientsToAdd);
     }
 }
