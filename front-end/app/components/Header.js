@@ -5,7 +5,8 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import ProfileButton from "./ProfileButton"
-
+import ShoppingListButton from "./ShoppingListButton";
+import SavedRecipeButton from "./SavedRecipeButton";
 
 function Header() {
     return (
@@ -13,7 +14,8 @@ function Header() {
             <Toolbar>
                 <Grid container>
                     <Grid item xs="3">
-                        <button>Hamburger Menu</button>
+                        <ShoppingListButton />
+                        <SavedRecipeButton />
                     </Grid>
                     <Grid item xs="3">
                         <Box
