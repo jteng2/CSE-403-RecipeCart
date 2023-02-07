@@ -1,19 +1,20 @@
 name: Recipe Cart CI
 
+on:
+  push:
+    paths:
+    - 'frontend/**'
+  pull_request:
+    paths:
+    - 'frontend/**'
 
 jobs:
-  test_front:
-    on:
-      push:
-        paths:
-        - 'front-end/'
-      pull_requests:
-        paths:
-        - 'front-end/'
+  build:
+
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: front-end/
+        working-directory: front-end
 
     strategy:
       matrix:
@@ -29,16 +30,3 @@ jobs:
     - run: npm i
     - run: npm run build --if-present
     - run: npm test
-  
-  test_back:
-    on:
-      push:
-        paths:
-        - 'src/'
-      pull_requests:
-        paths:
-        - 'src/'
-    runs-on: ubuntu-latest
-
-    steps:
-    - run: echo "Back-end test suite"
