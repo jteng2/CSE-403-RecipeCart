@@ -1,5 +1,4 @@
 name: Recipe Cart CI
-description: Runs unit tests for front-end and back-end
 
 on: [push, pull_request]
 
