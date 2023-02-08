@@ -12,12 +12,15 @@ repositories {
 }
 
 dependencies {
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 	implementation 'org.mongodb:mongo-java-driver:3.12.11'
 	implementation 'com.sparkjava:spark-core:2.9.4'
 	implementation 'org.slf4j:slf4j-simple:2.0.5'
 	implementation 'org.jetbrains:annotations:24.0.0'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+	implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 test {
@@ -26,7 +29,7 @@ test {
 
 jar {
 	manifest {
-		attributes "Main-Class": "com.gradle.tutorial.FizzBuzzProcessor"
+		attributes "Main-Class": "com.recipecart.Main"
 	}
 
 	from {
@@ -35,16 +38,16 @@ jar {
 }
 
 application {
-	getMainClass().set('com.gradle.tutorial.FizzBuzzProcessor')
+	getMainClass().set('com.recipecart.Main')
 }
 
 spotless {
 	// optional: limit format enforcement to just the files changed by this feature branch
-	ratchetFrom 'origin/main'
+	// ratchetFrom 'origin/main'
 
 	format 'misc', {
 		// define the files to apply `misc` to
-		target '*.gradle', '*.md', '.gitignore'
+		target '*.gradle', '.gitignore'
 
 		// define the steps to apply to those files
 		trimTrailingWhitespace()
