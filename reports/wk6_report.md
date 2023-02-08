@@ -32,7 +32,7 @@ Also, establish some protocol for communication between the front-end and back-e
 
 - Charles: I successfully set up Gradle (so that the project builds, runs tests, lints, etc.), helped set up the CI, and wrote starter code for the whole backend (there is getter/setter/constructor/builder functionality, but everything else is left unimplemented). I also made javadocs detailing the backend. Although, setting up detailed starter code left little time to write tests for them.
 - Devi: 
-- Ricky: 
+- Ricky: I created some react components for the website. Furthermore, I helped researched the different potential CI tools we could use. From there, through discussing with the team, I helped in determining which CI tool we should use. 
 - Caleb: 
 - Jason: 
 
@@ -40,6 +40,6 @@ Also, establish some protocol for communication between the front-end and back-e
 
 - Charles: Help write more unit tests for the backend, especially for the use case that will be implemented for beta release. Implement that use case.
 - Devi: 
-- Ricky: 
+- Ricky: This week I plan to build core react components. This includes the various ways to display the recipe to users, the shopping item component, and the acount info component. Furthermore, I plan to implement call to the backend API to populate the front end components. Additionally, I will write tests for the components.
 - Caleb: 
 - Jason: 
