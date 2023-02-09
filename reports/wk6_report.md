@@ -34,7 +34,7 @@ Also, establish some protocol for communication between the front-end and back-e
 - Devi: 
 - Ricky: I created some react components for the website. Furthermore, I helped researched the different potential CI tools we could use. From there, through discussing with the team, I helped in determining which CI tool we should use. 
 - Caleb: 
-- Jason: 
+- Jason: I helped research potential options for our CI system, helped fill out this week's update on our living document on CI and testing. I didn't write tests or help with Gradle like I had said, but I have read over most of what was already written.
 
 ### This week's goals
 
@@ -42,4 +42,4 @@ Also, establish some protocol for communication between the front-end and back-e
 - Devi: 
 - Ricky: This week I plan to build core react components. This includes the various ways to display the recipe to users, the shopping item component, and the acount info component. Furthermore, I plan to implement call to the backend API to populate the front end components. Additionally, I will write tests for the components.
 - Caleb: 
-- Jason: 
+- Jason: I want to help write unit tests/starter code for back-end and continue helping setup MongoDB.
