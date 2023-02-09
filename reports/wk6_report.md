@@ -31,7 +31,7 @@ Also, establish some protocol for communication between the front-end and back-e
 ### Progress and Issues
 
 - Charles: I successfully set up Gradle (so that the project builds, runs tests, lints, etc.), helped set up the CI, and wrote starter code for the whole backend (there is getter/setter/constructor/builder functionality, but everything else is left unimplemented). I also made javadocs detailing the backend. Although, setting up detailed starter code left little time to write tests for them.
-- Devi: 
+- Devi: I set up the remote Mongo and set up data bases. I helped write the CI tools document and do research about the tools. I also set up a meeting and action items document to keep track of backend goals following some confusion.
 - Ricky: I created some react components for the website. Furthermore, I helped researched the different potential CI tools we could use. From there, through discussing with the team, I helped in determining which CI tool we should use. 
 - Caleb: This week I set up Jest for frontend unit testing and implemented it into our CI pipeline using Github Actions. I also helped fill out and make adjustments to our living document. I've encountered a few issues with state navigation throughout the website, but they are slowly getting resolved.
 - Jason: I helped research potential options for our CI system, helped fill out this week's update on our living document on CI and testing. I didn't write tests or help with Gradle like I had said, but I have read over most of what was already written.
@@ -39,7 +39,7 @@ Also, establish some protocol for communication between the front-end and back-e
 ### This week's goals
 
 - Charles: Help write more unit tests for the backend, especially for the use case that will be implemented for beta release. Implement that use case.
-- Devi: 
+- Devi: I plan to finish database setup, write tests and starter code, and create some initial database calls.
 - Ricky: This week I plan to build core react components. This includes the various ways to display the recipe to users, the shopping item component, and the acount info component. Furthermore, I plan to implement call to the backend API to populate the front end components. Additionally, I will write tests for the components.
 - Caleb: This week I am going to finalize the majority of components necessary for our website. Additionally, I am going to implement user tracking throughout the app. I will also expand our unit testing environment. Lastly, I will work with the backend team to finalize a protocol for communication with the API.
 - Jason: I want to help write unit tests/starter code for back-end and continue helping setup MongoDB.
