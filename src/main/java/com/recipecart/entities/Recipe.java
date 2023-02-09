@@ -48,52 +48,72 @@ public final class Recipe {
         this.requiredIngredients = requiredIngredients;
     }
 
-    /** @return the "true" name of this Recipe */
+    /**
+     * @return the "true" name of this Recipe
+     */
     @Nullable public String getName() {
         return name;
     }
 
-    /** @return the name that appears for this Recipe */
+    /**
+     * @return the name that appears for this Recipe
+     */
     @Nullable public String getPresentationName() {
         return presentationName;
     }
 
-    /** @return the amount of time required to prepare to cook this Recipe */
+    /**
+     * @return the amount of time required to prepare to cook this Recipe
+     */
     @Nullable public Integer getPrepTime() {
         return prepTime;
     }
 
-    /** @return the amount of time required to cook this Recipe */
+    /**
+     * @return the amount of time required to cook this Recipe
+     */
     @Nullable public Integer getCookTime() {
         return cookTime;
     }
 
-    /** @return a URI leading to an image of this Recipe's finished product */
+    /**
+     * @return a URI leading to an image of this Recipe's finished product
+     */
     @Nullable public String getImageUri() {
         return imageUri;
     }
 
-    /** @return the number of people this Recipe's finished product intends to serve */
+    /**
+     * @return the number of people this Recipe's finished product intends to serve
+     */
     @Nullable public Integer getNumServings() {
         return numServings;
     }
 
-    /** @return this Recipe's average rating received by users */
+    /**
+     * @return this Recipe's average rating received by users
+     */
     public double getAvgRating() {
         return avgRating;
     }
 
-    /** @return the number of users that have rated this Recipe */
+    /**
+     * @return the number of users that have rated this Recipe
+     */
     public int getNumRatings() {
         return numRatings;
     }
 
-    /** @return an unmodifiable list with directions to cook this Recipe */
+    /**
+     * @return an unmodifiable list with directions to cook this Recipe
+     */
     @NotNull public List<String> getDirections() {
         return Collections.unmodifiableList(directions);
     }
 
-    /** @return an unmodifiable set with Tags associated with this Recipe */
+    /**
+     * @return an unmodifiable set with Tags associated with this Recipe
+     */
     @NotNull public Set<Tag> getTags() {
         return Collections.unmodifiableSet(tags);
     }

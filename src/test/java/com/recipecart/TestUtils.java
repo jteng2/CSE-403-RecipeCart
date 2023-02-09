@@ -13,11 +13,9 @@ public class TestUtils {
             "",
             "abc",
             "Hello World",
-            """
-8*H
-\t(#WRU*H\u8123(*\uD83D\uDE33QH#i238rh9
-https://google.com
-<script>alert("Boo!");</script>""",
+            "8*H\n"
+                    + "\t(#WRU*H\u8123(*\uD83D\uDE33QH#i238rh9\n"
+                    + "https://google.com<script>alert(\"Boo!\");</script>",
             null
         };
     }

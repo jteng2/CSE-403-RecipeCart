@@ -10,7 +10,9 @@ import org.jetbrains.annotations.Nullable;
 public abstract class EntityCommand implements Command {
     private @Nullable EntityStorage storage = null;
 
-    /** @return the place this command saves and loads entities during execution. */
+    /**
+     * @return the place this command saves and loads entities during execution.
+     */
     @Nullable public EntityStorage getStorageSource() {
         return storage;
     }

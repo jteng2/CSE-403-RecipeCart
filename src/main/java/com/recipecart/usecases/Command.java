@@ -11,7 +11,9 @@ public interface Command {
     String OK_MSG_GENERAL = "OK";
     String NOT_OK_MSG_GENERAL = "Not OK";
 
-    /** @return true if this command has finished executing, false otherwise. */
+    /**
+     * @return true if this command has finished executing, false otherwise.
+     */
     boolean isFinishedExecuting();
 
     /**

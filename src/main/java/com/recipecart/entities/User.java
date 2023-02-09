@@ -35,32 +35,44 @@ public final class User {
         this.shoppingList = shoppingList;
     }
 
-    /** @return this User's username */
+    /**
+     * @return this User's username
+     */
     @Nullable public String getUsername() {
         return username;
     }
 
-    /** @return an email address associated with this User */
+    /**
+     * @return an email address associated with this User
+     */
     @Nullable public String getEmailAddress() {
         return emailAddress;
     }
 
-    /** @return an unmodifiable list with the Recipes this User has authored */
+    /**
+     * @return an unmodifiable list with the Recipes this User has authored
+     */
     @NotNull public List<Recipe> getAuthoredRecipes() {
         return authoredRecipes;
     }
 
-    /** @return an unmodifiable list with the Recipes this User has saved */
+    /**
+     * @return an unmodifiable list with the Recipes this User has saved
+     */
     @NotNull public List<Recipe> getSavedRecipes() {
         return savedRecipes;
     }
 
-    /** @return an unmodifiable map with the Recipes this User has rated, with associated ratings */
+    /**
+     * @return an unmodifiable map with the Recipes this User has rated, with associated ratings
+     */
     @NotNull public Map<Recipe, Double> getRatedRecipes() {
         return ratedRecipes;
     }
 
-    /** @return an unmodifiable set with Ingredients this User owns */
+    /**
+     * @return an unmodifiable set with Ingredients this User owns
+     */
     @NotNull public Set<Ingredient> getOwnedIngredients() {
         return ownedIngredients;
     }

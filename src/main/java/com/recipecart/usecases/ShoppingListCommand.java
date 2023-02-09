@@ -18,7 +18,9 @@ public abstract class ShoppingListCommand extends EntityCommand {
         this.shopperUsername = shopperUsername;
     }
 
-    /** @return the username of the user whose shopping list is involved with this command. */
+    /**
+     * @return the username of the user whose shopping list is involved with this command.
+     */
     @NotNull public String getShopperUsername() {
         return shopperUsername;
     }
