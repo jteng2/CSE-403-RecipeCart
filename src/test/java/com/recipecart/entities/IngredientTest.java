@@ -49,7 +49,6 @@ public class IngredientTest {
         assertEquals(i1, i2);
     }
 
-
     @ParameterizedTest
     @MethodSource("twoConstructorParams")
     void testInequality(
