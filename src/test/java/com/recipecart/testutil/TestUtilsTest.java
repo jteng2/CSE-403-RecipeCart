@@ -1,7 +1,7 @@
 /* (C)2023 */
-package com.recipecart;
+package com.recipecart.testutil;
 
-import static com.recipecart.TestUtils.*;
+import static com.recipecart.testutil.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 
-public class TestTestUtils {
+public class TestUtilsTest {
     @Test
     void testNonStaircaseMatrix() {
         Supplier<Object[]> generator = () -> new Integer[] {1, 2, 3, 4, 5};
