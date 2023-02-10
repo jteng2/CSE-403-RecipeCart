@@ -1,33 +1,24 @@
 /* (C)2023 */
-package com.recipecart;
+package com.recipecart.testutil;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.params.provider.Arguments;
 
+/** This class contains various general utility methods that assist in unit testing. */
 public class TestUtils {
-    public static Object[] getStrings() {
-        return new String[] {
-            "",
-            "abc",
-            "Hello World",
-            "8*H\n"
-                    + "\t(#WRU*H\u8123(*\uD83D\uDE33QH#i238rh9\n"
-                    + "https://google.com<script>alert(\"Boo!\");</script>",
-            null
-        };
+
+    // We want to make a new String reference instead of using the same reference here;
+    // there would be a similar method for Integer also, but `new Integer()` is deprecated
+    public static @Nullable String newString(String toCopy) {
+        return toCopy == null ? null : new String(toCopy);
     }
 
-    public static Object[] getIntegers() {
-        return new Integer[] {0, 1, -16, 12345, null, Integer.MAX_VALUE, Integer.MIN_VALUE};
-    }
-
-    public static Object[] getInts() {
-        return new Object[] {0, 1, -16, 12345, Integer.MAX_VALUE, Integer.MIN_VALUE};
-    }
-
+    // Generates a 2D array where each column corresponds to elements of arrays generated
+    // by the given array generator.
+    //
     // We define a "staircase array" to be a 2D array, where each column is the same as
     // the last column, except each element is shifted down one row (and the bottom element
     // goes back to the top). Staircase arrays are generated when staircase is set to true.
@@ -52,7 +43,7 @@ public class TestUtils {
         return tuples;
     }
 
-    // horizontally stack given arrays (assumed to be non-jagged and non-null)
+    // Horizontally stacks the given matrices (assumed to be non-jagged and non-null)
     public static Object[][] horizontalConcatMatrix(List<Object[][]> matrices) {
         if (matrices.size() == 0 || matrices.get(0).length == 0) {
             return new Object[0][0];
@@ -79,7 +70,7 @@ public class TestUtils {
         return stacked;
     }
 
-    // converts a 2D array to a stream of arguments (each of which takes a row of the matrix)
+    // Convert rows of the given matrix to Arguments objects
     public static Stream<Arguments> argsFromMatrix(Object[][] matrix) {
         Stream.Builder<Arguments> builder = Stream.builder();
         for (Object[] row : matrix) {
@@ -88,13 +79,16 @@ public class TestUtils {
         return builder.build();
     }
 
+    // Combines generateMatrix with argsFromMatrix
     public static Stream<Arguments> generateArguments(
             Supplier<Object[]> generator, int columns, boolean staircase) {
         Object[][] matrix = generateMatrix(generator, columns, staircase);
         return argsFromMatrix(matrix);
     }
 
-    public static Stream<Arguments> generateMultiArguments(
+    // Generates a 2D matrix, created from horizontally concatenating 2D matrices created from
+    // generateMatrix, using respective elements of each parameter for each matrix
+    private static Object[][] matrixFromGenerators(
             List<Supplier<Object[]>> generators, int[] numColumns, boolean[] staircase) {
         if (numColumns.length != generators.size() || numColumns.length != staircase.length) {
             throw new IllegalArgumentException();
@@ -105,7 +99,41 @@ public class TestUtils {
             matrices.add(generateMatrix(generators.get(i), numColumns[i], staircase[i]));
         }
 
-        Object[][] concatMatrix = horizontalConcatMatrix(matrices);
+        return horizontalConcatMatrix(matrices);
+    }
+
+    // Combines matrixFromGenerators with argsFromMatrix
+    public static Stream<Arguments> generateMultiArguments(
+            List<Supplier<Object[]>> generators, int[] numColumns, boolean[] staircase) {
+        Object[][] concatMatrix = matrixFromGenerators(generators, numColumns, staircase);
         return argsFromMatrix(concatMatrix);
+    }
+
+    // Either staircases or doesn't "staircase" all the arguments
+    public static Stream<Arguments> generateMultiArguments(
+            List<Supplier<Object[]>> generators, int[] numColumns, boolean staircaseEach) {
+        boolean[] staircaseArray = new boolean[generators.size()];
+        Arrays.fill(staircaseArray, staircaseEach);
+
+        return generateMultiArguments(generators, numColumns, staircaseArray);
+    }
+
+    private static int[] arrayFromInt(int elem, int length) {
+        int[] arr = new int[length];
+        Arrays.fill(arr, elem);
+        return arr;
+    }
+
+    // Number of columns will be the same for each matrix
+    public static Stream<Arguments> generateMultiArguments(
+            List<Supplier<Object[]>> generators, int numColumnsEach, boolean[] staircase) {
+        return generateMultiArguments(
+                generators, arrayFromInt(numColumnsEach, generators.size()), staircase);
+    }
+
+    public static Stream<Arguments> generateMultiArguments(
+            List<Supplier<Object[]>> generators, int numColumnsEach, boolean staircaseEach) {
+        return generateMultiArguments(
+                generators, arrayFromInt(numColumnsEach, generators.size()), staircaseEach);
     }
 }
