@@ -2,7 +2,6 @@
 package com.recipecart.entities;
 
 import java.util.*;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,20 +11,20 @@ import org.jetbrains.annotations.Nullable;
 public final class User {
     private final @Nullable String username; // EntityStorage's "unique identifier" for User
     private final @Nullable String emailAddress;
-    private final @NotNull List<Recipe> authoredRecipes;
-    private final @NotNull List<Recipe> savedRecipes;
-    private final @NotNull Map<Recipe, Double> ratedRecipes;
-    private final @NotNull Set<Ingredient> ownedIngredients;
-    private final @NotNull Map<Ingredient, Double> shoppingList;
+    private final @NotNull List<@NotNull Recipe> authoredRecipes;
+    private final @NotNull List<@NotNull Recipe> savedRecipes;
+    private final @NotNull Map<@NotNull Recipe, @NotNull Double> ratedRecipes;
+    private final @NotNull Set<@NotNull Ingredient> ownedIngredients;
+    private final @NotNull Map<@NotNull Ingredient, @NotNull Double> shoppingList;
 
     private User(
             @Nullable String username,
             @Nullable String emailAddress,
-            @NotNull List<Recipe> authoredRecipes,
-            @NotNull List<Recipe> savedRecipes,
-            @NotNull Map<Recipe, Double> ratedRecipes,
-            @NotNull Set<Ingredient> ownedIngredients,
-            @NotNull Map<Ingredient, Double> shoppingList) {
+            @NotNull List<@NotNull Recipe> authoredRecipes,
+            @NotNull List<@NotNull Recipe> savedRecipes,
+            @NotNull Map<@NotNull Recipe, @NotNull Double> ratedRecipes,
+            @NotNull Set<@NotNull Ingredient> ownedIngredients,
+            @NotNull Map<@NotNull Ingredient, @NotNull Double> shoppingList) {
         this.username = username;
         this.emailAddress = emailAddress;
         this.authoredRecipes = authoredRecipes;
@@ -52,37 +51,37 @@ public final class User {
     /**
      * @return an unmodifiable list with the Recipes this User has authored
      */
-    @NotNull public List<Recipe> getAuthoredRecipes() {
-        return authoredRecipes;
+    @NotNull public List<@NotNull Recipe> getAuthoredRecipes() {
+        return Collections.unmodifiableList(authoredRecipes);
     }
 
     /**
      * @return an unmodifiable list with the Recipes this User has saved
      */
-    @NotNull public List<Recipe> getSavedRecipes() {
-        return savedRecipes;
+    @NotNull public List<@NotNull Recipe> getSavedRecipes() {
+        return Collections.unmodifiableList(savedRecipes);
     }
 
     /**
      * @return an unmodifiable map with the Recipes this User has rated, with associated ratings
      */
-    @NotNull public Map<Recipe, Double> getRatedRecipes() {
-        return ratedRecipes;
+    @NotNull public Map<@NotNull Recipe, @NotNull Double> getRatedRecipes() {
+        return Collections.unmodifiableMap(ratedRecipes);
     }
 
     /**
      * @return an unmodifiable set with Ingredients this User owns
      */
-    @NotNull public Set<Ingredient> getOwnedIngredients() {
-        return ownedIngredients;
+    @NotNull public Set<@NotNull Ingredient> getOwnedIngredients() {
+        return Collections.unmodifiableSet(ownedIngredients);
     }
 
     /**
      * @return an unmodifiable map with Ingredients the User intends to buy, and associated amounts
      *     for each ingredient
      */
-    @NotNull public Map<Ingredient, Double> getShoppingList() {
-        return shoppingList;
+    @NotNull public Map<@NotNull Ingredient, @NotNull Double> getShoppingList() {
+        return Collections.unmodifiableMap(shoppingList);
     }
 
     @Override
@@ -121,11 +120,11 @@ public final class User {
     public static class Builder {
         private @Nullable String username;
         private @Nullable String emailAddress;
-        private @NotNull List<Recipe> authoredRecipes;
-        private @NotNull List<Recipe> savedRecipes;
-        private @NotNull Map<Recipe, Double> ratedRecipes;
-        private @NotNull Set<Ingredient> ownedIngredients;
-        private @NotNull Map<Ingredient, Double> shoppingList;
+        private @NotNull List<@NotNull Recipe> authoredRecipes;
+        private @NotNull List<@NotNull Recipe> savedRecipes;
+        private @NotNull Map<@NotNull Recipe, @NotNull Double> ratedRecipes;
+        private @NotNull Set<@NotNull Ingredient> ownedIngredients;
+        private @NotNull Map<@NotNull Ingredient, @NotNull Double> shoppingList;
 
         /** Initializes all fields to their defaults. */
         public Builder() {
@@ -153,17 +152,6 @@ public final class User {
         }
 
         /**
-         * Sets currently-set-to-default fields to the fields of the given User. Fields set to
-         * anything other than the default are left unchanged.
-         *
-         * @param toCopy the User whose fields to copy
-         * @return this
-         */
-        public Recipe.Builder lowPrioritySetFields(Recipe toCopy) {
-            throw new NotImplementedException();
-        }
-
-        /**
          * @return a new User with fields specified via this Builder. Modifying data structures
          *     given to this Builder while specifying fields will not modify the returned User.
          */
@@ -171,11 +159,11 @@ public final class User {
             return new User(
                     username,
                     emailAddress,
-                    authoredRecipes,
-                    savedRecipes,
-                    ratedRecipes,
-                    ownedIngredients,
-                    shoppingList);
+                    new ArrayList<>(authoredRecipes),
+                    new ArrayList<>(savedRecipes),
+                    new HashMap<>(ratedRecipes),
+                    new HashSet<>(ownedIngredients),
+                    new HashMap<>(shoppingList));
         }
 
         public Builder setUsername(@Nullable String username) {
@@ -188,27 +176,29 @@ public final class User {
             return this;
         }
 
-        public Builder setAuthoredRecipes(@NotNull List<Recipe> authoredRecipes) {
+        public Builder setAuthoredRecipes(@NotNull List<@NotNull Recipe> authoredRecipes) {
             this.authoredRecipes = authoredRecipes;
             return this;
         }
 
-        public Builder setSavedRecipes(@NotNull List<Recipe> savedRecipes) {
+        public Builder setSavedRecipes(@NotNull List<@NotNull Recipe> savedRecipes) {
             this.savedRecipes = savedRecipes;
             return this;
         }
 
-        public Builder setRatedRecipes(@NotNull Map<Recipe, Double> ratedRecipes) {
+        public Builder setRatedRecipes(
+                @NotNull Map<@NotNull Recipe, @NotNull Double> ratedRecipes) {
             this.ratedRecipes = ratedRecipes;
             return this;
         }
 
-        public Builder setOwnedIngredients(@NotNull Set<Ingredient> ownedIngredients) {
+        public Builder setOwnedIngredients(@NotNull Set<@NotNull Ingredient> ownedIngredients) {
             this.ownedIngredients = ownedIngredients;
             return this;
         }
 
-        public Builder setShoppingList(@NotNull Map<Ingredient, Double> shoppingList) {
+        public Builder setShoppingList(
+                @NotNull Map<@NotNull Ingredient, @NotNull Double> shoppingList) {
             this.shoppingList = shoppingList;
             return this;
         }

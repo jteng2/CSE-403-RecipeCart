@@ -2,7 +2,6 @@
 package com.recipecart.entities;
 
 import java.util.*;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,9 +18,9 @@ public final class Recipe {
     private final @Nullable Integer numServings;
     private final double avgRating;
     private final int numRatings;
-    private final @NotNull List<String> directions;
-    private final @NotNull Set<Tag> tags;
-    private final @NotNull Map<Ingredient, Double> requiredIngredients;
+    private final @NotNull List<@NotNull String> directions;
+    private final @NotNull Set<@NotNull Tag> tags;
+    private final @NotNull Map<@NotNull Ingredient, @NotNull Double> requiredIngredients;
 
     private Recipe(
             @Nullable String name,
@@ -32,9 +31,9 @@ public final class Recipe {
             @Nullable Integer numServings,
             double avgRating,
             int numRatings,
-            @NotNull List<String> directions,
-            @NotNull Set<Tag> tags,
-            @NotNull Map<Ingredient, Double> requiredIngredients) {
+            @NotNull List<@NotNull String> directions,
+            @NotNull Set<@NotNull Tag> tags,
+            @NotNull Map<@NotNull Ingredient, @NotNull Double> requiredIngredients) {
         this.name = name;
         this.presentationName = presentationName;
         this.prepTime = prepTime;
@@ -107,21 +106,21 @@ public final class Recipe {
     /**
      * @return an unmodifiable list with directions to cook this Recipe
      */
-    @NotNull public List<String> getDirections() {
+    @NotNull public List<@NotNull String> getDirections() {
         return Collections.unmodifiableList(directions);
     }
 
     /**
      * @return an unmodifiable set with Tags associated with this Recipe
      */
-    @NotNull public Set<Tag> getTags() {
+    @NotNull public Set<@NotNull Tag> getTags() {
         return Collections.unmodifiableSet(tags);
     }
 
     /**
      * @return an unmodifiable map with Ingredients and associated amounts required for this Recipe
      */
-    @NotNull public Map<Ingredient, Double> getRequiredIngredients() {
+    @NotNull public Map<@NotNull Ingredient, @NotNull Double> getRequiredIngredients() {
         return Collections.unmodifiableMap(requiredIngredients);
     }
 
@@ -175,9 +174,9 @@ public final class Recipe {
         private @Nullable Integer numServings;
         private double avgRating = 0;
         private int numRatings = 0;
-        private @NotNull List<String> directions;
-        private @NotNull Set<Tag> tags;
-        private @NotNull Map<Ingredient, Double> requiredIngredients;
+        private @NotNull List<@NotNull String> directions;
+        private @NotNull Set<@NotNull Tag> tags;
+        private @NotNull Map<@NotNull Ingredient, @NotNull Double> requiredIngredients;
 
         /** Initializes all fields to their defaults. */
         public Builder() {
@@ -204,17 +203,6 @@ public final class Recipe {
                     .setDirections(toCopy.getDirections())
                     .setTags(toCopy.getTags())
                     .setRequiredIngredients(toCopy.getRequiredIngredients());
-        }
-
-        /**
-         * Sets currently-set-to-default fields to the fields of the given Recipe. Fields set to
-         * anything other than the default are left unchanged.
-         *
-         * @param toCopy the Recipe whose fields to copy
-         * @return this
-         */
-        public Builder lowPrioritySetFields(Recipe toCopy) {
-            throw new NotImplementedException();
         }
 
         /**
@@ -276,18 +264,18 @@ public final class Recipe {
             return this;
         }
 
-        public Builder setDirections(@NotNull List<String> directions) {
+        public Builder setDirections(@NotNull List<@NotNull String> directions) {
             this.directions = directions;
             return this;
         }
 
-        public Builder setTags(@NotNull Set<Tag> tags) {
+        public Builder setTags(@NotNull Set<@NotNull Tag> tags) {
             this.tags = tags;
             return this;
         }
 
         public Builder setRequiredIngredients(
-                @NotNull Map<Ingredient, Double> requiredIngredients) {
+                @NotNull Map<@NotNull Ingredient, @NotNull Double> requiredIngredients) {
             this.requiredIngredients = requiredIngredients;
             return this;
         }
