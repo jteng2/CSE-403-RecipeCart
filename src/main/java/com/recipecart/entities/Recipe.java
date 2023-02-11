@@ -265,17 +265,30 @@ public final class Recipe {
         }
 
         public Builder setDirections(@NotNull List<@NotNull String> directions) {
+            Objects.requireNonNull(directions, "Directions list cannot be null");
+            for (String s : directions) {
+                Objects.requireNonNull(s, "Individual directions cannot be null");
+            }
             this.directions = directions;
             return this;
         }
 
         public Builder setTags(@NotNull Set<@NotNull Tag> tags) {
+            Objects.requireNonNull(tags, "Tags set cannot be null");
+            for (Tag s : tags) {
+                Objects.requireNonNull(s, "Individual Tags cannot be null");
+            }
             this.tags = tags;
             return this;
         }
 
         public Builder setRequiredIngredients(
                 @NotNull Map<@NotNull Ingredient, @NotNull Double> requiredIngredients) {
+            Objects.requireNonNull(requiredIngredients, "Required Ingredient map cannot be null");
+            for (Map.Entry<Ingredient, Double> entry : requiredIngredients.entrySet()) {
+                Objects.requireNonNull(entry.getKey(), "Individual Ingredients cannot be null");
+                Objects.requireNonNull(entry.getValue(), "Ingredient amounts cannot be null");
+            }
             this.requiredIngredients = requiredIngredients;
             return this;
         }

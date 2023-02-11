@@ -125,21 +125,21 @@ public class TestData {
 
     public static Object[] getMapIngredientDoubleNoNulls() {
         return new Map[] {
-            Map.of(Presets.ingredient(0), 2),
+            Map.of(Presets.ingredient(0), 2.0),
             Map.of(),
             Map.of(Presets.ingredient(1), 0.1, Presets.ingredient(2), Double.MAX_VALUE),
             Map.of(
                     Presets.ingredient(0),
                     0.01,
                     Presets.ingredient(1),
-                    100,
+                    100.0,
                     Presets.ingredient(2),
-                    2,
+                    2.0,
                     Presets.ingredient(3),
                     Double.NaN,
                     Presets.ingredient(4),
                     Double.NEGATIVE_INFINITY),
-            Map.of(Presets.ingredient(0), -5)
+            Map.of(Presets.ingredient(0), -5.0)
         };
     }
 
@@ -160,10 +160,10 @@ public class TestData {
 
     public static Object[] getMapRecipeDoubleNoNulls() {
         return new Map[] {
-            Map.of(Presets.recipe(0), 3),
-            Map.of(Presets.recipe(1), 1, Presets.recipe(3), 3e+27, Presets.recipe(4), 4.000001),
+            Map.of(Presets.recipe(0), 3.0),
+            Map.of(Presets.recipe(1), 1.0, Presets.recipe(3), 3e+27, Presets.recipe(4), 4.000001),
             Map.of(Presets.recipe(2), Double.MAX_VALUE),
-            Map.of(Presets.recipe(2), -5000, Presets.recipe(4), 4),
+            Map.of(Presets.recipe(2), -5000.0, Presets.recipe(4), 4.0),
             Map.of()
         };
     }
