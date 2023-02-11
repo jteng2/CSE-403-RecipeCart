@@ -12,7 +12,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -35,6 +37,30 @@ public class MockEntitySaveAndLoaderTest {
 
     static Stream<Arguments> listUserParams() {
         return generateArguments(TestData::getListUserNoNulls);
+    }
+
+    static Stream<Arguments> nullableCollectionTagParams() {
+        return generateArguments(TestData::getListTagWithNulls);
+    }
+
+    static Stream<Arguments> nullableCollectionIngredientParams() {
+        return generateArguments(TestData::getListIngredientWithNulls);
+    }
+
+    static Stream<Arguments> nullableCollectionRecipeParams() {
+        return generateArguments(TestData::getListRecipeWithNulls);
+    }
+
+    static Stream<Arguments> nullableCollectionUserParams() {
+        return generateArguments(TestData::getListUserWithNulls);
+    }
+
+    static Stream<Arguments> nullableListStringParams() {
+        return generateArguments(TestData::getListStringWithNulls);
+    }
+
+    static Stream<Arguments> nullableSetStringParams() {
+        return generateArguments(TestData::getSetStringWithNulls);
     }
 
     @BeforeEach
@@ -214,6 +240,56 @@ public class MockEntitySaveAndLoaderTest {
         if (!saveUsers.containsAll(allUsers)) {
             assertThrows(IOException.class, () -> loader.getUsersByNames(allNames));
         }
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableCollectionTagParams")
+    void testSaveTagsNullCheck(@Nullable Collection<@Nullable Tag> tags) {
+        assertThrows(NullPointerException.class, () -> saver.updateTags(tags));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableCollectionIngredientParams")
+    void testSaveIngredientNullCheck(@Nullable Collection<@Nullable Ingredient> ingredients) {
+        assertThrows(NullPointerException.class, () -> saver.updateIngredients(ingredients));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableCollectionRecipeParams")
+    void testSaveRecipeNullCheck(@Nullable Collection<@Nullable Recipe> recipes) {
+        assertThrows(NullPointerException.class, () -> saver.updateRecipes(recipes));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableCollectionUserParams")
+    void testSaveUserNullCheck(@Nullable Collection<@Nullable User> users) {
+        assertThrows(NullPointerException.class, () -> saver.updateUsers(users));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableListStringParams")
+    void testGetEntityByIdNullCheck(@Nullable List<@Nullable String> ids) {
+        assertThrows(NullPointerException.class, () -> loader.getTagsByNames(ids));
+        assertThrows(NullPointerException.class, () -> loader.getIngredientsByNames(ids));
+        assertThrows(NullPointerException.class, () -> loader.getRecipesByNames(ids));
+        assertThrows(NullPointerException.class, () -> loader.getUsersByNames(ids));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableSetStringParams")
+    void testSearchEntityNullCheck(@Nullable Set<@Nullable String> tokens) {
+        assertThrows(NullPointerException.class, () -> loader.searchTags(tokens));
+        assertThrows(NullPointerException.class, () -> loader.searchIngredients(tokens));
+        assertThrows(NullPointerException.class, () -> loader.searchRecipes(tokens));
+        assertThrows(NullPointerException.class, () -> loader.searchUsers(tokens));
+    }
+
+    @Test
+    void testEntityExistsNullCheck() {
+        assertThrows(NullPointerException.class, () -> loader.tagNameExists(null));
+        assertThrows(NullPointerException.class, () -> loader.ingredientNameExists(null));
+        assertThrows(NullPointerException.class, () -> loader.recipeNameExists(null));
+        assertThrows(NullPointerException.class, () -> loader.usernameExists(null));
     }
 
     // This unchecked exception exists so that Function objects can have functions that

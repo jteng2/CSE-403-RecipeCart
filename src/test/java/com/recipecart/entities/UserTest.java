@@ -127,7 +127,7 @@ public class UserTest {
 
     @ParameterizedTest
     @MethodSource("nullableRecipesParams")
-    void testRecipesNullCheck(@Nullable List<Recipe> recipes) {
+    void testRecipesNullCheck(@Nullable List<@Nullable Recipe> recipes) {
         User.Builder builder = new User.Builder();
         assertThrows(NullPointerException.class, () -> builder.setAuthoredRecipes(recipes));
         assertThrows(NullPointerException.class, () -> builder.setSavedRecipes(recipes));
@@ -135,14 +135,14 @@ public class UserTest {
 
     @ParameterizedTest
     @MethodSource("nullableRatedRecipesParams")
-    void testRatedRecipesNullCheck(@Nullable Map<Recipe, Double> ratedRecipes) {
+    void testRatedRecipesNullCheck(@Nullable Map<@Nullable Recipe, @Nullable Double> ratedRecipes) {
         User.Builder builder = new User.Builder();
         assertThrows(NullPointerException.class, () -> builder.setRatedRecipes(ratedRecipes));
     }
 
     @ParameterizedTest
     @MethodSource("nullableOwnedIngredientsParams")
-    void testOwnedIngredientsNullCheck(@Nullable Set<Ingredient> ownedIngredients) {
+    void testOwnedIngredientsNullCheck(@Nullable Set<@Nullable Ingredient> ownedIngredients) {
         User.Builder builder = new User.Builder();
         assertThrows(
                 NullPointerException.class, () -> builder.setOwnedIngredients(ownedIngredients));
@@ -150,7 +150,8 @@ public class UserTest {
 
     @ParameterizedTest
     @MethodSource("nullableShoppingListParams")
-    void testShoppingListNullCheck(@Nullable Map<Ingredient, Double> shoppingList) {
+    void testShoppingListNullCheck(
+            @Nullable Map<@Nullable Ingredient, @Nullable Double> shoppingList) {
         User.Builder builder = new User.Builder();
         assertThrows(NullPointerException.class, () -> builder.setShoppingList(shoppingList));
     }

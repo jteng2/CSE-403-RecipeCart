@@ -27,6 +27,8 @@ public class TestDataTest {
                 TestData::getUsers,
                 TestData::getListStringNoNulls,
                 TestData::getListStringWithNulls,
+                TestData::getSetStringNoNulls,
+                TestData::getSetStringWithNulls,
                 TestData::getSetTagNoNulls,
                 TestData::getSetTagWithNulls,
                 TestData::getMapIngredientDoubleNoNulls,

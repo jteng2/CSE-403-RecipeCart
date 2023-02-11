@@ -140,21 +140,22 @@ public class RecipeTest {
 
     @ParameterizedTest
     @MethodSource("nullableDirectionsParams")
-    void testBuilderDirectionsNullCheck(@Nullable List<String> directions) {
+    void testBuilderDirectionsNullCheck(@Nullable List<@Nullable String> directions) {
         Recipe.Builder builder = new Recipe.Builder();
         assertThrows(NullPointerException.class, () -> builder.setDirections(directions));
     }
 
     @ParameterizedTest
     @MethodSource("nullableTagsParams")
-    void testBuilderTagsNullCheck(@Nullable Set<Tag> tags) {
+    void testBuilderTagsNullCheck(@Nullable Set<@Nullable Tag> tags) {
         Recipe.Builder builder = new Recipe.Builder();
         assertThrows(NullPointerException.class, () -> builder.setTags(tags));
     }
 
     @ParameterizedTest
     @MethodSource("nullableRequiredIngredientsParams")
-    void testBuilderDirectionsNullCheck(@Nullable Map<Ingredient, Double> requiredIngredients) {
+    void testBuilderDirectionsNullCheck(
+            @Nullable Map<@Nullable Ingredient, @Nullable Double> requiredIngredients) {
         Recipe.Builder builder = new Recipe.Builder();
         assertThrows(
                 NullPointerException.class,

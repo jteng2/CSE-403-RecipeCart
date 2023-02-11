@@ -123,6 +123,26 @@ public class TestData {
         };
     }
 
+    public static Object[] getSetStringNoNulls() {
+        return new Set[] {
+            Set.of("a", "b"),
+            Set.of("\n", "\0", "\t", "\r"),
+            new TreeSet<String>(),
+            Set.of("list", "set", "dict", "unordered_dict"),
+            Set.of("hello", "world")
+        };
+    }
+
+    public static Object[] getSetStringWithNulls() {
+        return new Set[] {
+            null,
+            TestUtils.setOfAllowNulls(null, "a"),
+            TestUtils.setOfAllowNulls((Object) null),
+            TestUtils.setOfAllowNulls(null, "c", "d"),
+            TestUtils.setOfAllowNulls("\n", "\0", null, "\t", "\r"),
+        };
+    }
+
     public static Object[] getSetTagNoNulls() {
         return new Set[] {
             Set.of(Presets.tag(0)),
