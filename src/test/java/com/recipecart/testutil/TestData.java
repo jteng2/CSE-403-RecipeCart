@@ -182,4 +182,44 @@ public class TestData {
             Set.of(Presets.ingredient(1))
         };
     }
+
+    public static Object[] getListTagNoNulls() {
+        return new List[] {
+            List.of(),
+            List.of(Presets.tag(4)),
+            List.of(Presets.tag(0), Presets.tag(1), Presets.tag(2), Presets.tag(3), Presets.tag(4)),
+            List.of(Presets.tag(3), Presets.tag(4)),
+            List.of(Presets.tag(1))
+        };
+    }
+
+    public static Object[] getListIngredientNoNulls() {
+        return new List[] {
+            List.of(),
+            List.of(Presets.ingredient(4)),
+            List.of(
+                    Presets.ingredient(0),
+                    Presets.ingredient(1),
+                    Presets.ingredient(2),
+                    Presets.ingredient(3),
+                    Presets.ingredient(4)),
+            List.of(Presets.ingredient(3), Presets.ingredient(4)),
+            List.of(Presets.ingredient(1))
+        };
+    }
+
+    public static Object[] getListUserNoNulls() {
+        return new List[] {
+            List.of(),
+            List.of(Presets.user(4)),
+            List.of(
+                    Presets.user(0),
+                    Presets.user(1),
+                    Presets.user(2),
+                    Presets.user(3),
+                    Presets.user(4)),
+            List.of(Presets.user(3), Presets.user(4)),
+            List.of(Presets.user(1))
+        };
+    }
 }
