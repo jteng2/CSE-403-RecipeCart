@@ -86,6 +86,14 @@ public class TestUtils {
         return argsFromMatrix(matrix);
     }
 
+    public static Stream<Arguments> generateArguments(Supplier<Object[]> generator, int columns) {
+        return generateArguments(generator, columns, true);
+    }
+
+    public static Stream<Arguments> generateArguments(Supplier<Object[]> generator) {
+        return generateArguments(generator, 1);
+    }
+
     // Generates a 2D matrix, created from horizontally concatenating 2D matrices created from
     // generateMatrix, using respective elements of each parameter for each matrix
     private static Object[][] matrixFromGenerators(

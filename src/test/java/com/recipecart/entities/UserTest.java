@@ -31,7 +31,7 @@ public class UserTest {
     }
 
     static Stream<Arguments> userParams() {
-        return generateArguments(TestData::getUsers, 1, true);
+        return generateArguments(TestData::getUsers);
     }
 
     static Stream<Arguments> unequalBuilderParams() {

@@ -30,7 +30,7 @@ public class RecipeTest {
     }
 
     static Stream<Arguments> recipeParams() {
-        return generateArguments(TestData::getRecipes, 1, true);
+        return generateArguments(TestData::getRecipes);
     }
 
     static Stream<Arguments> unequalBuilderParams() {
