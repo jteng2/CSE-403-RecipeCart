@@ -1,6 +1,7 @@
 /* (C)2023 */
 package com.recipecart.entities;
 
+import com.recipecart.utils.Utils;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -177,51 +178,50 @@ public final class User {
         }
 
         public Builder setAuthoredRecipes(@NotNull List<@NotNull Recipe> authoredRecipes) {
-            Objects.requireNonNull(authoredRecipes, "Authored Recipe list cannot be null");
-            for (Recipe r : authoredRecipes) {
-                Objects.requireNonNull(r, "Individual authored Recipes cannot be null");
-            }
+            Utils.requireAllNotNull(
+                    authoredRecipes,
+                    "Authored Recipe list cannot be null",
+                    "Individual authored Recipes cannot be null");
             this.authoredRecipes = authoredRecipes;
             return this;
         }
 
         public Builder setSavedRecipes(@NotNull List<@NotNull Recipe> savedRecipes) {
-            Objects.requireNonNull(savedRecipes, "Saved Recipe list cannot be null");
-            for (Recipe r : savedRecipes) {
-                Objects.requireNonNull(r, "Individual saved Recipes cannot be null");
-            }
+            Utils.requireAllNotNull(
+                    savedRecipes,
+                    "Saved Recipe list cannot be null",
+                    "Individual saved Recipes cannot be null");
             this.savedRecipes = savedRecipes;
             return this;
         }
 
         public Builder setRatedRecipes(
                 @NotNull Map<@NotNull Recipe, @NotNull Double> ratedRecipes) {
-            Objects.requireNonNull(ratedRecipes, "Rated Recipe map set cannot be null");
-            for (Map.Entry<Recipe, Double> entry : ratedRecipes.entrySet()) {
-                Objects.requireNonNull(entry.getKey(), "Individual rated Recipes cannot be null");
-                Objects.requireNonNull(entry.getValue(), "Recipe ratings cannot be null");
-            }
+            Utils.requireAllMapNotNull(
+                    ratedRecipes,
+                    "Rated Recipe map set cannot be null",
+                    "Individual rated Recipes cannot be null",
+                    "Recipe ratings cannot be null");
             this.ratedRecipes = ratedRecipes;
             return this;
         }
 
         public Builder setOwnedIngredients(@NotNull Set<@NotNull Ingredient> ownedIngredients) {
-            Objects.requireNonNull(ownedIngredients, "Owned Ingredient list cannot be null");
-            for (Ingredient i : ownedIngredients) {
-                Objects.requireNonNull(i, "Individual owned Ingredients cannot be null");
-            }
+            Utils.requireAllNotNull(
+                    ownedIngredients,
+                    "Owned Ingredient list cannot be null",
+                    "Individual owned Ingredients cannot be null");
             this.ownedIngredients = ownedIngredients;
             return this;
         }
 
         public Builder setShoppingList(
                 @NotNull Map<@NotNull Ingredient, @NotNull Double> shoppingList) {
-            Objects.requireNonNull(shoppingList, "Shopping list cannot be null");
-            for (Map.Entry<Ingredient, Double> entry : shoppingList.entrySet()) {
-                Objects.requireNonNull(entry.getKey(), "Shopping list Ingredients cannot be null");
-                Objects.requireNonNull(
-                        entry.getValue(), "Shopping list Ingredient amounts cannot be null");
-            }
+            Utils.requireAllMapNotNull(
+                    shoppingList,
+                    "Shopping list cannot be null",
+                    "Shopping list Ingredients cannot be null",
+                    "Shopping list Ingredient amounts cannot be null");
             this.shoppingList = shoppingList;
             return this;
         }
