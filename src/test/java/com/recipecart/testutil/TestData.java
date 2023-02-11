@@ -113,6 +113,16 @@ public class TestData {
         };
     }
 
+    public static Object[] getListStringWithNulls() {
+        return new List[] {
+            null,
+            TestUtils.listOfAllowNulls(null, "a"),
+            TestUtils.listOfAllowNulls((Object) null),
+            TestUtils.listOfAllowNulls(null, null, null),
+            TestUtils.listOfAllowNulls("\n", "\0", null, "\t", "\r"),
+        };
+    }
+
     public static Object[] getSetTagNoNulls() {
         return new Set[] {
             Set.of(Presets.tag(0)),
@@ -120,6 +130,16 @@ public class TestData {
             Set.of(Presets.tag(4), Presets.tag(2)),
             new HashSet<Tag>(),
             Set.of(Presets.tag(3), Presets.tag(4), Presets.tag(0))
+        };
+    }
+
+    public static Object[] getSetTagWithNulls() {
+        return new Set[] {
+            TestUtils.setOfAllowNulls((Object) null),
+            TestUtils.setOfAllowNulls(null, Presets.tag(2)),
+            TestUtils.setOfAllowNulls(Presets.tag(4), null, Presets.tag(2)),
+            null,
+            TestUtils.setOfAllowNulls(Presets.tag(3), null, Presets.tag(4), null, Presets.tag(0))
         };
     }
 
@@ -143,6 +163,32 @@ public class TestData {
         };
     }
 
+    public static Object[] getMapIngredientDoubleWithNulls() {
+        return new Map[] {
+            TestUtils.mapOfAllowNulls(null, 2.0),
+            null,
+            TestUtils.mapOfAllowNulls(
+                    Presets.ingredient(1),
+                    0.1,
+                    null,
+                    null,
+                    Presets.ingredient(2),
+                    Double.MAX_VALUE),
+            TestUtils.mapOfAllowNulls(
+                    Presets.ingredient(0),
+                    0.01,
+                    Presets.ingredient(1),
+                    100.0,
+                    Presets.ingredient(2),
+                    null,
+                    Presets.ingredient(3),
+                    Double.NaN,
+                    Presets.ingredient(4),
+                    Double.NEGATIVE_INFINITY),
+            TestUtils.mapOfAllowNulls(Presets.ingredient(0), null)
+        };
+    }
+
     public static Object[] getListRecipeNoNulls() {
         return new List[] {
             List.of(Presets.recipe(0)),
@@ -158,6 +204,22 @@ public class TestData {
         };
     }
 
+    public static Object[] getListRecipeWithNulls() {
+        return new List[] {
+            TestUtils.listOfAllowNulls((Object) null),
+            null,
+            TestUtils.listOfAllowNulls(
+                    Presets.recipe(0),
+                    Presets.recipe(1),
+                    Presets.recipe(2),
+                    null,
+                    Presets.recipe(3),
+                    Presets.recipe(4)),
+            TestUtils.listOfAllowNulls(null, Presets.recipe(3)),
+            TestUtils.listOfAllowNulls(Presets.recipe(4), null, null, null)
+        };
+    }
+
     public static Object[] getMapRecipeDoubleNoNulls() {
         return new Map[] {
             Map.of(Presets.recipe(0), 3.0),
@@ -165,6 +227,16 @@ public class TestData {
             Map.of(Presets.recipe(2), Double.MAX_VALUE),
             Map.of(Presets.recipe(2), -5000.0, Presets.recipe(4), 4.0),
             Map.of()
+        };
+    }
+
+    public static Object[] getMapRecipeDoubleWithNulls() {
+        return new Map[] {
+                TestUtils.mapOfAllowNulls(null, 3.0),
+                TestUtils.mapOfAllowNulls(Presets.recipe(1), 1.0, Presets.recipe(3), null, Presets.recipe(4), 4.000001),
+                TestUtils.mapOfAllowNulls(null, null),
+                TestUtils.mapOfAllowNulls(Presets.recipe(2), -5000.0, Presets.recipe(4), null),
+                null
         };
     }
 
@@ -183,6 +255,22 @@ public class TestData {
         };
     }
 
+    public static Object[] getSetIngredientWithNulls() {
+        return new Set[] {
+                null,
+                TestUtils.setOfAllowNulls((Object) null),
+                TestUtils.setOfAllowNulls(
+                        Presets.ingredient(0),
+                        Presets.ingredient(1),
+                        Presets.ingredient(2),
+                        null,
+                        Presets.ingredient(3),
+                        Presets.ingredient(4)),
+                TestUtils.setOfAllowNulls(null, Presets.ingredient(4)),
+                TestUtils.setOfAllowNulls(Presets.ingredient(1), null)
+        };
+    }
+
     public static Object[] getListTagNoNulls() {
         return new List[] {
             List.of(),
@@ -190,6 +278,16 @@ public class TestData {
             List.of(Presets.tag(0), Presets.tag(1), Presets.tag(2), Presets.tag(3), Presets.tag(4)),
             List.of(Presets.tag(3), Presets.tag(4)),
             List.of(Presets.tag(1))
+        };
+    }
+
+    public static Object[] getListTagWithNulls() {
+        return new List[] {
+                null,
+                TestUtils.listOfAllowNulls((Object) null),
+                TestUtils.listOfAllowNulls(Presets.tag(0), Presets.tag(1), null, Presets.tag(2), Presets.tag(3), Presets.tag(4)),
+                TestUtils.listOfAllowNulls(null, Presets.tag(4)),
+                TestUtils.listOfAllowNulls(Presets.tag(1), null)
         };
     }
 
@@ -208,6 +306,22 @@ public class TestData {
         };
     }
 
+    public static Object[] getListIngredientWithNulls() {
+        return new List[] {
+                null,
+                TestUtils.listOfAllowNulls((Object) null),
+                TestUtils.listOfAllowNulls(
+                        Presets.ingredient(0),
+                        Presets.ingredient(1),
+                        Presets.ingredient(2),
+                        Presets.ingredient(3),
+                        null,
+                        Presets.ingredient(4)),
+                TestUtils.listOfAllowNulls(null, Presets.ingredient(4)),
+                TestUtils.listOfAllowNulls(Presets.ingredient(1), null)
+        };
+    }
+
     public static Object[] getListUserNoNulls() {
         return new List[] {
             List.of(),
@@ -220,6 +334,22 @@ public class TestData {
                     Presets.user(4)),
             List.of(Presets.user(3), Presets.user(4)),
             List.of(Presets.user(1))
+        };
+    }
+
+    public static Object[] getListUserWithNulls() {
+        return new List[] {
+                null,
+                TestUtils.listOfAllowNulls((Object) null),
+                TestUtils.listOfAllowNulls(
+                        Presets.user(0),
+                        null,
+                        Presets.user(1),
+                        Presets.user(2),
+                        Presets.user(3),
+                        Presets.user(4)),
+                TestUtils.listOfAllowNulls(null, Presets.user(4)),
+                TestUtils.listOfAllowNulls(Presets.user(1), null)
         };
     }
 }

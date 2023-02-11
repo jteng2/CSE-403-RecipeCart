@@ -26,8 +26,23 @@ public class TestDataTest {
                 TestData::getRecipes,
                 TestData::getUsers,
                 TestData::getListStringNoNulls,
+                TestData::getListStringWithNulls,
                 TestData::getSetTagNoNulls,
-                TestData::getMapIngredientDoubleNoNulls);
+                TestData::getSetTagWithNulls,
+                TestData::getMapIngredientDoubleNoNulls,
+                TestData::getMapIngredientDoubleWithNulls,
+                TestData::getListRecipeNoNulls,
+                TestData::getListRecipeWithNulls,
+                TestData::getMapRecipeDoubleNoNulls,
+                TestData::getMapRecipeDoubleWithNulls,
+                TestData::getSetIngredientNoNulls,
+                TestData::getSetIngredientWithNulls,
+                TestData::getListTagNoNulls,
+                TestData::getListTagWithNulls,
+                TestData::getListIngredientNoNulls,
+                TestData::getListIngredientWithNulls,
+                TestData::getListUserNoNulls,
+                TestData::getListUserWithNulls);
     }
 
     // all methods in TestData whose return-value elements are always non-null
@@ -42,7 +57,15 @@ public class TestDataTest {
                 TestData::getUsers,
                 TestData::getListStringNoNulls,
                 TestData::getSetTagNoNulls,
-                TestData::getMapIngredientDoubleNoNulls);
+                TestData::getMapIngredientDoubleNoNulls,
+                TestData::getListRecipeNoNulls,
+                TestData::getMapIngredientDoubleNoNulls,
+                TestData::getListRecipeNoNulls,
+                TestData::getMapRecipeDoubleNoNulls,
+                TestData::getSetIngredientNoNulls,
+                TestData::getListTagNoNulls,
+                TestData::getListIngredientNoNulls,
+                TestData::getListUserNoNulls);
     }
 
     @ParameterizedTest

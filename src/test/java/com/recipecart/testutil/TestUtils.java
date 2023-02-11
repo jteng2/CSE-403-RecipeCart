@@ -144,4 +144,91 @@ public class TestUtils {
         return generateMultiArguments(
                 generators, arrayFromInt(numColumnsEach, generators.size()), staircaseEach);
     }
+
+    // Like List.of, but can take nulls
+    @SafeVarargs
+    public static <T> List<@Nullable T> listOfAllowNulls(@Nullable T... elems) {
+        List<T> list = new ArrayList<>(elems.length);
+        for (T elem : elems) {
+            list.add(elem); // copy manually, since Arrays.asList and List.of cannot take nulls
+        }
+        return Collections.unmodifiableList(list);
+    }
+
+    // Like Set.of, but can take nulls
+    @SafeVarargs
+    public static <T> Set<@Nullable T> setOfAllowNulls(@Nullable T... elems) {
+        Set<T> set = new HashSet<>(elems.length);
+        for (T elem : elems) {
+            set.add(elem); // copy manually, since Arrays.asList and List.of cannot take nulls
+        }
+        return Collections.unmodifiableSet(set);
+    }
+
+    // Like Map.of, but can take nulls
+    public static <K, V> Map<@Nullable K, @Nullable V> mapOfAllowNulls(
+            @Nullable K k1, @Nullable V v1) {
+        Map<K, V> map = new HashMap<>();
+        map.put(k1, v1); // copy manually, since Arrays.asList and List.of cannot take nulls
+        return Collections.unmodifiableMap(map);
+    }
+
+    public static <K, V> Map<@Nullable K, @Nullable V> mapOfAllowNulls(
+            @Nullable K k1, @Nullable V v1, @Nullable K k2, @Nullable V v2) {
+        Map<K, V> map = new HashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        return Collections.unmodifiableMap(map);
+    }
+
+    public static <K, V> Map<@Nullable K, @Nullable V> mapOfAllowNulls(
+            @Nullable K k1,
+            @Nullable V v1,
+            @Nullable K k2,
+            @Nullable V v2,
+            @Nullable K k3,
+            @Nullable V v3) {
+        Map<K, V> map = new HashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        return Collections.unmodifiableMap(map);
+    }
+
+    public static <K, V> Map<@Nullable K, @Nullable V> mapOfAllowNulls(
+            @Nullable K k1,
+            @Nullable V v1,
+            @Nullable K k2,
+            @Nullable V v2,
+            @Nullable K k3,
+            @Nullable V v3,
+            @Nullable K k4,
+            @Nullable V v4) {
+        Map<K, V> map = new HashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        return Collections.unmodifiableMap(map);
+    }
+
+    public static <K, V> Map<@Nullable K, @Nullable V> mapOfAllowNulls(
+            @Nullable K k1,
+            @Nullable V v1,
+            @Nullable K k2,
+            @Nullable V v2,
+            @Nullable K k3,
+            @Nullable V v3,
+            @Nullable K k4,
+            @Nullable V v4,
+            @Nullable K k5,
+            @Nullable V v5) {
+        Map<K, V> map = new HashMap<>();
+        map.put(k1, v1);
+        map.put(k2, v2);
+        map.put(k3, v3);
+        map.put(k4, v4);
+        map.put(k5, v5);
+        return Collections.unmodifiableMap(map);
+    }
 }
