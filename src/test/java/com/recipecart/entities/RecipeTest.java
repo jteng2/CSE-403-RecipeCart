@@ -9,6 +9,7 @@ import com.recipecart.testutil.TestData;
 import java.util.*;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -35,6 +36,18 @@ public class RecipeTest {
 
     static Stream<Arguments> unequalBuilderParams() {
         return Presets.recipeArgs(2).get();
+    }
+
+    static Stream<Arguments> nullableDirectionsParams() {
+        return generateArguments(TestData::getListStringWithNulls);
+    }
+
+    static Stream<Arguments> nullableTagsParams() {
+        return generateArguments(TestData::getSetTagWithNulls);
+    }
+
+    static Stream<Arguments> nullableRequiredIngredientsParams() {
+        return generateArguments(TestData::getMapIngredientDoubleWithNulls);
     }
 
     @Test
@@ -123,6 +136,29 @@ public class RecipeTest {
         assertEquals(recipe1.getTags(), recipe2.getTags());
         assertEquals(recipe1.getRequiredIngredients(), recipe2.getRequiredIngredients());
         assertEquals(recipe1.hashCode(), recipe2.hashCode());
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableDirectionsParams")
+    void testBuilderDirectionsNullCheck(@Nullable List<String> directions) {
+        Recipe.Builder builder = new Recipe.Builder();
+        assertThrows(NullPointerException.class, () -> builder.setDirections(directions));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableTagsParams")
+    void testBuilderTagsNullCheck(@Nullable Set<Tag> tags) {
+        Recipe.Builder builder = new Recipe.Builder();
+        assertThrows(NullPointerException.class, () -> builder.setTags(tags));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableRequiredIngredientsParams")
+    void testBuilderDirectionsNullCheck(@Nullable Map<Ingredient, Double> requiredIngredients) {
+        Recipe.Builder builder = new Recipe.Builder();
+        assertThrows(
+                NullPointerException.class,
+                () -> builder.setRequiredIngredients(requiredIngredients));
     }
 
     @ParameterizedTest
@@ -279,33 +315,5 @@ public class RecipeTest {
         assertNotEquals(recipe1.getDirections(), recipe2.getDirections());
         assertNotEquals(recipe1.getTags(), recipe2.getTags());
         assertNotEquals(recipe1.getRequiredIngredients(), recipe2.getRequiredIngredients());
-    }
-
-    @Test
-    void testNullChecking() {
-        Recipe.Builder builder = new Recipe.Builder();
-
-        assertThrows(NullPointerException.class, () -> builder.setDirections(null));
-        List<String> directions = new ArrayList<>();
-        directions.add("foo");
-        directions.add(null);
-        assertThrows(NullPointerException.class, () -> builder.setDirections(directions));
-
-        assertThrows(NullPointerException.class, () -> builder.setTags(null));
-        Set<Tag> tags = new HashSet<>();
-        tags.add(null);
-        tags.add(Presets.tag(0));
-        assertThrows(NullPointerException.class, () -> builder.setTags(tags));
-
-        assertThrows(NullPointerException.class, () -> builder.setRequiredIngredients(null));
-        Map<Ingredient, Double> requirements = new HashMap<>();
-        requirements.put(Presets.ingredient(0), 5.);
-        requirements.put(null, 5.);
-        assertThrows(
-                NullPointerException.class, () -> builder.setRequiredIngredients(requirements));
-        requirements.remove(null);
-        requirements.put(Presets.ingredient(1), null);
-        assertThrows(
-                NullPointerException.class, () -> builder.setRequiredIngredients(requirements));
     }
 }

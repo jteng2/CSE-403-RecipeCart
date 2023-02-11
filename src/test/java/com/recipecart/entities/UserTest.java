@@ -9,6 +9,7 @@ import com.recipecart.testutil.TestData;
 import java.util.*;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -36,6 +37,22 @@ public class UserTest {
 
     static Stream<Arguments> unequalBuilderParams() {
         return Presets.userArgs(2).get();
+    }
+
+    static Stream<Arguments> nullableRecipesParams() {
+        return generateArguments(TestData::getListRecipeWithNulls);
+    }
+
+    static Stream<Arguments> nullableRatedRecipesParams() {
+        return generateArguments(TestData::getMapRecipeDoubleWithNulls);
+    }
+
+    static Stream<Arguments> nullableOwnedIngredientsParams() {
+        return generateArguments(TestData::getSetIngredientWithNulls);
+    }
+
+    static Stream<Arguments> nullableShoppingListParams() {
+        return generateArguments(TestData::getMapIngredientDoubleWithNulls);
     }
 
     @Test
@@ -106,6 +123,36 @@ public class UserTest {
         assertEquals(expectedUser.getOwnedIngredients(), actualUser.getOwnedIngredients());
         assertEquals(expectedUser.getShoppingList(), actualUser.getShoppingList());
         assertEquals(expectedUser.hashCode(), actualUser.hashCode());
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableRecipesParams")
+    void testRecipesNullCheck(@Nullable List<Recipe> recipes) {
+        User.Builder builder = new User.Builder();
+        assertThrows(NullPointerException.class, () -> builder.setAuthoredRecipes(recipes));
+        assertThrows(NullPointerException.class, () -> builder.setSavedRecipes(recipes));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableRatedRecipesParams")
+    void testRatedRecipesNullCheck(@Nullable Map<Recipe, Double> ratedRecipes) {
+        User.Builder builder = new User.Builder();
+        assertThrows(NullPointerException.class, () -> builder.setRatedRecipes(ratedRecipes));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableOwnedIngredientsParams")
+    void testOwnedIngredientsNullCheck(@Nullable Set<Ingredient> ownedIngredients) {
+        User.Builder builder = new User.Builder();
+        assertThrows(
+                NullPointerException.class, () -> builder.setOwnedIngredients(ownedIngredients));
+    }
+
+    @ParameterizedTest
+    @MethodSource("nullableShoppingListParams")
+    void testShoppingListNullCheck(@Nullable Map<Ingredient, Double> shoppingList) {
+        User.Builder builder = new User.Builder();
+        assertThrows(NullPointerException.class, () -> builder.setShoppingList(shoppingList));
     }
 
     @ParameterizedTest
@@ -246,46 +293,5 @@ public class UserTest {
         assertNotEquals(user1.getRatedRecipes(), user2.getRatedRecipes());
         assertNotEquals(user1.getOwnedIngredients(), user2.getOwnedIngredients());
         assertNotEquals(user1.getShoppingList(), user2.getShoppingList());
-    }
-
-    @Test
-    void testNullChecking() {
-        User.Builder builder = new User.Builder();
-
-        assertThrows(NullPointerException.class, () -> builder.setAuthoredRecipes(null));
-        List<Recipe> authoredRecipes = new ArrayList<>();
-        authoredRecipes.add(Presets.recipe(0));
-        authoredRecipes.add(null);
-        assertThrows(NullPointerException.class, () -> builder.setAuthoredRecipes(authoredRecipes));
-
-        assertThrows(NullPointerException.class, () -> builder.setSavedRecipes(null));
-        List<Recipe> savedRecipes = new ArrayList<>();
-        savedRecipes.add(null);
-        savedRecipes.add(Presets.recipe(1));
-        assertThrows(NullPointerException.class, () -> builder.setSavedRecipes(savedRecipes));
-
-        assertThrows(NullPointerException.class, () -> builder.setRatedRecipes(null));
-        Map<Recipe, Double> ratedRecipes = new HashMap<>();
-        ratedRecipes.put(Presets.recipe(0), 4.);
-        ratedRecipes.put(null, 5.);
-        assertThrows(NullPointerException.class, () -> builder.setRatedRecipes(ratedRecipes));
-        ratedRecipes.remove(null);
-        ratedRecipes.put(Presets.recipe(1), null);
-        assertThrows(NullPointerException.class, () -> builder.setRatedRecipes(ratedRecipes));
-
-        assertThrows(NullPointerException.class, () -> builder.setOwnedIngredients(null));
-        Set<Ingredient> ingredients = new HashSet<>();
-        ingredients.add(null);
-        ingredients.add(Presets.ingredient(0));
-        assertThrows(NullPointerException.class, () -> builder.setOwnedIngredients(ingredients));
-
-        assertThrows(NullPointerException.class, () -> builder.setShoppingList(null));
-        Map<Ingredient, Double> shoppingList = new HashMap<>();
-        shoppingList.put(Presets.ingredient(0), 5.);
-        shoppingList.put(null, 5.);
-        assertThrows(NullPointerException.class, () -> builder.setShoppingList(shoppingList));
-        shoppingList.remove(null);
-        shoppingList.put(Presets.ingredient(1), null);
-        assertThrows(NullPointerException.class, () -> builder.setShoppingList(shoppingList));
     }
 }
