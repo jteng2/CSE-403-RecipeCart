@@ -65,7 +65,7 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     @Override
     public boolean tagNameExists(@NotNull String name) {
-        return savedUsers.containsKey(name);
+        return savedTags.containsKey(name);
     }
 
     @Override
@@ -83,18 +83,18 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return savedUsers.containsKey(name);
     }
 
-    private static <T> boolean matches(T toExamine, Collection<T> tokens) {
-        for (T token : tokens) {
-            if (toExamine.equals(token)) {
+    private static boolean matches(String toExamine, Set<String> tokens) {
+        for (String word : toExamine.split("\\s+")) {
+            if (tokens.contains(word)) {
                 return true;
             }
         }
         return false;
     }
 
-    private static <T> Set<T> findMatches(Collection<T> toSearch, Collection<T> tokens) {
-        Set<T> matches = new HashSet<>();
-        for (T ts : toSearch) {
+    private static Set<String> findMatches(Collection<String> toSearch, Set<String> tokens) {
+        Set<String> matches = new HashSet<>();
+        for (String ts : toSearch) {
             if (matches(ts, tokens)) {
                 matches.add(ts);
             }
@@ -102,8 +102,8 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return matches;
     }
 
-    private static <K, V> Set<K> findKeysOfMatchingValues(
-            Map<K, V> toSearch, Collection<V> tokens) {
+    private static <K> Set<K> findKeysOfMatchingValues(
+            Map<K, String> toSearch, Set<String> tokens) {
         Set<K> matches = new HashSet<>();
         for (K key : toSearch.keySet()) {
             if (matches(toSearch.get(key), tokens)) {
@@ -122,21 +122,21 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     }
 
     @Override
-    public @NotNull Collection<@NotNull Tag> searchTags(@NotNull List<@NotNull String> tokens) {
+    public @NotNull Collection<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedTags.keySet(), tokens);
         return getValuesOf(matchedNames, savedTags);
     }
 
     @Override
     public @NotNull Collection<@NotNull Ingredient> searchIngredients(
-            @NotNull List<@NotNull String> tokens) {
+            @NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedIngredients.keySet(), tokens);
         return getValuesOf(matchedNames, savedIngredients);
     }
 
     @Override
     public @NotNull Collection<@NotNull Recipe> searchRecipes(
-            @NotNull List<@NotNull String> tokens) {
+            @NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedRecipes.keySet(), tokens);
         Set<Recipe> matchedRecipes = getValuesOf(matchedNames, savedRecipes);
         matchedRecipes.addAll(findKeysOfMatchingValues(recipePresentationNames, tokens));
@@ -144,7 +144,7 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     }
 
     @Override
-    public @NotNull Collection<@NotNull User> searchUsers(@NotNull List<@NotNull String> tokens) {
+    public @NotNull Collection<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedUsers.keySet(), tokens);
         return getValuesOf(matchedNames, savedUsers);
     }
