@@ -18,6 +18,7 @@ public class TestDataTest {
         return Stream.of(
                 TestData::getStrings,
                 TestData::getNotNullStrings,
+                TestData::getNullStrings,
                 TestData::getIntegers,
                 TestData::getInts,
                 TestData::getPrimitiveDoubles,
@@ -25,6 +26,9 @@ public class TestDataTest {
                 TestData::getIngredients,
                 TestData::getRecipes,
                 TestData::getUsers,
+                TestData::getInvalidIngredients,
+                TestData::getInvalidRecipes,
+                TestData::getInvalidUsers,
                 TestData::getListStringNoNulls,
                 TestData::getListStringWithNulls,
                 TestData::getSetStringNoNulls,
@@ -34,16 +38,20 @@ public class TestDataTest {
                 TestData::getMapIngredientDoubleNoNulls,
                 TestData::getMapIngredientDoubleWithNulls,
                 TestData::getListRecipeNoNulls,
+                TestData::getListRecipeSomeInvalid,
                 TestData::getListRecipeWithNulls,
                 TestData::getMapRecipeDoubleNoNulls,
                 TestData::getMapRecipeDoubleWithNulls,
                 TestData::getSetIngredientNoNulls,
                 TestData::getSetIngredientWithNulls,
                 TestData::getListTagNoNulls,
+                TestData::getListTagSomeInvalid,
                 TestData::getListTagWithNulls,
                 TestData::getListIngredientNoNulls,
+                TestData::getListIngredientSomeInvalid,
                 TestData::getListIngredientWithNulls,
                 TestData::getListUserNoNulls,
+                TestData::getListUserSomeInvalid,
                 TestData::getListUserWithNulls);
     }
 
@@ -57,17 +65,24 @@ public class TestDataTest {
                 TestData::getIngredients,
                 TestData::getRecipes,
                 TestData::getUsers,
+                TestData::getInvalidIngredients,
+                TestData::getInvalidRecipes,
+                TestData::getInvalidUsers,
                 TestData::getListStringNoNulls,
                 TestData::getSetTagNoNulls,
                 TestData::getMapIngredientDoubleNoNulls,
                 TestData::getListRecipeNoNulls,
+                TestData::getListRecipeSomeInvalid,
                 TestData::getMapIngredientDoubleNoNulls,
                 TestData::getListRecipeNoNulls,
                 TestData::getMapRecipeDoubleNoNulls,
                 TestData::getSetIngredientNoNulls,
                 TestData::getListTagNoNulls,
+                TestData::getListTagSomeInvalid,
                 TestData::getListIngredientNoNulls,
-                TestData::getListUserNoNulls);
+                TestData::getListIngredientSomeInvalid,
+                TestData::getListUserNoNulls,
+                TestData::getListUserSomeInvalid);
     }
 
     @ParameterizedTest
@@ -78,9 +93,11 @@ public class TestDataTest {
         assertNotNull(generated);
         assertEquals(NUM_PARAM_COMBOS, generated.length);
 
-        // no 2 elems are equal
+        // no 2 elems are equal, unless all elements are null
         Set<Object> uniqueElems = new HashSet<>(Arrays.asList(generated));
-        assertEquals(generated.length, uniqueElems.size());
+        if (!(uniqueElems.size() == 1 && uniqueElems.contains(null))) {
+            assertEquals(generated.length, uniqueElems.size());
+        }
     }
 
     @ParameterizedTest

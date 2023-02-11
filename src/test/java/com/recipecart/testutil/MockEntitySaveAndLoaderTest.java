@@ -63,6 +63,22 @@ public class MockEntitySaveAndLoaderTest {
         return generateArguments(TestData::getSetStringWithNulls);
     }
 
+    static Stream<Arguments> listTagParamsSomeInvalid() {
+        return generateArguments(TestData::getListTagSomeInvalid);
+    }
+
+    static Stream<Arguments> listIngredientParamsSomeInvalid() {
+        return generateArguments(TestData::getListIngredientSomeInvalid);
+    }
+
+    static Stream<Arguments> listRecipeParamsSomeInvalid() {
+        return generateArguments(TestData::getListRecipeSomeInvalid);
+    }
+
+    static Stream<Arguments> listUserParamsSomeInvalid() {
+        return generateArguments(TestData::getListUserSomeInvalid);
+    }
+
     @BeforeEach
     void initSaverAndLoader() {
         MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
@@ -290,6 +306,30 @@ public class MockEntitySaveAndLoaderTest {
         assertThrows(NullPointerException.class, () -> loader.ingredientNameExists(null));
         assertThrows(NullPointerException.class, () -> loader.recipeNameExists(null));
         assertThrows(NullPointerException.class, () -> loader.usernameExists(null));
+    }
+
+    @ParameterizedTest
+    @MethodSource("listTagParamsSomeInvalid")
+    void testSaveTagsSomeInvalid(List<Tag> tags) {
+        assertThrows(IllegalArgumentException.class, () -> saver.updateTags(tags));
+    }
+
+    @ParameterizedTest
+    @MethodSource("listIngredientParamsSomeInvalid")
+    void testSaveIngredientsSomeInvalid(List<Ingredient> ingredients) {
+        assertThrows(IllegalArgumentException.class, () -> saver.updateIngredients(ingredients));
+    }
+
+    @ParameterizedTest
+    @MethodSource("listRecipeParamsSomeInvalid")
+    void testSaveRecipesSomeInvalid(List<Recipe> recipes) {
+        assertThrows(IllegalArgumentException.class, () -> saver.updateRecipes(recipes));
+    }
+
+    @ParameterizedTest
+    @MethodSource("listUserParamsSomeInvalid")
+    void testSaveUsersSomeInvalid(List<User> users) {
+        assertThrows(IllegalArgumentException.class, () -> saver.updateUsers(users));
     }
 
     // This unchecked exception exists so that Function objects can have functions that

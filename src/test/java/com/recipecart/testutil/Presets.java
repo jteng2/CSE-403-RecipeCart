@@ -29,34 +29,65 @@ public class Presets {
     //    - ex. if you set that value to 2, the Arguments will have twice as many parameters
     //       than if you'd set the value to 1, since there's two entities to construct
 
-    public static Supplier<Stream<Arguments>> tagArgs(int numTags, boolean staircase) {
+    private static Supplier<Object[]> getIdSupplier(boolean valid) {
+        return valid ? TestData::getNotNullStrings : TestData::getNullStrings;
+    }
+
+    public static Supplier<Stream<Arguments>> tagArgs(
+            int numTags, boolean staircase, boolean valid) {
         return () ->
-                TestUtils.generateMultiArguments(
-                        List.of(TestData::getNotNullStrings), numTags, staircase);
+                TestUtils.generateMultiArguments(List.of(getIdSupplier(valid)), numTags, staircase);
+    }
+
+    public static Supplier<Stream<Arguments>> tagArgs(int numTags, boolean staircase) {
+        return tagArgs(numTags, staircase, true);
     }
 
     public static Supplier<Stream<Arguments>> tagArgs(int numTags) {
         return tagArgs(numTags, true);
     }
 
+    public static Supplier<Stream<Arguments>> invalidTagArgs(int numTags, boolean staircase) {
+        return tagArgs(numTags, staircase, false);
+    }
+
+    public static Supplier<Stream<Arguments>> invalidTagArgs(int numTags) {
+        return invalidTagArgs(numTags, true);
+    }
+
     public static Supplier<Stream<Arguments>> ingredientArgs(
-            int numIngredients, boolean staircase) {
+            int numIngredients, boolean staircase, boolean valid) {
         return () ->
                 TestUtils.generateMultiArguments(
-                        List.of(TestData::getNotNullStrings, TestData::getStrings),
+                        List.of(getIdSupplier(valid), TestData::getStrings),
                         new int[] {numIngredients, numIngredients * 2},
                         staircase);
+    }
+
+    public static Supplier<Stream<Arguments>> ingredientArgs(
+            int numIngredients, boolean staircase) {
+        return ingredientArgs(numIngredients, staircase, true);
     }
 
     public static Supplier<Stream<Arguments>> ingredientArgs(int numIngredients) {
         return ingredientArgs(numIngredients, true);
     }
 
-    public static Supplier<Stream<Arguments>> recipeArgs(int numRecipes, boolean staircase) {
+    public static Supplier<Stream<Arguments>> invalidIngredientArgs(
+            int numIngredients, boolean staircase) {
+        return ingredientArgs(numIngredients, staircase, false);
+    }
+
+    public static Supplier<Stream<Arguments>> invalidIngredientArgs(int numIngredients) {
+        return invalidIngredientArgs(numIngredients, true);
+    }
+
+    public static Supplier<Stream<Arguments>> recipeArgs(
+            int numRecipes, boolean staircase, boolean valid) {
         return () ->
                 TestUtils.generateMultiArguments(
                         List.of(
-                                TestData::getNotNullStrings,
+                                getIdSupplier(valid),
                                 TestData::getStrings,
                                 TestData::getIntegers,
                                 TestData::getInts,
@@ -77,15 +108,28 @@ public class Presets {
                         staircase);
     }
 
+    public static Supplier<Stream<Arguments>> recipeArgs(int numRecipes, boolean staircase) {
+        return recipeArgs(numRecipes, staircase, true);
+    }
+
     public static Supplier<Stream<Arguments>> recipeArgs(int numRecipes) {
         return recipeArgs(numRecipes, true);
     }
 
-    public static Supplier<Stream<Arguments>> userArgs(int numUsers, boolean staircase) {
+    public static Supplier<Stream<Arguments>> invalidRecipeArgs(int numRecipes, boolean staircase) {
+        return recipeArgs(numRecipes, staircase, false);
+    }
+
+    public static Supplier<Stream<Arguments>> invalidRecipeArgs(int numRecipes) {
+        return invalidRecipeArgs(numRecipes, true);
+    }
+
+    public static Supplier<Stream<Arguments>> userArgs(
+            int numUsers, boolean staircase, boolean valid) {
         return () ->
                 TestUtils.generateMultiArguments(
                         List.of(
-                                TestData::getNotNullStrings,
+                                getIdSupplier(valid),
                                 TestData::getStrings,
                                 TestData::getListRecipeNoNulls,
                                 TestData::getMapRecipeDoubleNoNulls,
@@ -95,8 +139,20 @@ public class Presets {
                         staircase);
     }
 
+    public static Supplier<Stream<Arguments>> userArgs(int numUsers, boolean staircase) {
+        return userArgs(numUsers, staircase, true);
+    }
+
     public static Supplier<Stream<Arguments>> userArgs(int numUsers) {
         return userArgs(numUsers, true);
+    }
+
+    public static Supplier<Stream<Arguments>> invalidUserArgs(int numUsers, boolean staircase) {
+        return userArgs(numUsers, staircase, false);
+    }
+
+    public static Supplier<Stream<Arguments>> invalidUserArgs(int numUsers) {
+        return invalidUserArgs(numUsers, true);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,31 +164,51 @@ public class Presets {
     //    - (i.e. Tag/Ingredient/Recipe names and User usernames are not null)
 
     // Gets the (tagNum)'th preset Tag
-    public static Tag tag(int tagNum) {
+    public static Tag tag(int tagNum, boolean valid) {
         checkPresetNum(tagNum);
 
-        Object[] fields = getFields(tagArgs(1, true), tagNum);
+        Supplier<Stream<Arguments>> args = valid ? tagArgs(1, true) : invalidTagArgs(1, true);
+        Object[] fields = getFields(args, tagNum);
 
         return new Tag((String) fields[0]);
     }
 
+    public static Tag tag(int tagNum) {
+        return tag(tagNum, true);
+    }
+
+    public static Tag invalidTag(int tagNum) {
+        return tag(tagNum, false);
+    }
+
     // Gets the (ingredientNum)'th preset Ingredient
-    public static Ingredient ingredient(int ingredientNum) {
+    public static Ingredient ingredient(int ingredientNum, boolean valid) {
         checkPresetNum(ingredientNum);
 
-        Object[] fields = getFields(ingredientArgs(1, true), ingredientNum);
+        Supplier<Stream<Arguments>> args =
+                valid ? ingredientArgs(1, true) : invalidIngredientArgs(1, true);
+        Object[] fields = getFields(args, ingredientNum);
 
         return new Ingredient((String) fields[0], (String) fields[1], (String) fields[2]);
+    }
+
+    public static Ingredient ingredient(int ingredientNum) {
+        return ingredient(ingredientNum, true);
+    }
+
+    public static Ingredient invalidIngredient(int ingredientNum) {
+        return ingredient(ingredientNum, false);
     }
 
     // Gets the (recipeNum)'th preset Recipe
     // For the unsafe casts in methods "recipe" and "user", the corresponding object's type has been
     // checked to be of the type to be cast to.
     @SuppressWarnings("unchecked")
-    public static Recipe recipe(int recipeNum) {
+    public static Recipe recipe(int recipeNum, boolean valid) {
         checkPresetNum(recipeNum);
 
-        Object[] fields = getFields(recipeArgs(1, true), recipeNum);
+        Supplier<Stream<Arguments>> args = valid ? recipeArgs(1, true) : invalidRecipeArgs(1, true);
+        Object[] fields = getFields(args, recipeNum);
 
         return new Recipe.Builder()
                 .setName((String) fields[0])
@@ -149,12 +225,21 @@ public class Presets {
                 .build();
     }
 
+    public static Recipe recipe(int recipeNum) {
+        return recipe(recipeNum, true);
+    }
+
+    public static Recipe invalidRecipe(int recipeNum) {
+        return recipe(recipeNum, false);
+    }
+
     // Gets the (userNum)'th preset User
     @SuppressWarnings("unchecked")
-    public static User user(int userNum) {
+    public static User user(int userNum, boolean valid) {
         checkPresetNum(userNum);
 
-        Object[] fields = getFields(userArgs(1, true), userNum);
+        Supplier<Stream<Arguments>> args = valid ? userArgs(1, true) : invalidUserArgs(1, true);
+        Object[] fields = getFields(args, userNum);
 
         return new User.Builder()
                 .setUsername((String) fields[0])
@@ -165,6 +250,14 @@ public class Presets {
                 .setOwnedIngredients((Set<Ingredient>) fields[5])
                 .setShoppingList((Map<Ingredient, Double>) fields[6])
                 .build();
+    }
+
+    public static User user(int userNum) {
+        return user(userNum, true);
+    }
+
+    public static User invalidUser(int userNum) {
+        return user(userNum, false);
     }
 
     // Converts the (comboNum)'th "element" of paramCombos.get() into its corresponding array of

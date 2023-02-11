@@ -3,6 +3,7 @@ package com.recipecart.testutil;
 
 import static com.recipecart.testutil.TestData.NUM_PARAM_COMBOS;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.recipecart.entities.Ingredient;
 import com.recipecart.entities.Recipe;
@@ -43,6 +44,38 @@ public class PresetsTest {
         User preset = Presets.user(index);
         assertNotNull(preset);
         assertNotNull(preset.getUsername());
+    }
+
+    @ParameterizedTest
+    @MethodSource("possibleIndexes")
+    void testInvalidTagPresets(int index) {
+        Tag preset = Presets.invalidTag(index);
+        assertNotNull(preset);
+        assertNull(preset.getName());
+    }
+
+    @ParameterizedTest
+    @MethodSource("possibleIndexes")
+    void testInvalidIngredientPresets(int index) {
+        Ingredient preset = Presets.invalidIngredient(index);
+        assertNotNull(preset);
+        assertNull(preset.getName());
+    }
+
+    @ParameterizedTest
+    @MethodSource("possibleIndexes")
+    void testInvalidRecipePresets(int index) {
+        Recipe preset = Presets.invalidRecipe(index);
+        assertNotNull(preset);
+        assertNull(preset.getName());
+    }
+
+    @ParameterizedTest
+    @MethodSource("possibleIndexes")
+    void testInvalidUserPresets(int index) {
+        User preset = Presets.invalidUser(index);
+        assertNotNull(preset);
+        assertNull(preset.getUsername());
     }
 
     static Stream<Integer> possibleIndexes() {
