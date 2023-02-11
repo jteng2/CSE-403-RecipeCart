@@ -10,6 +10,7 @@ import com.recipecart.storage.EntityLoader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -134,7 +135,7 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * @return the saved Tags whose names matched, or an empty Collection if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull Tag> searchTags(@NotNull List<@NotNull String> tokens) {
+    public @NotNull Collection<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
@@ -147,7 +148,7 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      */
     @Override
     public @NotNull Collection<@NotNull Ingredient> searchIngredients(
-            @NotNull List<@NotNull String> tokens) {
+            @NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
@@ -160,7 +161,7 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      */
     @Override
     public @NotNull Collection<@NotNull Recipe> searchRecipes(
-            @NotNull List<@NotNull String> tokens) {
+            @NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
@@ -172,7 +173,7 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * @return the saved Users whose names matched, or an empty Collection if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull User> searchUsers(@NotNull List<@NotNull String> tokens) {
+    public @NotNull Collection<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
