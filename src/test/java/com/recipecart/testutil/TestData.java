@@ -232,11 +232,12 @@ public class TestData {
 
     public static Object[] getMapRecipeDoubleWithNulls() {
         return new Map[] {
-                TestUtils.mapOfAllowNulls(null, 3.0),
-                TestUtils.mapOfAllowNulls(Presets.recipe(1), 1.0, Presets.recipe(3), null, Presets.recipe(4), 4.000001),
-                TestUtils.mapOfAllowNulls(null, null),
-                TestUtils.mapOfAllowNulls(Presets.recipe(2), -5000.0, Presets.recipe(4), null),
-                null
+            TestUtils.mapOfAllowNulls(null, 3.0),
+            TestUtils.mapOfAllowNulls(
+                    Presets.recipe(1), 1.0, Presets.recipe(3), null, Presets.recipe(4), 4.000001),
+            TestUtils.mapOfAllowNulls(null, null),
+            TestUtils.mapOfAllowNulls(Presets.recipe(2), -5000.0, Presets.recipe(4), null),
+            null
         };
     }
 
@@ -257,17 +258,17 @@ public class TestData {
 
     public static Object[] getSetIngredientWithNulls() {
         return new Set[] {
-                null,
-                TestUtils.setOfAllowNulls((Object) null),
-                TestUtils.setOfAllowNulls(
-                        Presets.ingredient(0),
-                        Presets.ingredient(1),
-                        Presets.ingredient(2),
-                        null,
-                        Presets.ingredient(3),
-                        Presets.ingredient(4)),
-                TestUtils.setOfAllowNulls(null, Presets.ingredient(4)),
-                TestUtils.setOfAllowNulls(Presets.ingredient(1), null)
+            null,
+            TestUtils.setOfAllowNulls((Object) null),
+            TestUtils.setOfAllowNulls(
+                    Presets.ingredient(0),
+                    Presets.ingredient(1),
+                    Presets.ingredient(2),
+                    null,
+                    Presets.ingredient(3),
+                    Presets.ingredient(4)),
+            TestUtils.setOfAllowNulls(null, Presets.ingredient(4)),
+            TestUtils.setOfAllowNulls(Presets.ingredient(1), null)
         };
     }
 
@@ -283,11 +284,17 @@ public class TestData {
 
     public static Object[] getListTagWithNulls() {
         return new List[] {
-                null,
-                TestUtils.listOfAllowNulls((Object) null),
-                TestUtils.listOfAllowNulls(Presets.tag(0), Presets.tag(1), null, Presets.tag(2), Presets.tag(3), Presets.tag(4)),
-                TestUtils.listOfAllowNulls(null, Presets.tag(4)),
-                TestUtils.listOfAllowNulls(Presets.tag(1), null)
+            null,
+            TestUtils.listOfAllowNulls((Object) null),
+            TestUtils.listOfAllowNulls(
+                    Presets.tag(0),
+                    Presets.tag(1),
+                    null,
+                    Presets.tag(2),
+                    Presets.tag(3),
+                    Presets.tag(4)),
+            TestUtils.listOfAllowNulls(null, Presets.tag(4)),
+            TestUtils.listOfAllowNulls(Presets.tag(1), null)
         };
     }
 
@@ -308,17 +315,17 @@ public class TestData {
 
     public static Object[] getListIngredientWithNulls() {
         return new List[] {
-                null,
-                TestUtils.listOfAllowNulls((Object) null),
-                TestUtils.listOfAllowNulls(
-                        Presets.ingredient(0),
-                        Presets.ingredient(1),
-                        Presets.ingredient(2),
-                        Presets.ingredient(3),
-                        null,
-                        Presets.ingredient(4)),
-                TestUtils.listOfAllowNulls(null, Presets.ingredient(4)),
-                TestUtils.listOfAllowNulls(Presets.ingredient(1), null)
+            null,
+            TestUtils.listOfAllowNulls((Object) null),
+            TestUtils.listOfAllowNulls(
+                    Presets.ingredient(0),
+                    Presets.ingredient(1),
+                    Presets.ingredient(2),
+                    Presets.ingredient(3),
+                    null,
+                    Presets.ingredient(4)),
+            TestUtils.listOfAllowNulls(null, Presets.ingredient(4)),
+            TestUtils.listOfAllowNulls(Presets.ingredient(1), null)
         };
     }
 
@@ -339,17 +346,17 @@ public class TestData {
 
     public static Object[] getListUserWithNulls() {
         return new List[] {
-                null,
-                TestUtils.listOfAllowNulls((Object) null),
-                TestUtils.listOfAllowNulls(
-                        Presets.user(0),
-                        null,
-                        Presets.user(1),
-                        Presets.user(2),
-                        Presets.user(3),
-                        Presets.user(4)),
-                TestUtils.listOfAllowNulls(null, Presets.user(4)),
-                TestUtils.listOfAllowNulls(Presets.user(1), null)
+            null,
+            TestUtils.listOfAllowNulls((Object) null),
+            TestUtils.listOfAllowNulls(
+                    Presets.user(0),
+                    null,
+                    Presets.user(1),
+                    Presets.user(2),
+                    Presets.user(3),
+                    Presets.user(4)),
+            TestUtils.listOfAllowNulls(null, Presets.user(4)),
+            TestUtils.listOfAllowNulls(Presets.user(1), null)
         };
     }
 }

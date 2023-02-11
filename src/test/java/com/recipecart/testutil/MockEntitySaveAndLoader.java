@@ -4,6 +4,7 @@ package com.recipecart.testutil;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntityLoader;
 import com.recipecart.storage.EntitySaver;
+import com.recipecart.utils.Utils;
 import java.io.IOException;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,10 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     private static <K, V> List<V> getByIds(@NotNull List<@NotNull K> ids, Map<K, V> saved)
             throws IOException {
+        Utils.requireAllNotNull(
+                ids,
+                "Identifying name list cannot be null",
+                "Elements in identifying names cannot be null");
         List<V> matched = new ArrayList<>(ids.size());
         for (K id : ids) {
             if (!saved.containsKey(id)) {
@@ -65,21 +70,25 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     @Override
     public boolean tagNameExists(@NotNull String name) {
+        Objects.requireNonNull(name);
         return savedTags.containsKey(name);
     }
 
     @Override
     public boolean ingredientNameExists(@NotNull String name) {
+        Objects.requireNonNull(name);
         return savedIngredients.containsKey(name);
     }
 
     @Override
     public boolean recipeNameExists(@NotNull String name) {
+        Objects.requireNonNull(name);
         return savedRecipes.containsKey(name);
     }
 
     @Override
     public boolean usernameExists(@NotNull String name) {
+        Objects.requireNonNull(name);
         return savedUsers.containsKey(name);
     }
 
@@ -92,7 +101,9 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return false;
     }
 
-    private static Set<String> findMatches(Collection<String> toSearch, Set<String> tokens) {
+    private static Set<String> findMatches(
+            Collection<String> toSearch, @NotNull Set<@NotNull String> tokens) {
+        Utils.requireAllNotNull(tokens, "Tokens set cannot be null", "Tokens cannot be null");
         Set<String> matches = new HashSet<>();
         for (String ts : toSearch) {
             if (matches(ts, tokens)) {
@@ -151,6 +162,9 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     @Override
     public void updateTags(@NotNull Collection<@NotNull Tag> tags) {
+        Utils.requireAllNotNull(
+                tags, "Tag collection cannot be null", "Elements of tags cannot be null");
+        Utils.nullCheckTagNames(tags);
         for (Tag tag : tags) {
             savedTags.put(tag.getName(), tag);
         }
@@ -158,6 +172,11 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     @Override
     public void updateIngredients(@NotNull Collection<@NotNull Ingredient> ingredients) {
+        Utils.requireAllNotNull(
+                ingredients,
+                "Ingredient collection cannot be null",
+                "Elements of ingredients cannot be null");
+        Utils.nullCheckIngredientNames(ingredients);
         for (Ingredient ingredient : ingredients) {
             savedIngredients.put(ingredient.getName(), ingredient);
         }
@@ -165,6 +184,9 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     @Override
     public void updateRecipes(@NotNull Collection<@NotNull Recipe> recipes) {
+        Utils.requireAllNotNull(
+                recipes, "Recipe collection cannot be null", "Elements of recipes cannot be null");
+        Utils.nullCheckRecipeNames(recipes);
         for (Recipe recipe : recipes) {
             savedRecipes.put(recipe.getName(), recipe);
             recipePresentationNames.put(recipe, recipe.getPresentationName());
@@ -173,6 +195,9 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     @Override
     public void updateUsers(@NotNull Collection<@NotNull User> users) {
+        Utils.requireAllNotNull(
+                users, "User collection cannot be null", "Elements of users cannot be null");
+        Utils.nullCheckUserNames(users);
         for (User user : users) {
             savedUsers.put(user.getUsername(), user);
         }

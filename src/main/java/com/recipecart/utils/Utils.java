@@ -1,7 +1,9 @@
 /* (C)2023 */
 package com.recipecart.utils;
 
+import com.recipecart.entities.*;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -42,5 +44,101 @@ public class Utils {
             Objects.requireNonNull(entry.getKey(), keyNullMessage);
             Objects.requireNonNull(entry.getValue(), valueNullMessage);
         }
+    }
+
+    /**
+     * Throws an exception if any tag names are null.
+     *
+     * @param tags the Tags to check
+     * @throws IllegalArgumentException if any tags have null names
+     */
+    public static void nullCheckTagNames(Collection<Tag> tags) {
+        for (Tag t : tags) {
+            if (t.getName() == null) {
+                throw new IllegalArgumentException("Tag names cannot be null");
+            }
+        }
+    }
+
+    /**
+     * Throws an exception if the given tag has a null name.
+     *
+     * @param tag the Tag to null-check
+     * @throws IllegalArgumentException if the tag is null
+     */
+    public static void nullCheckTagName(Tag tag) {
+        nullCheckTagNames(Collections.singletonList(tag));
+    }
+
+    /**
+     * Throws an exception if any ingredient names are null.
+     *
+     * @param ingredients the Ingredients to check
+     * @throws IllegalArgumentException if any ingredients have null names
+     */
+    public static void nullCheckIngredientNames(Collection<Ingredient> ingredients) {
+        for (Ingredient t : ingredients) {
+            if (t.getName() == null) {
+                throw new IllegalArgumentException("Ingredient names cannot be null");
+            }
+        }
+    }
+
+    /**
+     * Throws an exception if the given ingredient has a null name.
+     *
+     * @param ingredient the Ingredient to null-check
+     * @throws IllegalArgumentException if the ingredient is null
+     */
+    public static void nullCheckIngredientName(Ingredient ingredient) {
+        nullCheckIngredientNames(Collections.singletonList(ingredient));
+    }
+
+    /**
+     * Throws an exception if any recipe names are null.
+     *
+     * @param recipes the Recipes to check
+     * @throws IllegalArgumentException if any recipes have null names
+     */
+    public static void nullCheckRecipeNames(Collection<Recipe> recipes) {
+        for (Recipe t : recipes) {
+            if (t.getName() == null) {
+                throw new IllegalArgumentException("Recipe names cannot be null");
+            }
+        }
+    }
+
+    /**
+     * Throws an exception if the given recipe has a null name.
+     *
+     * @param recipe the Recipe to null-check
+     * @throws IllegalArgumentException if the recipe is null
+     */
+    public static void nullCheckRecipeName(Recipe recipe) {
+        nullCheckRecipeNames(Collections.singletonList(recipe));
+    }
+
+    /**
+     * Throws an exception if any usernames are null.
+     *
+     * @param users the Users to check
+     * @throws IllegalArgumentException if any users have null names
+     */
+    public static void nullCheckUserNames(Collection<User> users) {
+        for (User t : users) {
+            if (t.getUsername() == null) {
+                throw new IllegalArgumentException("User names cannot be null");
+            }
+        }
+    }
+
+    /**
+     * Throws an exception if the given user has a null name.
+     *
+     * @param user the User to null-check
+     * @throws IllegalArgumentException if the user is null
+     */
+    public static void nullCheckUserName(User user) {
+        nullCheckUserNames(Collections.singletonList(user));
     }
 }
