@@ -17,8 +17,7 @@ public interface EntitySaver {
      * Tags that are "saved".
      *
      * @param tags Tags that need to be saved
-     * @throws IllegalArgumentException if tags, any of its elements, or any names of the Tags are
-     *     null
+     * @throws IllegalArgumentException if any names of the Tags are null
      */
     void updateTags(@NotNull Collection<@NotNull Tag> tags);
 
@@ -27,8 +26,7 @@ public interface EntitySaver {
      * Ingredients that are "saved".
      *
      * @param ingredients Ingredients that need to be saved
-     * @throws IllegalArgumentException if ingredients, any of its elements, or any names of the
-     *     Ingredients are null
+     * @throws IllegalArgumentException if any names of the Ingredients are null
      */
     void updateIngredients(@NotNull Collection<@NotNull Ingredient> ingredients);
 
@@ -37,8 +35,7 @@ public interface EntitySaver {
      * Recipes that are "saved".
      *
      * @param recipes Recipes that need to be saved
-     * @throws IllegalArgumentException if recipes, any of its elements, or any names of the Recipes
-     *     are null
+     * @throws IllegalArgumentException if any (non-presentation) names of the Recipes are null
      */
     void updateRecipes(@NotNull Collection<@NotNull Recipe> recipes);
 
@@ -47,8 +44,7 @@ public interface EntitySaver {
      * Users that are "saved".
      *
      * @param users Users that need to be saved
-     * @throws IllegalArgumentException if users, any of its elements, or any usernames of the Users
-     *     are null
+     * @throws IllegalArgumentException if any usernames of the Users are null
      */
     void updateUsers(@NotNull Collection<@NotNull User> users);
 }

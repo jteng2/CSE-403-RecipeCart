@@ -31,7 +31,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      *
      * @param names the exact names of the tags to be loaded
      * @throws IOException if, for any name, the tag with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Tag with that name
      */
     @Override
@@ -45,7 +44,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      *
      * @param names the exact names of the ingredients to be loaded
      * @throws IOException if, for any name, the ingredient with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Ingredient with that name
      */
     @Override
@@ -59,7 +57,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      *
      * @param names the exact names of the recipes to be loaded
      * @throws IOException if, for any name, the recipe with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Recipe with that name
      */
     @Override
@@ -73,7 +70,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      *
      * @param usernames the exact usernames of the users to be loaded
      * @throws IOException if, for any name, the user with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved User with that name
      */
     @Override
@@ -85,7 +81,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
     /**
      * Checks if a tag with the given name exists in the database this loader is connected to.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved tag with the given name exists, false otherwise
      */
     @Override
@@ -97,7 +92,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * Checks if an ingredient with the given name exists in the database this loader is connected
      * to.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved ingredient with the given name exists, false otherwise
      */
     @Override
@@ -108,7 +102,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
     /**
      * Checks if a recipe with the given name exists in the database this loader is connected to.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved recipe with the given name exists, false otherwise
      */
     @Override
@@ -119,7 +112,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
     /**
      * Checks if a user with the given name exists in the database this loader is connected to.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved user with the given name exists, false otherwise
      */
     @Override
