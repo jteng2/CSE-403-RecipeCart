@@ -1,9 +1,9 @@
 /* (C)2023 */
 package com.recipecart.database;
 
-import com.mongodb.ServerAddress;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntitySaver;
+import java.io.FileNotFoundException;
 import java.util.Collection;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bson.Document;
@@ -17,13 +17,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MongoEntitySaver extends MongoConnector implements EntitySaver {
 
-    /**
-     * Creates a MongoSaver that's connected to the database at the given host address.
-     *
-     * @param hostAddress the host address of the database to connect to
-     */
-    public MongoEntitySaver(ServerAddress hostAddress) {
-        super(hostAddress);
+    /** {@inheritDoc} */
+    public MongoEntitySaver(String filename) throws FileNotFoundException {
+        super(filename);
     }
 
     /**
