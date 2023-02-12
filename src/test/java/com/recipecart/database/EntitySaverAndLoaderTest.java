@@ -1,90 +1,129 @@
 /* (C)2023 */
-package com.recipecart.testutil;
+package com.recipecart.database;
 
 import static com.recipecart.testutil.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.recipecart.entities.*;
-import com.recipecart.storage.EntityLoader;
-import com.recipecart.storage.EntitySaver;
+import com.recipecart.storage.EntityStorage;
+import com.recipecart.testutil.TestData;
+import com.recipecart.testutil.TestUtils;
 import com.recipecart.utils.TwoTuple;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class MockEntitySaveAndLoaderTest {
-    EntitySaver saver;
-    EntityLoader loader;
+public class EntitySaverAndLoaderTest {
+
+    static Stream<Arguments> getStorageParams() {
+        Stream.Builder<Arguments> argumentsBuilder = Stream.builder();
+        for (Supplier<EntityStorage> storageGenerator : getStorageGenerators()) {
+            argumentsBuilder.add(Arguments.of(storageGenerator.get()));
+        }
+        return argumentsBuilder.build();
+    }
+
+    // Uncomment the lines in the following two functions once MongoEntitySaver/Loader is being
+    // implemented. Also uncomment lines in TestDataTest.java that contain
+    // TestDataTest::getMongoEntityStorages.
+
+    private static List<Supplier<EntityStorage>> getStorageGenerators() {
+        return List.of(
+                // () -> {
+                //    ServerAddress databaseAddress = TestUtils.getTestDatabaseAddress();
+                //    return new EntityStorage(
+                //            new MongoEntitySaver(databaseAddress),
+                //            new MongoEntityLoader(databaseAddress));
+                // },
+                () -> {
+                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    return new EntityStorage(saverAndLoader, saverAndLoader);
+                });
+    }
+
+    private static List<Supplier<Object[]>> getStorageArrayGenerators() {
+        return List.of(
+                // TestData::getMongoEntityStorages,
+                TestData::getMockEntityStorages);
+    }
+
+    private static Stream<Arguments> generateArgumentsWithStorage(Supplier<Object[]> generator) {
+        List<Supplier<Object[]>> storageGenerators = getStorageArrayGenerators();
+
+        Stream<Arguments> concatenatedArgs = null;
+        for (Supplier<Object[]> storageGenerator : storageGenerators) {
+            Stream<Arguments> toConcatenate =
+                    generateMultiArguments(List.of(storageGenerator, generator), 1, true);
+            concatenatedArgs =
+                    concatenatedArgs == null
+                            ? toConcatenate
+                            : Stream.concat(concatenatedArgs, toConcatenate);
+        }
+
+        return concatenatedArgs;
+    }
 
     static Stream<Arguments> listTagParams() {
-        return generateArguments(TestData::getListTagNoNulls);
+        return generateArgumentsWithStorage(TestData::getListTagNoNulls);
     }
 
     static Stream<Arguments> listIngredientParams() {
-        return generateArguments(TestData::getListIngredientNoNulls);
+        return generateArgumentsWithStorage(TestData::getListIngredientNoNulls);
     }
 
     static Stream<Arguments> listRecipeParams() {
-        return generateArguments(TestData::getListRecipeNoNulls);
+        return generateArgumentsWithStorage(TestData::getListRecipeNoNulls);
     }
 
     static Stream<Arguments> listUserParams() {
-        return generateArguments(TestData::getListUserNoNulls);
+        return generateArgumentsWithStorage(TestData::getListUserNoNulls);
     }
 
     static Stream<Arguments> nullableCollectionTagParams() {
-        return generateArguments(TestData::getListTagWithNulls);
+        return generateArgumentsWithStorage(TestData::getListTagWithNulls);
     }
 
     static Stream<Arguments> nullableCollectionIngredientParams() {
-        return generateArguments(TestData::getListIngredientWithNulls);
+        return generateArgumentsWithStorage(TestData::getListIngredientWithNulls);
     }
 
     static Stream<Arguments> nullableCollectionRecipeParams() {
-        return generateArguments(TestData::getListRecipeWithNulls);
+        return generateArgumentsWithStorage(TestData::getListRecipeWithNulls);
     }
 
     static Stream<Arguments> nullableCollectionUserParams() {
-        return generateArguments(TestData::getListUserWithNulls);
+        return generateArgumentsWithStorage(TestData::getListUserWithNulls);
     }
 
     static Stream<Arguments> nullableListStringParams() {
-        return generateArguments(TestData::getListStringWithNulls);
+        return generateArgumentsWithStorage(TestData::getListStringWithNulls);
     }
 
     static Stream<Arguments> nullableSetStringParams() {
-        return generateArguments(TestData::getSetStringWithNulls);
+        return generateArgumentsWithStorage(TestData::getSetStringWithNulls);
     }
 
     static Stream<Arguments> listTagParamsSomeInvalid() {
-        return generateArguments(TestData::getListTagSomeInvalid);
+        return generateArgumentsWithStorage(TestData::getListTagSomeInvalid);
     }
 
     static Stream<Arguments> listIngredientParamsSomeInvalid() {
-        return generateArguments(TestData::getListIngredientSomeInvalid);
+        return generateArgumentsWithStorage(TestData::getListIngredientSomeInvalid);
     }
 
     static Stream<Arguments> listRecipeParamsSomeInvalid() {
-        return generateArguments(TestData::getListRecipeSomeInvalid);
+        return generateArgumentsWithStorage(TestData::getListRecipeSomeInvalid);
     }
 
     static Stream<Arguments> listUserParamsSomeInvalid() {
-        return generateArguments(TestData::getListUserSomeInvalid);
-    }
-
-    @BeforeEach
-    void initSaverAndLoader() {
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
-        saver = saveAndLoader;
-        loader = saveAndLoader;
+        return generateArgumentsWithStorage(TestData::getListUserSomeInvalid);
     }
 
     private static <T, U> List<T> functionOutputForEach(List<U> source, Function<U, T> toApply) {
@@ -114,7 +153,7 @@ public class MockEntitySaveAndLoaderTest {
             List<T> includedEntities,
             List<U> allIds,
             List<U> includedIds,
-            Function<U, T> getTFromId) {
+            Function<U, T> getEntityFromId) {
         assertEquals(allEntities.size(), allIds.size());
         assertEquals(includedEntities.size(), includedIds.size());
         for (int i = 0; i < allEntities.size(); i++) {
@@ -124,20 +163,21 @@ public class MockEntitySaveAndLoaderTest {
             assertEquals(includedEntities.contains(entity), includedIds.contains(id));
 
             if (includedEntities.contains(entity)) {
-                assertEquals(entity, getTFromId.apply(id));
+                assertEquals(entity, getEntityFromId.apply(id));
             } else {
-                assertThrows(CustomUncheckedException.class, () -> getTFromId.apply(id));
+                assertThrows(CustomUncheckedException.class, () -> getEntityFromId.apply(id));
             }
         }
     }
 
     @ParameterizedTest
     @MethodSource("listTagParams")
-    void testSaveLoadTags(@NotNull List<@NotNull Tag> saveTags) throws IOException {
-        saver.updateTags(saveTags);
+    void testSaveLoadTags(EntityStorage storage, @NotNull List<@NotNull Tag> saveTags)
+            throws IOException {
+        storage.getSaver().updateTags(saveTags);
 
         List<Tag> allTags = TestUtils.convertToTypedList(TestData.getTags());
-        testProperIdsIncluded(allTags, saveTags, Tag::getName, loader::tagNameExists);
+        testProperIdsIncluded(allTags, saveTags, Tag::getName, storage.getLoader()::tagNameExists);
 
         List<String> saveNames = functionOutputForEach(saveTags, Tag::getName);
         List<String> allNames = functionOutputForEach(allTags, Tag::getName);
@@ -148,27 +188,33 @@ public class MockEntitySaveAndLoaderTest {
                 saveNames,
                 (String name) -> {
                     try {
-                        return loader.getTagsByNames(Collections.singletonList(name)).get(0);
+                        return storage.getLoader()
+                                .getTagsByNames(Collections.singletonList(name))
+                                .get(0);
                     } catch (IOException e) {
                         throw new CustomUncheckedException("Name not found ", e);
                     }
                 });
 
-        assertEquals(saveTags, loader.getTagsByNames(saveNames));
+        assertEquals(saveTags, storage.getLoader().getTagsByNames(saveNames));
         if (!saveTags.containsAll(allTags)) {
-            assertThrows(IOException.class, () -> loader.getTagsByNames(allNames));
+            assertThrows(IOException.class, () -> storage.getLoader().getTagsByNames(allNames));
         }
     }
 
     @ParameterizedTest
     @MethodSource("listIngredientParams")
-    void testSaveLoadIngredients(@NotNull List<@NotNull Ingredient> saveIngredients)
+    void testSaveLoadIngredients(
+            EntityStorage storage, @NotNull List<@NotNull Ingredient> saveIngredients)
             throws IOException {
-        saver.updateIngredients(saveIngredients);
+        storage.getSaver().updateIngredients(saveIngredients);
 
         List<Ingredient> allIngredients = TestUtils.convertToTypedList(TestData.getIngredients());
         testProperIdsIncluded(
-                allIngredients, saveIngredients, Ingredient::getName, loader::ingredientNameExists);
+                allIngredients,
+                saveIngredients,
+                Ingredient::getName,
+                storage.getLoader()::ingredientNameExists);
 
         List<String> saveNames = functionOutputForEach(saveIngredients, Ingredient::getName);
         List<String> allNames = functionOutputForEach(allIngredients, Ingredient::getName);
@@ -179,25 +225,30 @@ public class MockEntitySaveAndLoaderTest {
                 saveNames,
                 (String name) -> {
                     try {
-                        return loader.getIngredientsByNames(Collections.singletonList(name)).get(0);
+                        return storage.getLoader()
+                                .getIngredientsByNames(Collections.singletonList(name))
+                                .get(0);
                     } catch (IOException e) {
                         throw new CustomUncheckedException("Name not found ", e);
                     }
                 });
 
-        assertEquals(saveIngredients, loader.getIngredientsByNames(saveNames));
+        assertEquals(saveIngredients, storage.getLoader().getIngredientsByNames(saveNames));
         if (!saveIngredients.containsAll(allIngredients)) {
-            assertThrows(IOException.class, () -> loader.getIngredientsByNames(allNames));
+            assertThrows(
+                    IOException.class, () -> storage.getLoader().getIngredientsByNames(allNames));
         }
     }
 
     @ParameterizedTest
     @MethodSource("listRecipeParams")
-    void testSaveLoadRecipes(@NotNull List<@NotNull Recipe> saveRecipes) throws IOException {
-        saver.updateRecipes(saveRecipes);
+    void testSaveLoadRecipes(EntityStorage storage, @NotNull List<@NotNull Recipe> saveRecipes)
+            throws IOException {
+        storage.getSaver().updateRecipes(saveRecipes);
 
         List<Recipe> allRecipes = TestUtils.convertToTypedList(TestData.getRecipes());
-        testProperIdsIncluded(allRecipes, saveRecipes, Recipe::getName, loader::recipeNameExists);
+        testProperIdsIncluded(
+                allRecipes, saveRecipes, Recipe::getName, storage.getLoader()::recipeNameExists);
 
         List<String> saveNames = functionOutputForEach(saveRecipes, Recipe::getName);
         List<String> allNames = functionOutputForEach(allRecipes, Recipe::getName);
@@ -208,25 +259,29 @@ public class MockEntitySaveAndLoaderTest {
                 saveNames,
                 (String name) -> {
                     try {
-                        return loader.getRecipesByNames(Collections.singletonList(name)).get(0);
+                        return storage.getLoader()
+                                .getRecipesByNames(Collections.singletonList(name))
+                                .get(0);
                     } catch (IOException e) {
                         throw new CustomUncheckedException("Name not found ", e);
                     }
                 });
 
-        assertEquals(saveRecipes, loader.getRecipesByNames(saveNames));
+        assertEquals(saveRecipes, storage.getLoader().getRecipesByNames(saveNames));
         if (!saveRecipes.containsAll(allRecipes)) {
-            assertThrows(IOException.class, () -> loader.getRecipesByNames(allNames));
+            assertThrows(IOException.class, () -> storage.getLoader().getRecipesByNames(allNames));
         }
     }
 
     @ParameterizedTest
     @MethodSource("listUserParams")
-    void testSaveLoadUsers(@NotNull List<@NotNull User> saveUsers) throws IOException {
-        saver.updateUsers(saveUsers);
+    void testSaveLoadUsers(EntityStorage storage, @NotNull List<@NotNull User> saveUsers)
+            throws IOException {
+        storage.getSaver().updateUsers(saveUsers);
 
         List<User> allUsers = TestUtils.convertToTypedList(TestData.getUsers());
-        testProperIdsIncluded(allUsers, saveUsers, User::getUsername, loader::usernameExists);
+        testProperIdsIncluded(
+                allUsers, saveUsers, User::getUsername, storage.getLoader()::usernameExists);
 
         List<String> saveNames = functionOutputForEach(saveUsers, User::getUsername);
         List<String> allNames = functionOutputForEach(allUsers, User::getUsername);
@@ -237,15 +292,17 @@ public class MockEntitySaveAndLoaderTest {
                 saveNames,
                 (String name) -> {
                     try {
-                        return loader.getUsersByNames(Collections.singletonList(name)).get(0);
+                        return storage.getLoader()
+                                .getUsersByNames(Collections.singletonList(name))
+                                .get(0);
                     } catch (IOException e) {
                         throw new CustomUncheckedException("Name not found ", e);
                     }
                 });
 
-        assertEquals(saveUsers, loader.getUsersByNames(saveNames));
+        assertEquals(saveUsers, storage.getLoader().getUsersByNames(saveNames));
         if (!saveUsers.containsAll(allUsers)) {
-            assertThrows(IOException.class, () -> loader.getUsersByNames(allNames));
+            assertThrows(IOException.class, () -> storage.getLoader().getUsersByNames(allNames));
         }
     }
 
@@ -326,10 +383,17 @@ public class MockEntitySaveAndLoaderTest {
         }
 
         Stream.Builder<Arguments> paramsListsBuilder = Stream.builder();
-        for (int i = 0; i < expectedEntitySets.size(); i++) {
-            paramsListsBuilder.add(
-                    Arguments.of(entities, tokenSets.get(i), expectedEntitySets.get(i)));
+        for (Supplier<EntityStorage> storageGenerator : getStorageGenerators()) {
+            for (int i = 0; i < expectedEntitySets.size(); i++) {
+                paramsListsBuilder.add(
+                        Arguments.of(
+                                storageGenerator.get(),
+                                entities,
+                                tokenSets.get(i),
+                                expectedEntitySets.get(i)));
+            }
         }
+        // return withStorage(paramsListsBuilder.build());
         return paramsListsBuilder.build();
     }
 
@@ -358,10 +422,11 @@ public class MockEntitySaveAndLoaderTest {
 
     @ParameterizedTest
     @MethodSource("getSearchTags")
-    void testSearchForTag(List<Tag> tags, Set<String> tokens, Set<Tag> expected) {
-        saver.updateTags(tags);
+    void testSearchForTag(
+            EntityStorage storage, List<Tag> tags, Set<String> tokens, Set<Tag> expected) {
+        storage.getSaver().updateTags(tags);
 
-        assertEquals(expected, loader.searchTags(tokens));
+        assertEquals(expected, storage.getLoader().searchTags(tokens));
     }
 
     private static Ingredient renameIngredient(Ingredient ingredient, String toRename) {
@@ -382,9 +447,12 @@ public class MockEntitySaveAndLoaderTest {
     @ParameterizedTest
     @MethodSource("getSearchIngredients")
     void testSearchForIngredient(
-            List<Ingredient> ingredients, Set<String> tokens, Set<Ingredient> expected) {
-        saver.updateIngredients(ingredients);
-        assertEquals(expected, loader.searchIngredients(tokens));
+            EntityStorage storage,
+            List<Ingredient> ingredients,
+            Set<String> tokens,
+            Set<Ingredient> expected) {
+        storage.getSaver().updateIngredients(ingredients);
+        assertEquals(expected, storage.getLoader().searchIngredients(tokens));
     }
 
     private static Recipe renameRecipe(Recipe recipe, String toRename) {
@@ -414,9 +482,10 @@ public class MockEntitySaveAndLoaderTest {
 
     @ParameterizedTest
     @MethodSource("getSearchRecipes")
-    void testSearchForRecipe(List<Recipe> recipes, Set<String> tokens, Set<Recipe> expected) {
-        saver.updateRecipes(recipes);
-        assertEquals(expected, loader.searchRecipes(tokens));
+    void testSearchForRecipe(
+            EntityStorage storage, List<Recipe> recipes, Set<String> tokens, Set<Recipe> expected) {
+        storage.getSaver().updateRecipes(recipes);
+        assertEquals(expected, storage.getLoader().searchRecipes(tokens));
     }
 
     private static User renameUser(User User, String toRename) {
@@ -435,83 +504,95 @@ public class MockEntitySaveAndLoaderTest {
 
     @ParameterizedTest
     @MethodSource("getSearchUsers")
-    void testSearchForUser(List<User> users, Set<String> tokens, Set<User> expected) {
-        saver.updateUsers(users);
-        assertEquals(expected, loader.searchUsers(tokens));
+    void testSearchForUser(
+            EntityStorage storage, List<User> users, Set<String> tokens, Set<User> expected) {
+        storage.getSaver().updateUsers(users);
+        assertEquals(expected, storage.getLoader().searchUsers(tokens));
     }
 
     @ParameterizedTest
     @MethodSource("nullableCollectionTagParams")
-    void testSaveTagsNullCheck(@Nullable Collection<@Nullable Tag> tags) {
-        assertThrows(NullPointerException.class, () -> saver.updateTags(tags));
+    void testSaveTagsNullCheck(EntityStorage storage, @Nullable Collection<@Nullable Tag> tags) {
+        assertThrows(NullPointerException.class, () -> storage.getSaver().updateTags(tags));
     }
 
     @ParameterizedTest
     @MethodSource("nullableCollectionIngredientParams")
-    void testSaveIngredientNullCheck(@Nullable Collection<@Nullable Ingredient> ingredients) {
-        assertThrows(NullPointerException.class, () -> saver.updateIngredients(ingredients));
+    void testSaveIngredientNullCheck(
+            EntityStorage storage, @Nullable Collection<@Nullable Ingredient> ingredients) {
+        assertThrows(
+                NullPointerException.class,
+                () -> storage.getSaver().updateIngredients(ingredients));
     }
 
     @ParameterizedTest
     @MethodSource("nullableCollectionRecipeParams")
-    void testSaveRecipeNullCheck(@Nullable Collection<@Nullable Recipe> recipes) {
-        assertThrows(NullPointerException.class, () -> saver.updateRecipes(recipes));
+    void testSaveRecipeNullCheck(
+            EntityStorage storage, @Nullable Collection<@Nullable Recipe> recipes) {
+        assertThrows(NullPointerException.class, () -> storage.getSaver().updateRecipes(recipes));
     }
 
     @ParameterizedTest
     @MethodSource("nullableCollectionUserParams")
-    void testSaveUserNullCheck(@Nullable Collection<@Nullable User> users) {
-        assertThrows(NullPointerException.class, () -> saver.updateUsers(users));
+    void testSaveUserNullCheck(EntityStorage storage, @Nullable Collection<@Nullable User> users) {
+        assertThrows(NullPointerException.class, () -> storage.getSaver().updateUsers(users));
     }
 
     @ParameterizedTest
     @MethodSource("nullableListStringParams")
-    void testGetEntityByIdNullCheck(@Nullable List<@Nullable String> ids) {
-        assertThrows(NullPointerException.class, () -> loader.getTagsByNames(ids));
-        assertThrows(NullPointerException.class, () -> loader.getIngredientsByNames(ids));
-        assertThrows(NullPointerException.class, () -> loader.getRecipesByNames(ids));
-        assertThrows(NullPointerException.class, () -> loader.getUsersByNames(ids));
+    void testGetEntityByIdNullCheck(EntityStorage storage, @Nullable List<@Nullable String> ids) {
+        assertThrows(NullPointerException.class, () -> storage.getLoader().getTagsByNames(ids));
+        assertThrows(
+                NullPointerException.class, () -> storage.getLoader().getIngredientsByNames(ids));
+        assertThrows(NullPointerException.class, () -> storage.getLoader().getRecipesByNames(ids));
+        assertThrows(NullPointerException.class, () -> storage.getLoader().getUsersByNames(ids));
     }
 
     @ParameterizedTest
     @MethodSource("nullableSetStringParams")
-    void testSearchEntityNullCheck(@Nullable Set<@Nullable String> tokens) {
-        assertThrows(NullPointerException.class, () -> loader.searchTags(tokens));
-        assertThrows(NullPointerException.class, () -> loader.searchIngredients(tokens));
-        assertThrows(NullPointerException.class, () -> loader.searchRecipes(tokens));
-        assertThrows(NullPointerException.class, () -> loader.searchUsers(tokens));
+    void testSearchEntityNullCheck(EntityStorage storage, @Nullable Set<@Nullable String> tokens) {
+        assertThrows(NullPointerException.class, () -> storage.getLoader().searchTags(tokens));
+        assertThrows(
+                NullPointerException.class, () -> storage.getLoader().searchIngredients(tokens));
+        assertThrows(NullPointerException.class, () -> storage.getLoader().searchRecipes(tokens));
+        assertThrows(NullPointerException.class, () -> storage.getLoader().searchUsers(tokens));
     }
 
-    @Test
-    void testEntityExistsNullCheck() {
-        assertThrows(NullPointerException.class, () -> loader.tagNameExists(null));
-        assertThrows(NullPointerException.class, () -> loader.ingredientNameExists(null));
-        assertThrows(NullPointerException.class, () -> loader.recipeNameExists(null));
-        assertThrows(NullPointerException.class, () -> loader.usernameExists(null));
+    @ParameterizedTest
+    @MethodSource("getStorageParams")
+    void testEntityExistsNullCheck(EntityStorage storage) {
+        assertThrows(NullPointerException.class, () -> storage.getLoader().tagNameExists(null));
+        assertThrows(
+                NullPointerException.class, () -> storage.getLoader().ingredientNameExists(null));
+        assertThrows(NullPointerException.class, () -> storage.getLoader().recipeNameExists(null));
+        assertThrows(NullPointerException.class, () -> storage.getLoader().usernameExists(null));
     }
 
     @ParameterizedTest
     @MethodSource("listTagParamsSomeInvalid")
-    void testSaveTagsSomeInvalid(List<Tag> tags) {
-        assertThrows(IllegalArgumentException.class, () -> saver.updateTags(tags));
+    void testSaveTagsSomeInvalid(EntityStorage storage, List<Tag> tags) {
+        assertThrows(IllegalArgumentException.class, () -> storage.getSaver().updateTags(tags));
     }
 
     @ParameterizedTest
     @MethodSource("listIngredientParamsSomeInvalid")
-    void testSaveIngredientsSomeInvalid(List<Ingredient> ingredients) {
-        assertThrows(IllegalArgumentException.class, () -> saver.updateIngredients(ingredients));
+    void testSaveIngredientsSomeInvalid(EntityStorage storage, List<Ingredient> ingredients) {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> storage.getSaver().updateIngredients(ingredients));
     }
 
     @ParameterizedTest
     @MethodSource("listRecipeParamsSomeInvalid")
-    void testSaveRecipesSomeInvalid(List<Recipe> recipes) {
-        assertThrows(IllegalArgumentException.class, () -> saver.updateRecipes(recipes));
+    void testSaveRecipesSomeInvalid(EntityStorage storage, List<Recipe> recipes) {
+        assertThrows(
+                IllegalArgumentException.class, () -> storage.getSaver().updateRecipes(recipes));
     }
 
     @ParameterizedTest
     @MethodSource("listUserParamsSomeInvalid")
-    void testSaveUsersSomeInvalid(List<User> users) {
-        assertThrows(IllegalArgumentException.class, () -> saver.updateUsers(users));
+    void testSaveUsersSomeInvalid(EntityStorage storage, List<User> users) {
+        assertThrows(IllegalArgumentException.class, () -> storage.getSaver().updateUsers(users));
     }
 
     // This unchecked exception exists so that Function objects can have functions that

@@ -1,10 +1,17 @@
 /* (C)2023 */
 package com.recipecart.testutil;
 
+import com.mongodb.ServerAddress;
+import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MongoEntityLoader;
+import com.recipecart.database.MongoEntitySaver;
 import com.recipecart.entities.Ingredient;
 import com.recipecart.entities.Recipe;
 import com.recipecart.entities.Tag;
 import com.recipecart.entities.User;
+import com.recipecart.storage.EntityLoader;
+import com.recipecart.storage.EntitySaver;
+import com.recipecart.storage.EntityStorage;
 import java.util.*;
 
 /**
@@ -470,5 +477,29 @@ public class TestData {
             TestUtils.listOfAllowNulls(null, Presets.user(4)),
             TestUtils.listOfAllowNulls(Presets.user(1), null)
         };
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Methods that generate EntityStorages
+    //  - Since EntityStorages are compared via reference, none of them are .equals to each other
+
+    public static Object[] getMongoEntityStorages() {
+        EntityStorage[] storages = new EntityStorage[NUM_PARAM_COMBOS];
+        for (int i = 0; i < storages.length; i++) {
+            ServerAddress testDbAddress = TestUtils.getTestDatabaseAddress();
+            EntitySaver saver = new MongoEntitySaver(testDbAddress);
+            EntityLoader loader = new MongoEntityLoader(testDbAddress);
+            storages[i] = new EntityStorage(saver, loader);
+        }
+        return storages;
+    }
+
+    public static Object[] getMockEntityStorages() {
+        EntityStorage[] storages = new EntityStorage[NUM_PARAM_COMBOS];
+        for (int i = 0; i < storages.length; i++) {
+            MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+            storages[i] = new EntityStorage(saverAndLoader, saverAndLoader);
+        }
+        return storages;
     }
 }

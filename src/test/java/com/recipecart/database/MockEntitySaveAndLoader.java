@@ -1,5 +1,5 @@
 /* (C)2023 */
-package com.recipecart.testutil;
+package com.recipecart.database;
 
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntityLoader;

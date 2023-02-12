@@ -1,9 +1,11 @@
 /* (C)2023 */
 package com.recipecart.testutil;
 
+import com.mongodb.ServerAddress;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -240,5 +242,10 @@ public class TestUtils {
             list.add((T) o);
         }
         return list;
+    }
+
+    public static ServerAddress getTestDatabaseAddress() {
+        throw new NotImplementedException();
+        // return new ServerAddress(/* DB ADDRESS HERE */);
     }
 }
