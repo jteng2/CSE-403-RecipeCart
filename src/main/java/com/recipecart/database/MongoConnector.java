@@ -14,10 +14,20 @@ public class MongoConnector {
 
     /**
      * Creates a MongoConnector that's connected to the database whose address is in the given file.
-     * The file needs to be a JSON file, with the format of { "hostname": "host address of the db
-     * goes here", "port": "port of the db goes here", "tags": ["database name", "collection name"],
-     * "ingredients": ["database name", "collection name"], "recipes": ["database name", "collection
-     * name"], "users": ["database name", "collection name"], }
+     * The file needs to be a JSON file, with the format of
+     *
+     * <pre>{@code
+     * {
+     *      ...
+     *      "hostname": "host address of the db goes here",
+     *      "port": "port of the db goes here",
+     *      "tags": ["database name", "collection name"],
+     *      "ingredients": ["database name", "collection name"],
+     *      "recipes": ["database name", "collection name"],
+     *      "users": ["database name", "collection name"],
+     *      ...
+     * }
+     * }</pre>
      *
      * @param filename the file with the database address details
      */
