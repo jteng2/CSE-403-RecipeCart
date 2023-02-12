@@ -231,4 +231,14 @@ public class TestUtils {
         map.put(k5, v5);
         return Collections.unmodifiableMap(map);
     }
+
+    // for all uses of this method, each Object in things is of type T
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> convertToTypedList(Object[] things) {
+        List<T> list = new ArrayList<>();
+        for (Object o : things) {
+            list.add((T) o);
+        }
+        return list;
+    }
 }

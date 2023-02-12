@@ -82,7 +82,8 @@ public interface EntityLoader {
     boolean usernameExists(@NotNull String name);
 
     /**
-     * Searches for saved tags whose names contain at least one of the given tokens.
+     * Searches for saved tags whose names contain at least one of the given tokens
+     * (case-insensitive).
      *
      * @param tokens the tokens for name-matching
      * @return the saved Tags whose names matched, or an empty Collection if none matched
@@ -90,7 +91,8 @@ public interface EntityLoader {
     @NotNull Collection<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens);
 
     /**
-     * Searches for saved ingredients whose names contain at least one of the given tokens.
+     * Searches for saved ingredients whose names contain at least one of the given tokens
+     * (case-insensitive).
      *
      * @param tokens the tokens for name-matching
      * @return the saved Ingredients whose names matched, or an empty Collection if none matched
@@ -99,7 +101,7 @@ public interface EntityLoader {
 
     /**
      * Searches for saved recipes whose names (name or presentation name) contain at least one of
-     * the given tokens.
+     * the given tokens (case-insensitive).
      *
      * @param tokens the tokens for name-matching
      * @return the saved Recipes whose names matched, or an empty Collection if none matched
@@ -107,7 +109,8 @@ public interface EntityLoader {
     @NotNull Collection<@NotNull Recipe> searchRecipes(@NotNull Set<@NotNull String> tokens);
 
     /**
-     * Searches for saved users whose names contain at least one of the given tokens.
+     * Searches for saved users whose names contain at least one of the given tokens
+     * (case-insensitive).
      *
      * @param tokens the tokens for name-matching
      * @return the saved Users whose names matched, or an empty Collection if none matched

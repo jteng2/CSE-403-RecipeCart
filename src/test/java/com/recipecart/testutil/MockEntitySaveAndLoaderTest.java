@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntityLoader;
 import com.recipecart.storage.EntitySaver;
+import com.recipecart.utils.TwoTuple;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
@@ -86,16 +87,6 @@ public class MockEntitySaveAndLoaderTest {
         loader = saveAndLoader;
     }
 
-    // for all uses of this method, each Object in things is of type T
-    @SuppressWarnings("unchecked")
-    private static <T> List<T> convertToTypedList(Object[] things) {
-        List<T> list = new ArrayList<>();
-        for (Object o : things) {
-            list.add((T) o);
-        }
-        return list;
-    }
-
     private static <T, U> List<T> functionOutputForEach(List<U> source, Function<U, T> toApply) {
         List<T> outputs = new ArrayList<>();
         for (U elem : source) {
@@ -145,7 +136,7 @@ public class MockEntitySaveAndLoaderTest {
     void testSaveLoadTags(@NotNull List<@NotNull Tag> saveTags) throws IOException {
         saver.updateTags(saveTags);
 
-        List<Tag> allTags = convertToTypedList(TestData.getTags());
+        List<Tag> allTags = TestUtils.convertToTypedList(TestData.getTags());
         testProperIdsIncluded(allTags, saveTags, Tag::getName, loader::tagNameExists);
 
         List<String> saveNames = functionOutputForEach(saveTags, Tag::getName);
@@ -175,7 +166,7 @@ public class MockEntitySaveAndLoaderTest {
             throws IOException {
         saver.updateIngredients(saveIngredients);
 
-        List<Ingredient> allIngredients = convertToTypedList(TestData.getIngredients());
+        List<Ingredient> allIngredients = TestUtils.convertToTypedList(TestData.getIngredients());
         testProperIdsIncluded(
                 allIngredients, saveIngredients, Ingredient::getName, loader::ingredientNameExists);
 
@@ -205,7 +196,7 @@ public class MockEntitySaveAndLoaderTest {
     void testSaveLoadRecipes(@NotNull List<@NotNull Recipe> saveRecipes) throws IOException {
         saver.updateRecipes(saveRecipes);
 
-        List<Recipe> allRecipes = convertToTypedList(TestData.getRecipes());
+        List<Recipe> allRecipes = TestUtils.convertToTypedList(TestData.getRecipes());
         testProperIdsIncluded(allRecipes, saveRecipes, Recipe::getName, loader::recipeNameExists);
 
         List<String> saveNames = functionOutputForEach(saveRecipes, Recipe::getName);
@@ -234,7 +225,7 @@ public class MockEntitySaveAndLoaderTest {
     void testSaveLoadUsers(@NotNull List<@NotNull User> saveUsers) throws IOException {
         saver.updateUsers(saveUsers);
 
-        List<User> allUsers = convertToTypedList(TestData.getUsers());
+        List<User> allUsers = TestUtils.convertToTypedList(TestData.getUsers());
         testProperIdsIncluded(allUsers, saveUsers, User::getUsername, loader::usernameExists);
 
         List<String> saveNames = functionOutputForEach(saveUsers, User::getUsername);
@@ -256,6 +247,197 @@ public class MockEntitySaveAndLoaderTest {
         if (!saveUsers.containsAll(allUsers)) {
             assertThrows(IOException.class, () -> loader.getUsersByNames(allNames));
         }
+    }
+
+    private static List<String> getEntityNames() {
+        return List.of("Chicken Adobo", "hella veggies", "null", "Mangoes", "Deleted User");
+    }
+
+    private static List<String> getPresentationNames() {
+        return List.of(
+                "Tasty Chicken Adobo with Rice",
+                "Healthy Hearty Veggie Dish",
+                "Address zero",
+                "My favorite fruit",
+                "");
+    }
+
+    private static List<Set<String>> getTokenSets() {
+        return List.of(
+                Set.of("Healthy", "Chicken"),
+                Set.of("veggies", "fruit"),
+                Set.of("adobo", "Null", "Mangoes", "user", "withrice", "Tasty", "address"),
+                Set.of(),
+                Set.of("Mangos, hellaveggies", "deleted", "zero"));
+    }
+
+    private static List<Set<String>> getExpectedEntityNameSets() {
+        return List.of(
+                Set.of("Chicken Adobo"),
+                Set.of("hella veggies"),
+                Set.of("Chicken Adobo", "null", "Mangoes", "Deleted User"),
+                Set.of(),
+                Set.of("Deleted User"));
+    }
+
+    private static List<Set<String>> getExpectedRecipeNameSets() {
+        return List.of(
+                Set.of("Chicken Adobo", "hella veggies"),
+                Set.of("hella veggies", "Mangoes"),
+                Set.of("Chicken Adobo", "null", "Mangoes", "Deleted User"),
+                Set.of(),
+                Set.of("Deleted User", "null"));
+    }
+
+    private static <T> Stream<Arguments> getSearchTestParams(
+            List<T> entitiesOriginal,
+            List<List<String>> newEntityNameLists,
+            List<Set<String>> tokenSets,
+            List<Set<String>> expectedEntityNameSets,
+            List<Function<TwoTuple<T, String>, T>> entityRenamers) {
+        assertNotEquals(0, newEntityNameLists.size());
+        assertEquals(newEntityNameLists.size(), entityRenamers.size());
+        for (List<String> newEntityNames : newEntityNameLists) {
+            assertEquals(entitiesOriginal.size(), newEntityNames.size());
+        }
+        assertEquals(tokenSets.size(), expectedEntityNameSets.size());
+
+        List<Set<T>> expectedEntitySets = new ArrayList<>();
+        for (int i = 0; i < expectedEntityNameSets.size(); i++) {
+            expectedEntitySets.add(new HashSet<>());
+        }
+
+        List<T> entities = new ArrayList<>();
+        for (int i = 0; i < entitiesOriginal.size(); i++) {
+            T newEntity = entitiesOriginal.get(i);
+            for (int j = 0; j < newEntityNameLists.size(); j++) {
+                String rename = newEntityNameLists.get(j).get(i);
+                newEntity = entityRenamers.get(j).apply(new TwoTuple<>(newEntity, rename));
+            }
+            entities.add(newEntity);
+
+            // element 0 of newEntityNameLists reserved for the "unique" names of the entities
+            for (int j = 0; j < expectedEntitySets.size(); j++) {
+                String newName = newEntityNameLists.get(0).get(i);
+                if (expectedEntityNameSets.get(j).contains(newName)) {
+                    expectedEntitySets.get(j).add(newEntity);
+                }
+            }
+        }
+
+        Stream.Builder<Arguments> paramsListsBuilder = Stream.builder();
+        for (int i = 0; i < expectedEntitySets.size(); i++) {
+            paramsListsBuilder.add(
+                    Arguments.of(entities, tokenSets.get(i), expectedEntitySets.get(i)));
+        }
+        return paramsListsBuilder.build();
+    }
+
+    private static <T> Stream<Arguments> getSearchTestParams(
+            List<T> entitiesOriginal,
+            List<String> newEntityNames,
+            List<Set<String>> tokenSets,
+            List<Set<String>> expectedEntityNameSets,
+            Function<TwoTuple<T, String>, T> renameEntity) {
+        return getSearchTestParams(
+                entitiesOriginal,
+                Collections.singletonList(newEntityNames),
+                tokenSets,
+                expectedEntityNameSets,
+                Collections.singletonList(renameEntity));
+    }
+
+    private static Stream<Arguments> getSearchTags() {
+        return getSearchTestParams(
+                TestUtils.convertToTypedList(TestData.getTags()),
+                getEntityNames(),
+                getTokenSets(),
+                getExpectedEntityNameSets(),
+                (tagAndString) -> new Tag(tagAndString.getSecond()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getSearchTags")
+    void testSearchForTag(List<Tag> tags, Set<String> tokens, Set<Tag> expected) {
+        saver.updateTags(tags);
+
+        assertEquals(expected, loader.searchTags(tokens));
+    }
+
+    private static Ingredient renameIngredient(Ingredient ingredient, String toRename) {
+        return new Ingredient(toRename, ingredient.getUnits(), ingredient.getImageUri());
+    }
+
+    private static Stream<Arguments> getSearchIngredients() {
+        return getSearchTestParams(
+                TestUtils.convertToTypedList(TestData.getIngredients()),
+                getEntityNames(),
+                getTokenSets(),
+                getExpectedEntityNameSets(),
+                (TwoTuple<Ingredient, String> ingredientAndString) ->
+                        renameIngredient(
+                                ingredientAndString.getFirst(), ingredientAndString.getSecond()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getSearchIngredients")
+    void testSearchForIngredient(
+            List<Ingredient> ingredients, Set<String> tokens, Set<Ingredient> expected) {
+        saver.updateIngredients(ingredients);
+        assertEquals(expected, loader.searchIngredients(tokens));
+    }
+
+    private static Recipe renameRecipe(Recipe recipe, String toRename) {
+        return new Recipe.Builder(recipe).setName(toRename).build();
+    }
+
+    private static Recipe renameRecipePresentationName(Recipe recipe, String toRename) {
+        return new Recipe.Builder(recipe).setPresentationName(toRename).build();
+    }
+
+    private static Stream<Arguments> getSearchRecipes() {
+        Function<TwoTuple<Recipe, String>, Recipe> recipeRenamer =
+                (TwoTuple<Recipe, String> recipeAndString) ->
+                        renameRecipe(recipeAndString.getFirst(), recipeAndString.getSecond());
+        Function<TwoTuple<Recipe, String>, Recipe> recipePresentationRenamer =
+                (TwoTuple<Recipe, String> recipeAndString) ->
+                        renameRecipePresentationName(
+                                recipeAndString.getFirst(), recipeAndString.getSecond());
+
+        return getSearchTestParams(
+                TestUtils.convertToTypedList(TestData.getRecipes()),
+                List.of(getEntityNames(), getPresentationNames()),
+                getTokenSets(),
+                getExpectedRecipeNameSets(),
+                List.of(recipeRenamer, recipePresentationRenamer));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getSearchRecipes")
+    void testSearchForRecipe(List<Recipe> recipes, Set<String> tokens, Set<Recipe> expected) {
+        saver.updateRecipes(recipes);
+        assertEquals(expected, loader.searchRecipes(tokens));
+    }
+
+    private static User renameUser(User User, String toRename) {
+        return new User.Builder(User).setUsername(toRename).build();
+    }
+
+    private static Stream<Arguments> getSearchUsers() {
+        return getSearchTestParams(
+                TestUtils.convertToTypedList(TestData.getUsers()),
+                getEntityNames(),
+                getTokenSets(),
+                getExpectedEntityNameSets(),
+                (TwoTuple<User, String> userAndString) ->
+                        renameUser(userAndString.getFirst(), userAndString.getSecond()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getSearchUsers")
+    void testSearchForUser(List<User> users, Set<String> tokens, Set<User> expected) {
+        saver.updateUsers(users);
+        assertEquals(expected, loader.searchUsers(tokens));
     }
 
     @ParameterizedTest

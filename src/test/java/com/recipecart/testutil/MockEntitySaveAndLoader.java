@@ -92,6 +92,14 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return savedUsers.containsKey(name);
     }
 
+    private static Set<String> toLowerCaseStrings(Collection<String> strings) {
+        Set<String> lowerCaseStrings = new HashSet<>();
+        for (String s : strings) {
+            lowerCaseStrings.add(s.toLowerCase(Locale.ROOT));
+        }
+        return lowerCaseStrings;
+    }
+
     private static boolean matches(String toExamine, Set<String> tokens) {
         for (String word : toExamine.split("\\s+")) {
             if (tokens.contains(word)) {
@@ -102,11 +110,14 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     }
 
     private static Set<String> findMatches(
-            Collection<String> toSearch, @NotNull Set<@NotNull String> tokens) {
+            Collection<String> toSearch, @NotNull Set<@NotNull String> tokens, boolean ignoreCase) {
         Utils.requireAllNotNull(tokens, "Tokens set cannot be null", "Tokens cannot be null");
+
+        Set<String> tokensToUse = ignoreCase ? toLowerCaseStrings(tokens) : tokens;
+
         Set<String> matches = new HashSet<>();
         for (String ts : toSearch) {
-            if (matches(ts, tokens)) {
+            if (matches(ignoreCase ? ts.toLowerCase(Locale.ROOT) : ts, tokensToUse)) {
                 matches.add(ts);
             }
         }
@@ -114,11 +125,18 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     }
 
     private static <K> Set<K> findKeysOfMatchingValues(
-            Map<K, String> toSearch, Set<String> tokens) {
+            Map<K, String> toSearch, @NotNull Set<@NotNull String> tokens, boolean ignoreCase) {
+        Utils.requireAllNotNull(tokens, "Tokens set cannot be null", "Tokens cannot be null");
+
+        Set<String> tokensToUse = ignoreCase ? toLowerCaseStrings(tokens) : tokens;
+
         Set<K> matches = new HashSet<>();
         for (K key : toSearch.keySet()) {
-            if (matches(toSearch.get(key), tokens)) {
-                matches.add(key);
+            String value = toSearch.get(key);
+            if (value != null) {
+                if (matches(ignoreCase ? value.toLowerCase(Locale.ROOT) : value, tokensToUse)) {
+                    matches.add(key);
+                }
             }
         }
         return matches;
@@ -134,29 +152,29 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     @Override
     public @NotNull Collection<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
-        Set<String> matchedNames = findMatches(savedTags.keySet(), tokens);
+        Set<String> matchedNames = findMatches(savedTags.keySet(), tokens, true);
         return getValuesOf(matchedNames, savedTags);
     }
 
     @Override
     public @NotNull Collection<@NotNull Ingredient> searchIngredients(
             @NotNull Set<@NotNull String> tokens) {
-        Set<String> matchedNames = findMatches(savedIngredients.keySet(), tokens);
+        Set<String> matchedNames = findMatches(savedIngredients.keySet(), tokens, true);
         return getValuesOf(matchedNames, savedIngredients);
     }
 
     @Override
     public @NotNull Collection<@NotNull Recipe> searchRecipes(
             @NotNull Set<@NotNull String> tokens) {
-        Set<String> matchedNames = findMatches(savedRecipes.keySet(), tokens);
+        Set<String> matchedNames = findMatches(savedRecipes.keySet(), tokens, true);
         Set<Recipe> matchedRecipes = getValuesOf(matchedNames, savedRecipes);
-        matchedRecipes.addAll(findKeysOfMatchingValues(recipePresentationNames, tokens));
+        matchedRecipes.addAll(findKeysOfMatchingValues(recipePresentationNames, tokens, true));
         return matchedRecipes;
     }
 
     @Override
     public @NotNull Collection<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
-        Set<String> matchedNames = findMatches(savedUsers.keySet(), tokens);
+        Set<String> matchedNames = findMatches(savedUsers.keySet(), tokens, true);
         return getValuesOf(matchedNames, savedUsers);
     }
 
