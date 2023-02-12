@@ -21,7 +21,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class EntitySaverAndLoaderTest {
-
     static Stream<Arguments> getStorageParams() {
         Stream.Builder<Arguments> argumentsBuilder = Stream.builder();
         for (Supplier<EntityStorage> storageGenerator : getStorageGenerators()) {
@@ -37,10 +36,9 @@ public class EntitySaverAndLoaderTest {
     private static List<Supplier<EntityStorage>> getStorageGenerators() {
         return List.of(
                 // () -> {
-                //    ServerAddress databaseAddress = TestUtils.getTestDatabaseAddress();
                 //    return new EntityStorage(
-                //            new MongoEntitySaver(databaseAddress),
-                //            new MongoEntityLoader(databaseAddress));
+                //            new MongoEntitySaver(TestData.TEST_MONGO_ADDRESS_FILE),
+                //            new MongoEntityLoader(TestData.TEST_MONGO_ADDRESS_FILE));
                 // },
                 () -> {
                     MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
@@ -352,6 +350,7 @@ public class EntitySaverAndLoaderTest {
             List<Set<String>> tokenSets,
             List<Set<String>> expectedEntityNameSets,
             List<Function<TwoTuple<T, String>, T>> entityRenamers) {
+        // check if data structure sizes are consistent
         assertNotEquals(0, newEntityNameLists.size());
         assertEquals(newEntityNameLists.size(), entityRenamers.size());
         for (List<String> newEntityNames : newEntityNameLists) {
@@ -359,6 +358,7 @@ public class EntitySaverAndLoaderTest {
         }
         assertEquals(tokenSets.size(), expectedEntityNameSets.size());
 
+        // initialize sets
         List<Set<T>> expectedEntitySets = new ArrayList<>();
         for (int i = 0; i < expectedEntityNameSets.size(); i++) {
             expectedEntitySets.add(new HashSet<>());
@@ -366,6 +366,7 @@ public class EntitySaverAndLoaderTest {
 
         List<T> entities = new ArrayList<>();
         for (int i = 0; i < entitiesOriginal.size(); i++) {
+            // get entities from their names, with chain of renaming functions applied to them
             T newEntity = entitiesOriginal.get(i);
             for (int j = 0; j < newEntityNameLists.size(); j++) {
                 String rename = newEntityNameLists.get(j).get(i);
@@ -373,7 +374,9 @@ public class EntitySaverAndLoaderTest {
             }
             entities.add(newEntity);
 
-            // element 0 of newEntityNameLists reserved for the "unique" names of the entities
+            // get expected entities from their names
+            // (element 0 of newEntityNameLists reserved for the "unique" names of the entities,
+            // which are used for identifying entities)
             for (int j = 0; j < expectedEntitySets.size(); j++) {
                 String newName = newEntityNameLists.get(0).get(i);
                 if (expectedEntityNameSets.get(j).contains(newName)) {
@@ -382,6 +385,7 @@ public class EntitySaverAndLoaderTest {
             }
         }
 
+        // turn these entities, etc. into arguments
         Stream.Builder<Arguments> paramsListsBuilder = Stream.builder();
         for (Supplier<EntityStorage> storageGenerator : getStorageGenerators()) {
             for (int i = 0; i < expectedEntitySets.size(); i++) {
@@ -393,7 +397,6 @@ public class EntitySaverAndLoaderTest {
                                 expectedEntitySets.get(i)));
             }
         }
-        // return withStorage(paramsListsBuilder.build());
         return paramsListsBuilder.build();
     }
 
@@ -417,7 +420,8 @@ public class EntitySaverAndLoaderTest {
                 getEntityNames(),
                 getTokenSets(),
                 getExpectedEntityNameSets(),
-                (tagAndString) -> new Tag(tagAndString.getSecond()));
+                (TwoTuple<Tag, String> tagAndString) ->
+                        renameTag(tagAndString.getFirst(), tagAndString.getSecond()));
     }
 
     @ParameterizedTest
@@ -427,10 +431,6 @@ public class EntitySaverAndLoaderTest {
         storage.getSaver().updateTags(tags);
 
         assertEquals(expected, storage.getLoader().searchTags(tokens));
-    }
-
-    private static Ingredient renameIngredient(Ingredient ingredient, String toRename) {
-        return new Ingredient(toRename, ingredient.getUnits(), ingredient.getImageUri());
     }
 
     private static Stream<Arguments> getSearchIngredients() {
@@ -453,14 +453,6 @@ public class EntitySaverAndLoaderTest {
             Set<Ingredient> expected) {
         storage.getSaver().updateIngredients(ingredients);
         assertEquals(expected, storage.getLoader().searchIngredients(tokens));
-    }
-
-    private static Recipe renameRecipe(Recipe recipe, String toRename) {
-        return new Recipe.Builder(recipe).setName(toRename).build();
-    }
-
-    private static Recipe renameRecipePresentationName(Recipe recipe, String toRename) {
-        return new Recipe.Builder(recipe).setPresentationName(toRename).build();
     }
 
     private static Stream<Arguments> getSearchRecipes() {
@@ -486,10 +478,6 @@ public class EntitySaverAndLoaderTest {
             EntityStorage storage, List<Recipe> recipes, Set<String> tokens, Set<Recipe> expected) {
         storage.getSaver().updateRecipes(recipes);
         assertEquals(expected, storage.getLoader().searchRecipes(tokens));
-    }
-
-    private static User renameUser(User User, String toRename) {
-        return new User.Builder(User).setUsername(toRename).build();
     }
 
     private static Stream<Arguments> getSearchUsers() {

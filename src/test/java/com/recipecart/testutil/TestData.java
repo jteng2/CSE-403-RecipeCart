@@ -1,7 +1,6 @@
 /* (C)2023 */
 package com.recipecart.testutil;
 
-import com.mongodb.ServerAddress;
 import com.recipecart.database.MockEntitySaveAndLoader;
 import com.recipecart.database.MongoEntityLoader;
 import com.recipecart.database.MongoEntitySaver;
@@ -12,6 +11,7 @@ import com.recipecart.entities.User;
 import com.recipecart.storage.EntityLoader;
 import com.recipecart.storage.EntitySaver;
 import com.recipecart.storage.EntityStorage;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -26,6 +26,9 @@ public class TestData {
 
     // each method in this class generates an Object[] of this length
     static final int NUM_PARAM_COMBOS = 5;
+
+    // filename containing address info of the test mongo
+    public static final String TEST_MONGO_FILE = "put filename here";
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Methods that generate basic objects and (simulated (i.e. non-null)) primitive types
@@ -486,9 +489,14 @@ public class TestData {
     public static Object[] getMongoEntityStorages() {
         EntityStorage[] storages = new EntityStorage[NUM_PARAM_COMBOS];
         for (int i = 0; i < storages.length; i++) {
-            ServerAddress testDbAddress = TestUtils.getTestDatabaseAddress();
-            EntitySaver saver = new MongoEntitySaver(testDbAddress);
-            EntityLoader loader = new MongoEntityLoader(testDbAddress);
+            EntitySaver saver;
+            EntityLoader loader;
+            try {
+                saver = new MongoEntitySaver(TEST_MONGO_FILE);
+                loader = new MongoEntityLoader(TEST_MONGO_FILE);
+            } catch (IOException e) {
+                throw new AssertionError("Please specify the mongo test filename!");
+            }
             storages[i] = new EntityStorage(saver, loader);
         }
         return storages;

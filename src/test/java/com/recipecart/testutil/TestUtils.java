@@ -1,11 +1,11 @@
 /* (C)2023 */
 package com.recipecart.testutil;
 
-import com.mongodb.ServerAddress;
+import com.recipecart.entities.*;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -244,8 +244,32 @@ public class TestUtils {
         return list;
     }
 
-    public static ServerAddress getTestDatabaseAddress() {
-        throw new NotImplementedException();
-        // return new ServerAddress(/* DB ADDRESS HERE */);
+    @SuppressWarnings("unused") // currently, newName is the only field of tag
+    public static Tag renameTag(@NotNull Tag tag, String newName) {
+        return new Tag(newName);
+    }
+
+    public static Ingredient renameIngredient(Ingredient ingredient, String toRename) {
+        return new Ingredient(toRename, ingredient.getUnits(), ingredient.getImageUri());
+    }
+
+    public static Recipe renameRecipe(Recipe recipe, String toRename) {
+        return new Recipe.Builder(recipe).setName(toRename).build();
+    }
+
+    public static Recipe renameRecipePresentationName(Recipe recipe, String toRename) {
+        return new Recipe.Builder(recipe).setPresentationName(toRename).build();
+    }
+
+    public static Recipe renameRecipeFull(
+            Recipe recipe, String toRename, String toRenamePresentation) {
+        return new Recipe.Builder(recipe)
+                .setName(toRename)
+                .setPresentationName(toRenamePresentation)
+                .build();
+    }
+
+    public static User renameUser(User User, String toRename) {
+        return new User.Builder(User).setUsername(toRename).build();
     }
 }
