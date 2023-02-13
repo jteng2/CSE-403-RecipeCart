@@ -97,7 +97,7 @@ public class Presets {
                                 TestData::getMapIngredientDoubleNoNulls),
                         new int[] {
                             numRecipes,
-                            numRecipes * 2,
+                            numRecipes * 3,
                             numRecipes * 3,
                             numRecipes,
                             numRecipes,
@@ -213,15 +213,16 @@ public class Presets {
         return new Recipe.Builder()
                 .setName((String) fields[0])
                 .setPresentationName((String) fields[1])
-                .setImageUri((String) fields[2])
-                .setPrepTime((Integer) fields[3])
-                .setCookTime((Integer) fields[4])
-                .setNumServings((Integer) fields[5])
-                .setNumRatings((int) fields[6])
-                .setAvgRating((double) fields[7])
-                .setDirections((List<String>) fields[8])
-                .setTags((Set<Tag>) fields[9])
-                .setRequiredIngredients((Map<Ingredient, Double>) fields[10])
+                .setAuthorUsername((String) fields[2])
+                .setImageUri((String) fields[3])
+                .setPrepTime((Integer) fields[4])
+                .setCookTime((Integer) fields[5])
+                .setNumServings((Integer) fields[6])
+                .setNumRatings((int) fields[7])
+                .setAvgRating((double) fields[8])
+                .setDirections((List<String>) fields[9])
+                .setTags((Set<Tag>) fields[10])
+                .setRequiredIngredients((Map<Ingredient, Double>) fields[11])
                 .build();
     }
 

@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public final class Recipe {
     private final @Nullable String name; // EntityStorage's "unique identifier" for Recipe
     private final @Nullable String presentationName;
+    private final @Nullable String authorUsername;
     private final @Nullable Integer prepTime;
     private final @Nullable Integer cookTime;
     private final @Nullable String imageUri;
@@ -26,6 +27,7 @@ public final class Recipe {
     private Recipe(
             @Nullable String name,
             @Nullable String presentationName,
+            @Nullable String authorUsername,
             @Nullable Integer prepTime,
             @Nullable Integer cookTime,
             @Nullable String imageUri,
@@ -37,6 +39,7 @@ public final class Recipe {
             @NotNull Map<@NotNull Ingredient, @NotNull Double> requiredIngredients) {
         this.name = name;
         this.presentationName = presentationName;
+        this.authorUsername = authorUsername;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.imageUri = imageUri;
@@ -60,6 +63,13 @@ public final class Recipe {
      */
     @Nullable public String getPresentationName() {
         return presentationName;
+    }
+
+    /**
+     * @return the username of the user that created this recipe
+     */
+    @Nullable public String getAuthorUsername() {
+        return authorUsername;
     }
 
     /**
@@ -134,6 +144,7 @@ public final class Recipe {
                 && getNumRatings() == recipe.getNumRatings()
                 && Objects.equals(getName(), recipe.getName())
                 && Objects.equals(getPresentationName(), recipe.getPresentationName())
+                && Objects.equals(getAuthorUsername(), recipe.getAuthorUsername())
                 && Objects.equals(getPrepTime(), recipe.getPrepTime())
                 && Objects.equals(getCookTime(), recipe.getCookTime())
                 && Objects.equals(getImageUri(), recipe.getImageUri())
@@ -148,6 +159,7 @@ public final class Recipe {
         return Objects.hash(
                 getName(),
                 getPresentationName(),
+                getAuthorUsername(),
                 getPrepTime(),
                 getCookTime(),
                 getImageUri(),
@@ -169,6 +181,7 @@ public final class Recipe {
     public static class Builder {
         private @Nullable String name;
         private @Nullable String presentationName;
+        private @Nullable String authorUsername;
         private @Nullable Integer prepTime;
         private @Nullable Integer cookTime;
         private @Nullable String imageUri;
@@ -195,6 +208,7 @@ public final class Recipe {
             this();
             setName(toCopy.getName())
                     .setPresentationName(toCopy.getPresentationName())
+                    .setAuthorUsername(toCopy.getAuthorUsername())
                     .setPrepTime(toCopy.getPrepTime())
                     .setCookTime(toCopy.getCookTime())
                     .setImageUri(toCopy.getImageUri())
@@ -214,6 +228,7 @@ public final class Recipe {
             return new Recipe(
                     name,
                     presentationName,
+                    authorUsername,
                     prepTime,
                     cookTime,
                     imageUri,
@@ -232,6 +247,11 @@ public final class Recipe {
 
         public Builder setPresentationName(@Nullable String presentationName) {
             this.presentationName = presentationName;
+            return this;
+        }
+
+        public Builder setAuthorUsername(@Nullable String authorUsername) {
+            this.authorUsername = authorUsername;
             return this;
         }
 

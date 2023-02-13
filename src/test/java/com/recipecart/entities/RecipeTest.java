@@ -57,6 +57,7 @@ public class RecipeTest {
         assertNotNull(recipe);
         assertNull(recipe.getName());
         assertNull(recipe.getPresentationName());
+        assertNull(recipe.getAuthorUsername());
         assertNull(recipe.getPrepTime());
         assertNull(recipe.getCookTime());
         assertNull(recipe.getImageUri());
@@ -77,6 +78,7 @@ public class RecipeTest {
             @NotNull String s1,
             String s2,
             String s3,
+            String s4,
             Integer i1,
             Integer i2,
             Integer i3,
@@ -89,7 +91,8 @@ public class RecipeTest {
                 new Recipe.Builder()
                         .setName(s1)
                         .setPresentationName(s2)
-                        .setImageUri(s3)
+                        .setAuthorUsername(s3)
+                        .setImageUri(s4)
                         .setPrepTime(i1)
                         .setCookTime(i2)
                         .setNumServings(i3)
@@ -103,7 +106,8 @@ public class RecipeTest {
         assertNotNull(recipe);
         assertEquals(s1, recipe.getName());
         assertEquals(s2, recipe.getPresentationName());
-        assertEquals(s3, recipe.getImageUri());
+        assertEquals(s3, recipe.getAuthorUsername());
+        assertEquals(s4, recipe.getImageUri());
         assertEquals(i1, recipe.getPrepTime());
         assertEquals(i2, recipe.getCookTime());
         assertEquals(i3, recipe.getNumServings());
@@ -126,6 +130,7 @@ public class RecipeTest {
         assertEquals(recipe1, recipe2);
         assertEquals(recipe1.getName(), recipe2.getName());
         assertEquals(recipe1.getPresentationName(), recipe2.getPresentationName());
+        assertEquals(recipe1.getAuthorUsername(), recipe2.getAuthorUsername());
         assertEquals(recipe1.getImageUri(), recipe2.getImageUri());
         assertEquals(recipe1.getPrepTime(), recipe2.getPrepTime());
         assertEquals(recipe1.getCookTime(), recipe2.getCookTime());
@@ -208,6 +213,7 @@ public class RecipeTest {
             @NotNull String s1,
             String s2,
             String s3,
+            String s4,
             Integer i1,
             Integer i2,
             Integer i3,
@@ -221,7 +227,8 @@ public class RecipeTest {
                         new Recipe.Builder()
                                 .setName(s1)
                                 .setPresentationName(s2)
-                                .setImageUri(s3)
+                                .setAuthorUsername(s3)
+                                .setImageUri(s4)
                                 .setPrepTime(i1)
                                 .setCookTime(i2)
                                 .setNumServings(i3)
@@ -235,7 +242,8 @@ public class RecipeTest {
                         new Recipe.Builder()
                                 .setName(newString(s1))
                                 .setPresentationName(newString(s2))
-                                .setImageUri(newString(s3))
+                                .setAuthorUsername(newString(s3))
+                                .setImageUri(newString(s4))
                                 .setPrepTime(i1)
                                 .setCookTime(i2)
                                 .setNumServings(i3)
@@ -258,6 +266,8 @@ public class RecipeTest {
             String r2s2,
             String r1s3,
             String r2s3,
+            String r1s4,
+            String r2s4,
             Integer r1i1,
             Integer r2i1,
             Integer r1i2,
@@ -279,7 +289,8 @@ public class RecipeTest {
                         new Recipe.Builder()
                                 .setName(r1s1)
                                 .setPresentationName(r1s2)
-                                .setImageUri(r1s3)
+                                .setAuthorUsername(r1s3)
+                                .setImageUri(r1s4)
                                 .setPrepTime(r1i1)
                                 .setCookTime(r1i2)
                                 .setNumServings(r1i3)
@@ -291,9 +302,10 @@ public class RecipeTest {
                                 .build(),
                 recipe2 =
                         new Recipe.Builder()
-                                .setName(newString(r2s1))
-                                .setPresentationName(newString(r2s2))
-                                .setImageUri(newString(r2s3))
+                                .setName(r2s1)
+                                .setPresentationName(r2s2)
+                                .setAuthorUsername(r2s3)
+                                .setImageUri(r2s4)
                                 .setPrepTime(r2i1)
                                 .setCookTime(r2i2)
                                 .setNumServings(r2i3)
@@ -306,6 +318,7 @@ public class RecipeTest {
 
         assertNotEquals(recipe1, recipe2);
         assertNotEquals(recipe1.getName(), recipe2.getName());
+        assertNotEquals(recipe1.getAuthorUsername(), recipe2.getAuthorUsername());
         assertNotEquals(recipe1.getPresentationName(), recipe2.getPresentationName());
         assertNotEquals(recipe1.getImageUri(), recipe2.getImageUri());
         assertNotEquals(recipe1.getPrepTime(), recipe2.getPrepTime());
