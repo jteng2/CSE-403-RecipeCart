@@ -1,0 +1,68 @@
+{
+    "recipes": [
+        {
+            "name": "chicken taco",
+            "ingredients": [
+                "extra-virgin olive oil",
+                "chicken breasts",
+                "corn tortilla",
+                "kosher salt",
+                "black pepper",
+                "chilli powder",
+                "ground cumin",
+                "paprika",
+                "cayene",
+                "sour cream",
+                "salsa",
+                "shredded montgomery cheese"
+            ],
+            "time to cook": 30
+        },
+        {
+            "name": "vegetable stir fry",
+            "ingredients": [
+                "olive oil",
+                "red bell pepper",
+                "yellow bell peppers",
+                "sugar snap peas",
+                "carrots",
+                "mushrooms",
+                "broccoli",
+                "baby corn",
+                "water chestnuts",
+                "soy sauce",
+                "garlic cloves (minced)",
+                "brown sugar",
+                "sesame oil",
+                "chicken broth",
+                "cornstarch",
+                "green onions",
+                "sesame seeds"
+            ],
+            "time to cook": 15
+        },
+        {
+            "name": "chicken stir fry",
+            "ingredients": [
+                "chicken breasts",
+                "salt",
+                "pepper",
+                "olive oil",
+                "broccoli",
+                "yellow bell peppers",
+                "red bell pepper",
+                "baby carrots",
+                "minced ginger",
+                "minced garlic cloves",
+                "corn starch",
+                "cold water",
+                "chicken broth",
+                "soy sauce",
+                "honey",
+                "toasted sesame oil",
+                "crushed red pepper flakes"
+            ],
+            "time to cook": 18
+        }
+    ]
+}
