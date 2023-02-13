@@ -8,7 +8,6 @@ import com.recipecart.entities.*;
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.testutil.TestData;
 import com.recipecart.testutil.TestUtils;
-import com.recipecart.utils.TwoTuple;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
@@ -29,7 +28,7 @@ public class EntitySaverAndLoaderTest {
         return argumentsBuilder.build();
     }
 
-    // Uncomment the lines in the following two functions once MongoEntitySaver/Loader is being
+    // Uncomment the lines in the following functions once MongoEntitySaver/Loader is being
     // implemented. Also uncomment lines in TestDataTest.java that contain
     // TestDataTest::getMongoEntityStorages.
 
@@ -304,124 +303,20 @@ public class EntitySaverAndLoaderTest {
         }
     }
 
-    private static List<String> getEntityNames() {
-        return List.of("Chicken Adobo", "hella veggies", "null", "Mangoes", "Deleted User");
-    }
-
-    private static List<String> getPresentationNames() {
-        return List.of(
-                "Tasty Chicken Adobo with Rice",
-                "Healthy Hearty Veggie Dish",
-                "Address zero",
-                "My favorite fruit",
-                "");
-    }
-
-    private static List<Set<String>> getTokenSets() {
-        return List.of(
-                Set.of("Healthy", "Chicken"),
-                Set.of("veggies", "fruit"),
-                Set.of("adobo", "Null", "Mangoes", "user", "withrice", "Tasty", "address"),
-                Set.of(),
-                Set.of("Mangos, hellaveggies", "deleted", "zero"));
-    }
-
-    private static List<Set<String>> getExpectedEntityNameSets() {
-        return List.of(
-                Set.of("Chicken Adobo"),
-                Set.of("hella veggies"),
-                Set.of("Chicken Adobo", "null", "Mangoes", "Deleted User"),
-                Set.of(),
-                Set.of("Deleted User"));
-    }
-
-    private static List<Set<String>> getExpectedRecipeNameSets() {
-        return List.of(
-                Set.of("Chicken Adobo", "hella veggies"),
-                Set.of("hella veggies", "Mangoes"),
-                Set.of("Chicken Adobo", "null", "Mangoes", "Deleted User"),
-                Set.of(),
-                Set.of("Deleted User", "null"));
-    }
-
-    private static <T> Stream<Arguments> getSearchTestParams(
-            List<T> entitiesOriginal,
-            List<List<String>> newEntityNameLists,
-            List<Set<String>> tokenSets,
-            List<Set<String>> expectedEntityNameSets,
-            List<Function<TwoTuple<T, String>, T>> entityRenamers) {
-        // check if data structure sizes are consistent
-        assertNotEquals(0, newEntityNameLists.size());
-        assertEquals(newEntityNameLists.size(), entityRenamers.size());
-        for (List<String> newEntityNames : newEntityNameLists) {
-            assertEquals(entitiesOriginal.size(), newEntityNames.size());
-        }
-        assertEquals(tokenSets.size(), expectedEntityNameSets.size());
-
-        // initialize sets
-        List<Set<T>> expectedEntitySets = new ArrayList<>();
-        for (int i = 0; i < expectedEntityNameSets.size(); i++) {
-            expectedEntitySets.add(new HashSet<>());
-        }
-
-        List<T> entities = new ArrayList<>();
-        for (int i = 0; i < entitiesOriginal.size(); i++) {
-            // get entities from their names, with chain of renaming functions applied to them
-            T newEntity = entitiesOriginal.get(i);
-            for (int j = 0; j < newEntityNameLists.size(); j++) {
-                String rename = newEntityNameLists.get(j).get(i);
-                newEntity = entityRenamers.get(j).apply(new TwoTuple<>(newEntity, rename));
-            }
-            entities.add(newEntity);
-
-            // get expected entities from their names
-            // (element 0 of newEntityNameLists reserved for the "unique" names of the entities,
-            // which are used for identifying entities)
-            for (int j = 0; j < expectedEntitySets.size(); j++) {
-                String newName = newEntityNameLists.get(0).get(i);
-                if (expectedEntityNameSets.get(j).contains(newName)) {
-                    expectedEntitySets.get(j).add(newEntity);
-                }
-            }
-        }
-
-        // turn these entities, etc. into arguments
-        Stream.Builder<Arguments> paramsListsBuilder = Stream.builder();
-        for (Supplier<EntityStorage> storageGenerator : getStorageGenerators()) {
-            for (int i = 0; i < expectedEntitySets.size(); i++) {
-                paramsListsBuilder.add(
-                        Arguments.of(
-                                storageGenerator.get(),
-                                entities,
-                                tokenSets.get(i),
-                                expectedEntitySets.get(i)));
-            }
-        }
-        return paramsListsBuilder.build();
-    }
-
-    private static <T> Stream<Arguments> getSearchTestParams(
-            List<T> entitiesOriginal,
-            List<String> newEntityNames,
-            List<Set<String>> tokenSets,
-            List<Set<String>> expectedEntityNameSets,
-            Function<TwoTuple<T, String>, T> renameEntity) {
-        return getSearchTestParams(
-                entitiesOriginal,
-                Collections.singletonList(newEntityNames),
-                tokenSets,
-                expectedEntityNameSets,
-                Collections.singletonList(renameEntity));
-    }
-
     private static Stream<Arguments> getSearchTags() {
-        return getSearchTestParams(
-                TestUtils.convertToTypedList(TestData.getTags()),
-                getEntityNames(),
-                getTokenSets(),
-                getExpectedEntityNameSets(),
-                (TwoTuple<Tag, String> tagAndString) ->
-                        renameTag(tagAndString.getFirst(), tagAndString.getSecond()));
+        return TestUtils.getSearchTags(getStorageGenerators());
+    }
+
+    private static Stream<Arguments> getSearchIngredients() {
+        return TestUtils.getSearchIngredients(getStorageGenerators());
+    }
+
+    private static Stream<Arguments> getSearchRecipes() {
+        return TestUtils.getSearchRecipes(getStorageGenerators());
+    }
+
+    private static Stream<Arguments> getSearchUsers() {
+        return TestUtils.getSearchUsers(getStorageGenerators());
     }
 
     @ParameterizedTest
@@ -431,17 +326,6 @@ public class EntitySaverAndLoaderTest {
         storage.getSaver().updateTags(tags);
 
         assertEquals(expected, storage.getLoader().searchTags(tokens));
-    }
-
-    private static Stream<Arguments> getSearchIngredients() {
-        return getSearchTestParams(
-                TestUtils.convertToTypedList(TestData.getIngredients()),
-                getEntityNames(),
-                getTokenSets(),
-                getExpectedEntityNameSets(),
-                (TwoTuple<Ingredient, String> ingredientAndString) ->
-                        renameIngredient(
-                                ingredientAndString.getFirst(), ingredientAndString.getSecond()));
     }
 
     @ParameterizedTest
@@ -455,39 +339,12 @@ public class EntitySaverAndLoaderTest {
         assertEquals(expected, storage.getLoader().searchIngredients(tokens));
     }
 
-    private static Stream<Arguments> getSearchRecipes() {
-        Function<TwoTuple<Recipe, String>, Recipe> recipeRenamer =
-                (TwoTuple<Recipe, String> recipeAndString) ->
-                        renameRecipe(recipeAndString.getFirst(), recipeAndString.getSecond());
-        Function<TwoTuple<Recipe, String>, Recipe> recipePresentationRenamer =
-                (TwoTuple<Recipe, String> recipeAndString) ->
-                        renameRecipePresentationName(
-                                recipeAndString.getFirst(), recipeAndString.getSecond());
-
-        return getSearchTestParams(
-                TestUtils.convertToTypedList(TestData.getRecipes()),
-                List.of(getEntityNames(), getPresentationNames()),
-                getTokenSets(),
-                getExpectedRecipeNameSets(),
-                List.of(recipeRenamer, recipePresentationRenamer));
-    }
-
     @ParameterizedTest
     @MethodSource("getSearchRecipes")
     void testSearchForRecipe(
             EntityStorage storage, List<Recipe> recipes, Set<String> tokens, Set<Recipe> expected) {
         storage.getSaver().updateRecipes(recipes);
         assertEquals(expected, storage.getLoader().searchRecipes(tokens));
-    }
-
-    private static Stream<Arguments> getSearchUsers() {
-        return getSearchTestParams(
-                TestUtils.convertToTypedList(TestData.getUsers()),
-                getEntityNames(),
-                getTokenSets(),
-                getExpectedEntityNameSets(),
-                (TwoTuple<User, String> userAndString) ->
-                        renameUser(userAndString.getFirst(), userAndString.getSecond()));
     }
 
     @ParameterizedTest
