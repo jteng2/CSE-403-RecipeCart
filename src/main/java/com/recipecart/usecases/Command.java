@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
  * successful, as well as a message output. Each Command instance can only be executed once.
  */
 public interface Command {
-    String OK_MSG_GENERAL = "OK";
-    String NOT_OK_MSG_GENERAL = "Not OK";
+    String OK_GENERAL = "OK";
+    String NOT_OK_GENERAL = "Not OK";
 
     /**
      * @return true if this command has finished executing, false otherwise.
@@ -29,7 +29,7 @@ public interface Command {
      * Returns a message describing the result of the command's execution (ex. what went wrong, if
      * the command failed). Can only be called once the command has finished executing.
      *
-     * @throws IllegalStateException if the command hasn't finished executing
+     * @throws IllegalStateException if the command hasn't finished executing (or hasn't started)
      * @return the message describing the result of the command's execution
      */
     @NotNull String getExecutionMessage();
