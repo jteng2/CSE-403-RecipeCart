@@ -11,7 +11,6 @@ import com.recipecart.testutil.TestUtils;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,107 +19,75 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class EntitySaverAndLoaderTest {
-    static Stream<Arguments> getStorageParams() {
-        Stream.Builder<Arguments> argumentsBuilder = Stream.builder();
-        for (Supplier<EntityStorage> storageGenerator : getStorageGenerators()) {
-            argumentsBuilder.add(Arguments.of(storageGenerator.get()));
-        }
-        return argumentsBuilder.build();
-    }
-
-    // Uncomment the lines in the following functions once MongoEntitySaver/Loader is being
-    // implemented. Also uncomment lines in TestDataTest.java that contain
-    // TestDataTest::getMongoEntityStorages.
-
-    private static List<Supplier<EntityStorage>> getStorageGenerators() {
-        return List.of(
-                // () -> {
-                //    return new EntityStorage(
-                //            new MongoEntitySaver(TestData.TEST_MONGO_ADDRESS_FILE),
-                //            new MongoEntityLoader(TestData.TEST_MONGO_ADDRESS_FILE));
-                // },
-                () -> {
-                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
-                    return new EntityStorage(saverAndLoader, saverAndLoader);
-                });
-    }
-
-    private static List<Supplier<Object[]>> getStorageArrayGenerators() {
-        return List.of(
-                // TestData::getMongoEntityStorages,
-                TestData::getMockEntityStorages);
-    }
-
-    private static Stream<Arguments> generateArgumentsWithStorage(Supplier<Object[]> generator) {
-        List<Supplier<Object[]>> storageGenerators = getStorageArrayGenerators();
-
-        Stream<Arguments> concatenatedArgs = null;
-        for (Supplier<Object[]> storageGenerator : storageGenerators) {
-            Stream<Arguments> toConcatenate =
-                    generateMultiArguments(List.of(storageGenerator, generator), 1, true);
-            concatenatedArgs =
-                    concatenatedArgs == null
-                            ? toConcatenate
-                            : Stream.concat(concatenatedArgs, toConcatenate);
-        }
-
-        return concatenatedArgs;
-    }
 
     static Stream<Arguments> listTagParams() {
-        return generateArgumentsWithStorage(TestData::getListTagNoNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListTagNoNulls);
     }
 
     static Stream<Arguments> listIngredientParams() {
-        return generateArgumentsWithStorage(TestData::getListIngredientNoNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListIngredientNoNulls);
     }
 
     static Stream<Arguments> listRecipeParams() {
-        return generateArgumentsWithStorage(TestData::getListRecipeNoNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListRecipeNoNulls);
     }
 
     static Stream<Arguments> listUserParams() {
-        return generateArgumentsWithStorage(TestData::getListUserNoNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListUserNoNulls);
     }
 
     static Stream<Arguments> nullableCollectionTagParams() {
-        return generateArgumentsWithStorage(TestData::getListTagWithNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListTagWithNulls);
     }
 
     static Stream<Arguments> nullableCollectionIngredientParams() {
-        return generateArgumentsWithStorage(TestData::getListIngredientWithNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListIngredientWithNulls);
     }
 
     static Stream<Arguments> nullableCollectionRecipeParams() {
-        return generateArgumentsWithStorage(TestData::getListRecipeWithNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListRecipeWithNulls);
     }
 
     static Stream<Arguments> nullableCollectionUserParams() {
-        return generateArgumentsWithStorage(TestData::getListUserWithNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListUserWithNulls);
     }
 
     static Stream<Arguments> nullableListStringParams() {
-        return generateArgumentsWithStorage(TestData::getListStringWithNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListStringWithNulls);
     }
 
     static Stream<Arguments> nullableSetStringParams() {
-        return generateArgumentsWithStorage(TestData::getSetStringWithNulls);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getSetStringWithNulls);
     }
 
     static Stream<Arguments> listTagParamsSomeInvalid() {
-        return generateArgumentsWithStorage(TestData::getListTagSomeInvalid);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListTagSomeInvalid);
     }
 
     static Stream<Arguments> listIngredientParamsSomeInvalid() {
-        return generateArgumentsWithStorage(TestData::getListIngredientSomeInvalid);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListIngredientSomeInvalid);
     }
 
     static Stream<Arguments> listRecipeParamsSomeInvalid() {
-        return generateArgumentsWithStorage(TestData::getListRecipeSomeInvalid);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListRecipeSomeInvalid);
     }
 
     static Stream<Arguments> listUserParamsSomeInvalid() {
-        return generateArgumentsWithStorage(TestData::getListUserSomeInvalid);
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getListUserSomeInvalid);
     }
 
     private static <T, U> List<T> functionOutputForEach(List<U> source, Function<U, T> toApply) {
@@ -401,6 +368,10 @@ public class EntitySaverAndLoaderTest {
                 NullPointerException.class, () -> storage.getLoader().searchIngredients(tokens));
         assertThrows(NullPointerException.class, () -> storage.getLoader().searchRecipes(tokens));
         assertThrows(NullPointerException.class, () -> storage.getLoader().searchUsers(tokens));
+    }
+
+    private static Stream<Arguments> getStorageParams() {
+        return TestUtils.getStorageParams(getStorageGenerators());
     }
 
     @ParameterizedTest

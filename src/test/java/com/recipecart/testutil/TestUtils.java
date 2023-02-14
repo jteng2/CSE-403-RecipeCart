@@ -4,6 +4,7 @@ package com.recipecart.testutil;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import com.recipecart.database.MockEntitySaveAndLoader;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.utils.TwoTuple;
@@ -294,6 +295,64 @@ public class TestUtils {
 
     public static User renameUser(User User, String toRename) {
         return new User.Builder(User).setUsername(toRename).build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////// Methods for generating EntityStorage objects //////////////////////////////
+
+    public static Stream<Arguments> getStorageParams(
+            List<Supplier<EntityStorage>> storageGenerators) {
+        Stream.Builder<Arguments> argumentsBuilder = Stream.builder();
+        for (Supplier<EntityStorage> storageGenerator : storageGenerators) {
+            argumentsBuilder.add(Arguments.of(storageGenerator.get()));
+        }
+        return argumentsBuilder.build();
+    }
+
+    // Uncomment the lines in the following functions once MongoEntitySaver/Loader is being
+    // implemented. Also uncomment lines in TestDataTest.java that contain
+    // TestDataTest::getMongoEntityStorages.
+
+    public static List<Supplier<EntityStorage>> getStorageGenerators() {
+        return List.of(
+                // () -> {
+                //    return new EntityStorage(
+                //            new MongoEntitySaver(TestData.TEST_MONGO_ADDRESS_FILE),
+                //            new MongoEntityLoader(TestData.TEST_MONGO_ADDRESS_FILE));
+                // },
+                () -> {
+                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    return new EntityStorage(saverAndLoader, saverAndLoader);
+                });
+    }
+
+    public static List<Supplier<EntityStorage>> getMockStorageGenerators() {
+        return List.of(
+                () -> {
+                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    return new EntityStorage(saverAndLoader, saverAndLoader);
+                });
+    }
+
+    public static List<Supplier<Object[]>> getStorageArrayGenerators() {
+        return List.of(
+                // TestData::getMongoEntityStorages,
+                TestData::getMockEntityStorages);
+    }
+
+    public static Stream<Arguments> generateArgumentsWithStorage(
+            List<Supplier<Object[]>> storageGenerators, Supplier<Object[]> generator) {
+        Stream<Arguments> concatenatedArgs = null;
+        for (Supplier<Object[]> storageGenerator : storageGenerators) {
+            Stream<Arguments> toConcatenate =
+                    generateMultiArguments(List.of(storageGenerator, generator), 1, true);
+            concatenatedArgs =
+                    concatenatedArgs == null
+                            ? toConcatenate
+                            : Stream.concat(concatenatedArgs, toConcatenate);
+        }
+
+        return concatenatedArgs;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
