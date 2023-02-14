@@ -2,6 +2,7 @@
 package com.recipecart.usecases;
 
 import com.recipecart.entities.Recipe;
+import com.recipecart.utils.Utils;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -12,6 +13,11 @@ import org.jetbrains.annotations.Nullable;
 
 /** This class represents the use case of someone searching for recipes. */
 public final class SearchRecipesCommand extends EntityCommand {
+    public static final String
+            OK_MATCHES_FOUND = "Search successful: Recipes that matched were found",
+            OK_NO_MATCHES_FOUND = "Search successful: but no matching Recipes were found",
+            NOT_OK_SEARCH_ERROR = "Search unsuccessful: something went wrong during searching";
+
     private final @NotNull Collection<@NotNull String> searchTerms;
 
     /**
@@ -20,6 +26,10 @@ public final class SearchRecipesCommand extends EntityCommand {
      * @param searchTerms the search terms to use when searching.
      */
     public SearchRecipesCommand(@NotNull Collection<@NotNull String> searchTerms) {
+        Utils.requireAllNotNull(
+                searchTerms,
+                "Search term collection cannot be null",
+                "Individual search terms cannot be null");
         this.searchTerms = new HashSet<>(searchTerms);
     }
 
@@ -35,6 +45,18 @@ public final class SearchRecipesCommand extends EntityCommand {
      *     search's execution failed, then the list will be null.
      */
     @Nullable public List<@NotNull Recipe> getMatches() {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * Returns a message describing if the search that happened when executing this command was
+     * successful or not.
+     *
+     * @throws IllegalStateException if the search hasn't finished (or started) yet
+     * @return the message describing the result of the search
+     */
+    @Override
+    @NotNull public String getExecutionMessage() {
         throw new NotImplementedException();
     }
 
