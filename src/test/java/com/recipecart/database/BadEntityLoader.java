@@ -62,24 +62,24 @@ public class BadEntityLoader implements EntityLoader {
     }
 
     @Override
-    public @NotNull Collection<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
         throw new RuntimeException();
     }
 
     @Override
-    public @NotNull Collection<@NotNull Ingredient> searchIngredients(
+    public @NotNull Set<@NotNull Ingredient> searchIngredients(
             @NotNull Set<@NotNull String> tokens) {
         throw new RuntimeException();
     }
 
     @Override
-    public @NotNull Collection<@NotNull Recipe> searchRecipes(
+    public @NotNull Set<@NotNull Recipe> searchRecipes(
             @NotNull Set<@NotNull String> tokens) {
         throw new RuntimeException();
     }
 
     @Override
-    public @NotNull Collection<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
         throw new RuntimeException();
     }
 }

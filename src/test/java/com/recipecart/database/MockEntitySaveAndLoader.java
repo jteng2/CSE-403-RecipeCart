@@ -151,20 +151,20 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     }
 
     @Override
-    public @NotNull Collection<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedTags.keySet(), tokens, true);
         return getValuesOf(matchedNames, savedTags);
     }
 
     @Override
-    public @NotNull Collection<@NotNull Ingredient> searchIngredients(
+    public @NotNull Set<@NotNull Ingredient> searchIngredients(
             @NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedIngredients.keySet(), tokens, true);
         return getValuesOf(matchedNames, savedIngredients);
     }
 
     @Override
-    public @NotNull Collection<@NotNull Recipe> searchRecipes(
+    public @NotNull Set<@NotNull Recipe> searchRecipes(
             @NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedRecipes.keySet(), tokens, true);
         Set<Recipe> matchedRecipes = getValuesOf(matchedNames, savedRecipes);
@@ -173,7 +173,7 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     }
 
     @Override
-    public @NotNull Collection<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedUsers.keySet(), tokens, true);
         return getValuesOf(matchedNames, savedUsers);
     }

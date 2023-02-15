@@ -125,10 +125,10 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * this loader is connected to.
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Tags whose names matched, or an empty Collection if none matched
+     * @return the saved Tags whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
@@ -137,10 +137,10 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * database this loader is connected to.
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Ingredients whose names matched, or an empty Collection if none matched
+     * @return the saved Ingredients whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull Ingredient> searchIngredients(
+    public @NotNull Set<@NotNull Ingredient> searchIngredients(
             @NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
@@ -150,10 +150,10 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * database this loader is connected to.
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Recipes whose names matched, or an empty Collection if none matched
+     * @return the saved Recipes whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull Recipe> searchRecipes(
+    public @NotNull Set<@NotNull Recipe> searchRecipes(
             @NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
@@ -163,10 +163,10 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * database this loader is connected to.
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Users whose names matched, or an empty Collection if none matched
+     * @return the saved Users whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
