@@ -6,3 +6,5 @@
         - Upon reaching Recipe Search page, enter new search
         - Refresh the page
         - Observe that the search results return to the original search
+- Profile Button
+    - Dropdown menu buttons do not function in any way whatsoever
