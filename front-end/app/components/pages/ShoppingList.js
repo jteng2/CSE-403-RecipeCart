@@ -4,7 +4,7 @@ import Header from "../Header";
 
 function ShoppingList() {
     return(
-        <Grid container >
+        <Grid container>
             <Grid container alignItems="center" justifyContent="center" direction="column">
                 <Grid item>
                     <p>SHOPPING LIST</p>

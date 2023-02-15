@@ -12,7 +12,7 @@ function Home() {
     }
     
     return(
-        <Grid container direction="column">
+        <Grid container>
             <Grid item container alignItems="center" justifyContent="center" direction="column">
                 <Grid item>
                     <p>HOME PAGE</p>
