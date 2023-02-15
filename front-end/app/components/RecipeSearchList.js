@@ -22,12 +22,12 @@ function RecipeSearchList(props) {
         //     <li key={name}>{name}</li>
         // }) WHY DOES THIS NOT WORK???????
 
-        console.log(matching_recipes);
         for (let i = 0; i < matching_recipes.length; i++) {
             const name = matching_recipes[i]["name"];
             const ingredients = matching_recipes[i]["ingredients"];
             const time_to_cook = matching_recipes[i]["time to cook"];
-            matching_recipes[i] = <RecipeEntry recipeNumber={name}
+            matching_recipes[i] = <RecipeEntry key={name}
+                                     recipeNumber={name}
                                      ingredients={ingredients}
                                      time_to_cook={time_to_cook}
                                      component={<RecipeSmallBox name={name}/>}/>;
