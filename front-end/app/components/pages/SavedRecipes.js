@@ -4,8 +4,8 @@ import Header from "../Header";
 
 function SavedRecipes() {
     return(
-        <Grid container alignItems="center">
-            <Grid container justifyContent="center">
+        <Grid container >
+            <Grid container alignItems="center" justifyContent="center" direction="column">
                 <Grid item>
                     <p>SAVED RECIPES</p>
                 </Grid>

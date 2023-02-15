@@ -12,8 +12,8 @@ function Home() {
     }
     
     return(
-        <Grid container alignItems="center">
-            <Grid container justifyContent="center">
+        <Grid container direction="column">
+            <Grid item container alignItems="center" justifyContent="center" direction="column">
                 <Grid item>
                     <p>HOME PAGE</p>
                 </Grid>

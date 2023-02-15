@@ -11,21 +11,16 @@ function RecipeSearch() {
 
 
     return(
-        <Grid container alignItems="center">
-            <Grid container justifyContent="center">
+        <Grid container >
+            <Grid container alignItems="center" justifyContent="center" direction="column">
                 <Grid item>
                     <p>RECIPE SEARCH</p>
                 </Grid>
                 <Grid item>
                     <Header />
                 </Grid>
-            </Grid>
-            <Grid container alignItems="left" sx={{
-                paddingTop: "1rem",
-                paddingLeft: "3rem",
-            }}>
-                <Grid item>
-                    <RecipeSearchList search = {search} updateSearch={setSearch}/>
+                <Grid item sx={{paddingTop: "2rem"}}>
+                    <RecipeSearchList search = {search} updateSearch={setSearch} />
                 </Grid>
             </Grid>
         </Grid>

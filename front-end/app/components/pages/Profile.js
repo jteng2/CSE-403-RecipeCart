@@ -4,8 +4,8 @@ import Header from "../Header";
 
 function Profile() {
     return(
-        <Grid container alignItems="center">
-            <Grid container justifyContent="center">
+        <Grid container >
+            <Grid container alignItems="center" justifyContent="center" direction="column">
                 <Grid item>
                     <p>PROFILE PAGE</p>
                 </Grid>
