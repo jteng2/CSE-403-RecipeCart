@@ -29,9 +29,16 @@ reports: weekly updates on each collaboraters' progress and goals
 bug-tracking: Stores a file that keeps track of all our bugs
 
 # Building the System
-## Building the front-end
+## First Steps
+- Start by cloning the repository.
+- Next follow the steps for "Building the back-end" and "Building the front-end".
 
 ## Building the back-end
+
+## Building the front-end
+- Run `npm install` to install all the dependencies
+- Run `npm run build` to build the front end
+- Run `npm run start` to start the application
  
 # Testing the System
 ## Testing the front-end
