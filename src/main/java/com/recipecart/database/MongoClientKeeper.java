@@ -32,7 +32,9 @@ public class MongoClientKeeper {
         throw new NotImplementedException();
     }
 
-    /** @return the singleton MongoConnections */
+    /**
+     * @return the singleton MongoConnections
+     */
     public static MongoClientKeeper getInstance() {
         if (instance == null) {
             instance = new MongoClientKeeper();

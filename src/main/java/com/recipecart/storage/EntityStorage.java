@@ -30,12 +30,16 @@ public class EntityStorage {
         this.loader = loader;
     }
 
-    /** @return the object used for saving entities, for this EntityStorage */
+    /**
+     * @return the object used for saving entities, for this EntityStorage
+     */
     @NotNull public EntitySaver getSaver() {
         return saver;
     }
 
-    /** @return the object used for loading entities, for this EntityStorage */
+    /**
+     * @return the object used for loading entities, for this EntityStorage
+     */
     @NotNull public EntityLoader getLoader() {
         return loader;
     }

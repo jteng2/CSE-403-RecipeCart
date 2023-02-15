@@ -1,9 +1,9 @@
 /* (C)2023 */
 package com.recipecart.database;
 
-import com.mongodb.ServerAddress;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntitySaver;
+import java.io.FileNotFoundException;
 import java.util.Collection;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bson.Document;
@@ -17,21 +17,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MongoEntitySaver extends MongoConnector implements EntitySaver {
 
-    /**
-     * Creates a MongoSaver that's connected to the database at the given host address.
-     *
-     * @param hostAddress the host address of the database to connect to
-     */
-    public MongoEntitySaver(ServerAddress hostAddress) {
-        super(hostAddress);
+    /** {@inheritDoc} */
+    public MongoEntitySaver(String filename) throws FileNotFoundException {
+        super(filename);
     }
 
     /**
      * Saves the given Tags to the Mongo database this saver is connected to.
      *
      * @param tags Tags that need to be saved
-     * @throws IllegalArgumentException if tags, any of its elements, or any names of the Tags are
-     *     null
+     * @throws IllegalArgumentException if any names of the Tags are null
      */
     @Override
     public void updateTags(@NotNull Collection<@NotNull Tag> tags) {
@@ -42,8 +37,7 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
      * Saves the given Ingredients to the Mongo database this saver is connected to.
      *
      * @param ingredients Ingredients that need to be saved
-     * @throws IllegalArgumentException if ingredients, any of its elements, or any names of the
-     *     Ingredients are null
+     * @throws IllegalArgumentException if any names of the Ingredients are null
      */
     @Override
     public void updateIngredients(@NotNull Collection<@NotNull Ingredient> ingredients) {
@@ -54,8 +48,7 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
      * Saves the given Recipes to the Mongo database this saver is connected to.
      *
      * @param recipes Recipes that need to be saved
-     * @throws IllegalArgumentException if recipes, any of its elements, or any names of the Recipes
-     *     are null
+     * @throws IllegalArgumentException if any (non-presentation) names of the Recipes are null
      */
     @Override
     public void updateRecipes(@NotNull Collection<@NotNull Recipe> recipes) {
@@ -66,8 +59,7 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
      * Saves the given Users to the Mongo database this saver is connected to.
      *
      * @param users Users that need to be saved
-     * @throws IllegalArgumentException if users, any of its elements, or any usernames of the Users
-     *     are null
+     * @throws IllegalArgumentException if any usernames of the Users are null
      */
     @Override
     public void updateUsers(@NotNull Collection<@NotNull User> users) {

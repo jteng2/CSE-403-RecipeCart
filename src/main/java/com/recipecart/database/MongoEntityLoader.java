@@ -1,15 +1,15 @@
 /* (C)2023 */
 package com.recipecart.database;
 
-import com.mongodb.ServerAddress;
 import com.recipecart.entities.Ingredient;
 import com.recipecart.entities.Recipe;
 import com.recipecart.entities.Tag;
 import com.recipecart.entities.User;
 import com.recipecart.storage.EntityLoader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang3.NotImplementedException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -21,8 +21,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MongoEntityLoader extends MongoConnector implements EntityLoader {
 
-    public MongoEntityLoader(ServerAddress hostAddress) {
-        super(hostAddress);
+    /** {@inheritDoc} */
+    public MongoEntityLoader(String filename) throws FileNotFoundException {
+        super(filename);
     }
 
     /**
@@ -30,7 +31,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      *
      * @param names the exact names of the tags to be loaded
      * @throws IOException if, for any name, the tag with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Tag with that name
      */
     @Override
@@ -44,7 +44,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      *
      * @param names the exact names of the ingredients to be loaded
      * @throws IOException if, for any name, the ingredient with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Ingredient with that name
      */
     @Override
@@ -58,7 +57,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      *
      * @param names the exact names of the recipes to be loaded
      * @throws IOException if, for any name, the recipe with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Recipe with that name
      */
     @Override
@@ -72,7 +70,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      *
      * @param usernames the exact usernames of the users to be loaded
      * @throws IOException if, for any name, the user with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved User with that name
      */
     @Override
@@ -84,7 +81,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
     /**
      * Checks if a tag with the given name exists in the database this loader is connected to.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved tag with the given name exists, false otherwise
      */
     @Override
@@ -96,7 +92,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * Checks if an ingredient with the given name exists in the database this loader is connected
      * to.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved ingredient with the given name exists, false otherwise
      */
     @Override
@@ -107,7 +102,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
     /**
      * Checks if a recipe with the given name exists in the database this loader is connected to.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved recipe with the given name exists, false otherwise
      */
     @Override
@@ -118,7 +112,6 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
     /**
      * Checks if a user with the given name exists in the database this loader is connected to.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved user with the given name exists, false otherwise
      */
     @Override
@@ -131,10 +124,10 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * this loader is connected to.
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Tags whose names matched, or an empty Collection if none matched
+     * @return the saved Tags whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull Tag> searchTags(@NotNull List<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
@@ -143,11 +136,11 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * database this loader is connected to.
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Ingredients whose names matched, or an empty Collection if none matched
+     * @return the saved Ingredients whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull Ingredient> searchIngredients(
-            @NotNull List<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Ingredient> searchIngredients(
+            @NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
@@ -156,11 +149,10 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * database this loader is connected to.
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Recipes whose names matched, or an empty Collection if none matched
+     * @return the saved Recipes whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull Recipe> searchRecipes(
-            @NotNull List<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Recipe> searchRecipes(@NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 
@@ -169,10 +161,10 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * database this loader is connected to.
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Users whose names matched, or an empty Collection if none matched
+     * @return the saved Users whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Collection<@NotNull User> searchUsers(@NotNull List<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 

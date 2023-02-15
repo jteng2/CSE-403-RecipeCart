@@ -3,8 +3,8 @@ package com.recipecart.storage;
 
 import com.recipecart.entities.*;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +18,6 @@ public interface EntityLoader {
      *
      * @param names the exact names of the Tags to be loaded
      * @throws IOException if, for any name, the Tag with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Tag with that name
      */
     @NotNull List<@NotNull Tag> getTagsByNames(@NotNull List<@NotNull String> names) throws IOException;
@@ -28,7 +27,6 @@ public interface EntityLoader {
      *
      * @param names the exact names of the Ingredients to be loaded
      * @throws IOException if, for any name, the Ingredient with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Ingredient with that name
      */
     @NotNull List<@NotNull Ingredient> getIngredientsByNames(@NotNull List<@NotNull String> names)
@@ -39,7 +37,6 @@ public interface EntityLoader {
      *
      * @param names the exact names of the Recipes to be loaded
      * @throws IOException if, for any name, the Recipe with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved Recipe with that name
      */
     @NotNull List<@NotNull Recipe> getRecipesByNames(@NotNull List<@NotNull String> names)
@@ -50,7 +47,6 @@ public interface EntityLoader {
      *
      * @param usernames the exact usernames of the Users to be loaded
      * @throws IOException if, for any name, the User with the given name failed to be found
-     * @throws IllegalArgumentException if names or any of its elements are null
      * @return for each name given, the respective saved User with that name
      */
     @NotNull List<@NotNull User> getUsersByNames(@NotNull List<@NotNull String> usernames)
@@ -59,7 +55,6 @@ public interface EntityLoader {
     /**
      * Checks if a tag with the given name exists.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved tag with the given name exists, false otherwise
      */
     boolean tagNameExists(@NotNull String name);
@@ -67,7 +62,6 @@ public interface EntityLoader {
     /**
      * Checks if an ingredient with the given name exists.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved ingredient with the given name exists, false otherwise
      */
     boolean ingredientNameExists(@NotNull String name);
@@ -75,7 +69,6 @@ public interface EntityLoader {
     /**
      * Checks if a recipe with the given name (not presentation name) exists.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved recipe with the given name exists, false otherwise
      */
     boolean recipeNameExists(@NotNull String name);
@@ -83,41 +76,43 @@ public interface EntityLoader {
     /**
      * Checks if a user with the given username exists.
      *
-     * @throws IllegalArgumentException if name is null
      * @return true if a saved user with the given username exists, false otherwise
      */
     boolean usernameExists(@NotNull String name);
 
     /**
-     * Searches for saved tags whose names contain at least one of the given tokens.
+     * Searches for saved tags whose names contain at least one of the given tokens
+     * (case-insensitive).
      *
      * @param tokens the tokens for name-matching
      * @return the saved Tags whose names matched, or an empty Collection if none matched
      */
-    @NotNull Collection<@NotNull Tag> searchTags(@NotNull List<@NotNull String> tokens);
+    @NotNull Set<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens);
 
     /**
-     * Searches for saved ingredients whose names contain at least one of the given tokens.
+     * Searches for saved ingredients whose names contain at least one of the given tokens
+     * (case-insensitive).
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Ingredients whose names matched, or an empty Collection if none matched
+     * @return the saved Ingredients whose names matched, or an empty Set if none matched
      */
-    @NotNull Collection<@NotNull Ingredient> searchIngredients(@NotNull List<@NotNull String> tokens);
+    @NotNull Set<@NotNull Ingredient> searchIngredients(@NotNull Set<@NotNull String> tokens);
 
     /**
      * Searches for saved recipes whose names (name or presentation name) contain at least one of
-     * the given tokens.
+     * the given tokens (case-insensitive).
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Recipes whose names matched, or an empty Collection if none matched
+     * @return the saved Recipes whose names matched, or an empty Set if none matched
      */
-    @NotNull Collection<@NotNull Recipe> searchRecipes(@NotNull List<@NotNull String> tokens);
+    @NotNull Set<@NotNull Recipe> searchRecipes(@NotNull Set<@NotNull String> tokens);
 
     /**
-     * Searches for saved users whose names contain at least one of the given tokens.
+     * Searches for saved users whose names contain at least one of the given tokens
+     * (case-insensitive).
      *
      * @param tokens the tokens for name-matching
-     * @return the saved Users whose names matched, or an empty Collection if none matched
+     * @return the saved Users whose names matched, or an empty Set if none matched
      */
-    @NotNull Collection<@NotNull User> searchUsers(@NotNull List<@NotNull String> tokens);
+    @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens);
 }
