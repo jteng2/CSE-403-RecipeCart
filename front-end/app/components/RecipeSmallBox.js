@@ -1,10 +1,10 @@
 import React from 'react';
 import "./../resources/styles/RecipeSmallBox.css";
 
-function RecipeSmallBox() {
+function RecipeSmallBox(props) {
     return (
         <div className="recipe-box">
-            Recipe
+           {props.name ? props.name : "Recipe"}
         </div>
     );
 }
