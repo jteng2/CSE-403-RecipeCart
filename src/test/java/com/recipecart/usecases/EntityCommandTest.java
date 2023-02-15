@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.recipecart.database.MockEntitySaveAndLoader;
 import com.recipecart.storage.EntityStorage;
 import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -89,6 +90,16 @@ public class EntityCommandTest {
         };
     }
 
+    private static EntityCommand nullCheckEntityCommand_NullMessage() {
+        return new EntityCommand() {
+            @Override
+            public void execute() {
+                setExecutionMessage(null);
+                finishExecuting();
+            }
+        };
+    }
+
     private static Stream<Arguments> goodEntityCommands() {
         return Stream.of(
                 Arguments.of(goodEntityCommand_Successful()),
@@ -104,7 +115,12 @@ public class EntityCommandTest {
                 Arguments.of(badEntityCommand_DoubleMessage()));
     }
 
-    private static Stream<Arguments> allEntityCommands() {
+    private static Stream<Arguments> nullCheckEntityCommands() {
+        return Stream.of(Arguments.of(nullCheckEntityCommand_NullMessage()));
+    }
+
+    // does not include null-check commands
+    private static Stream<Arguments> goodAndBadEntityCommands() {
         return Stream.concat(goodEntityCommands(), badEntityCommands());
     }
 
@@ -115,7 +131,7 @@ public class EntityCommandTest {
     }
 
     @ParameterizedTest
-    @MethodSource("allEntityCommands")
+    @MethodSource("goodAndBadEntityCommands")
     void testDefaultState(EntityCommand command) {
         assertFalse(command.isFinishedExecuting());
 
@@ -124,7 +140,13 @@ public class EntityCommandTest {
     }
 
     @ParameterizedTest
-    @MethodSource("allEntityCommands")
+    @MethodSource("nullCheckEntityCommands")
+    void testMessageNullCheck(EntityCommand command) {
+        assertThrows(NullPointerException.class, command::execute);
+    }
+
+    @ParameterizedTest
+    @MethodSource("goodAndBadEntityCommands")
     void testEntityStorage(EntityCommand command) {
         command.setStorageSource(storage);
 
