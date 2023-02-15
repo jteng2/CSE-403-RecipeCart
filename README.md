@@ -27,3 +27,6 @@ back-end: back-end related files
 database: databases of of our recipe, user, ingredient information  
 reports: weekly updates on each collaboraters' progress and goals
 bug-tracking: Stores a file that keeps track of all our bugs
+
+# Functional Use Case
+- Currently, our only use case that is operational a user searching for a recipe.
