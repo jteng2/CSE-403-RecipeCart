@@ -34,6 +34,10 @@ bug-tracking: Stores a file that keeps track of all our bugs
 - Next follow the steps for "Building the back-end" and "Building the front-end".
 
 ## Building the back-end
+- Run `./gradlew` while on the top-level directory of the repository to run the Gradle wrapper, which installs/sets up Gradle for the project.
+- Run `./gradlew build` to build the back-end.
+- Run `./gradlew run` to start the application's backend. (This will currently fail, as the main method is not yet implemented.)
+On IntelliJ, the Gradle build and run tasks can also be done on the Gradle tab without having to use the command line.
 
 ## Building the front-end
 - Run `npm install` to install all the dependencies.
@@ -42,13 +46,11 @@ bug-tracking: Stores a file that keeps track of all our bugs
 - Access the website at http://localhost:8080
  
 # Testing the System
-
 ## Testing the back-end
+- Running `./gradlew build` also runs the backend tests.
 
 ## Testing the front-end
 - Run `npm run test` to run tests.
 
-
-
-# Functional Use Case
+# Functional Use Cases
 - Currently, our only use case that is operational is a user searching for a recipe.
