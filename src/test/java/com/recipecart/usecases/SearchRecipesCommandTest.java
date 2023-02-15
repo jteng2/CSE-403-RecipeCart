@@ -53,7 +53,7 @@ public class SearchRecipesCommandTest {
     void testGetMatchesBeforeExecution(Set<String> tokens) {
         SearchRecipesCommand search = new SearchRecipesCommand(tokens);
 
-        assertThrows(IllegalStateException.class, search::getMatches);
+        assertThrows(IllegalStateException.class, search::getMatchingRecipes);
     }
 
     @ParameterizedTest
@@ -75,11 +75,10 @@ public class SearchRecipesCommandTest {
         assertTrue(search.isFinishedExecuting());
         assertTrue(search.isSuccessful());
 
-        List<Recipe> matches = search.getMatches();
+        Set<Recipe> matches = search.getMatchingRecipes();
         assertNotNull(matches);
         assertEquals(expected.size(), matches.size());
-        Set<Recipe> uniqueMatches = new HashSet<>(matches);
-        assertEquals(expected, uniqueMatches);
+        assertEquals(expected, matches);
         assertEquals(
                 matches.size() == 0
                         ? SearchRecipesCommand.OK_NO_MATCHES_FOUND
@@ -96,7 +95,7 @@ public class SearchRecipesCommandTest {
 
         assertTrue(search.isFinishedExecuting());
         assertFalse(search.isSuccessful());
-        assertNull(search.getMatches());
+        assertNull(search.getMatchingRecipes());
         assertEquals(SearchRecipesCommand.NOT_OK_SEARCH_ERROR, search.getExecutionMessage());
     }
 
@@ -111,6 +110,7 @@ public class SearchRecipesCommandTest {
         search.execute();
 
         assertThrows(IllegalStateException.class, search::execute);
-        assertThrows(UnsupportedOperationException.class, search.getMatches()::clear);
+        assertNotNull(search.getMatchingRecipes());
+        assertThrows(UnsupportedOperationException.class, search.getMatchingRecipes()::clear);
     }
 }

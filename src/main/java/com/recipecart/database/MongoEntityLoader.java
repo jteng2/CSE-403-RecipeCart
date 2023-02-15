@@ -8,7 +8,6 @@ import com.recipecart.entities.User;
 import com.recipecart.storage.EntityLoader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang3.NotImplementedException;
@@ -153,8 +152,7 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      * @return the saved Recipes whose names matched, or an empty Set if none matched
      */
     @Override
-    public @NotNull Set<@NotNull Recipe> searchRecipes(
-            @NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Recipe> searchRecipes(@NotNull Set<@NotNull String> tokens) {
         throw new NotImplementedException();
     }
 

@@ -7,7 +7,6 @@ import com.recipecart.entities.Tag;
 import com.recipecart.entities.User;
 import com.recipecart.storage.EntityLoader;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
@@ -73,8 +72,7 @@ public class BadEntityLoader implements EntityLoader {
     }
 
     @Override
-    public @NotNull Set<@NotNull Recipe> searchRecipes(
-            @NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Recipe> searchRecipes(@NotNull Set<@NotNull String> tokens) {
         throw new RuntimeException();
     }
 

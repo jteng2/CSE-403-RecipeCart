@@ -2,10 +2,9 @@
 package com.recipecart.usecases;
 
 import com.recipecart.storage.EntityStorage;
+import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 /** This abstract class represents an action item that represents a use case involving entities. */
 public abstract class EntityCommand implements Command {

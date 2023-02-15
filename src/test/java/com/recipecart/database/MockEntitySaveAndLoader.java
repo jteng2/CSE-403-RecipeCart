@@ -164,8 +164,7 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     }
 
     @Override
-    public @NotNull Set<@NotNull Recipe> searchRecipes(
-            @NotNull Set<@NotNull String> tokens) {
+    public @NotNull Set<@NotNull Recipe> searchRecipes(@NotNull Set<@NotNull String> tokens) {
         Set<String> matchedNames = findMatches(savedRecipes.keySet(), tokens, true);
         Set<Recipe> matchedRecipes = getValuesOf(matchedNames, savedRecipes);
         matchedRecipes.addAll(findKeysOfMatchingValues(recipePresentationNames, tokens, true));
