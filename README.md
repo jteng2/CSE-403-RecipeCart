@@ -23,9 +23,9 @@ RecipeCart an application where users can search, save, upload, and rate recipes
 # Repository Layout
 Main Folders: front-end, back-end, database, and reports  
 front-end: Front-end related files  
-back-end: back-end related files  
+src: back-end related files  
 database: databases of of our recipe, user, ingredient information  
-reports: weekly updates on each collaboraters' progress and goals
+reports: weekly updates on each collaboraters' progress and goals  
 bug-tracking: Stores a file that keeps track of all our bugs
 
 # Building the System
