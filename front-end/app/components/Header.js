@@ -1,10 +1,7 @@
 import React from "react";
 import { AppBar, Toolbar } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import ProfileButton from "./ProfileButton"
+import ProfileButton from "./ProfileButton";
 import ShoppingListButton from "./ShoppingListButton";
 import SavedRecipeButton from "./SavedRecipeButton";
 import LogoButton from "./LogoButton";
@@ -14,17 +11,14 @@ function Header() {
         <AppBar position="static" style={{ background: "#DCD7EE"}}>
             <Toolbar>
                 <Grid container>
-                    <Grid item xs="3">
+                    <Grid item xs={3}>
                         <ShoppingListButton />
                         <SavedRecipeButton />
                     </Grid>
-                    <Grid item xs="3">
+                    <Grid item xs={6}>
                         <LogoButton />
                     </Grid>
-                    <Grid item xs="3">
-                        <TextField variant="filled" color="info" focused></TextField>
-                    </Grid>
-                    <Grid item xs="3">
+                    <Grid item xs={3}>
                         <ProfileButton />
                     </Grid>
                 </Grid>

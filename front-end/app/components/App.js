@@ -7,6 +7,7 @@ const Profile = lazy(() => import("./pages/Profile"));
 const RecipeSearch = lazy(() => import("./pages/RecipeSearch"));
 const SavedRecipes = lazy(() => import("./pages/SavedRecipes"));
 const ShoppingList = lazy(() => import("./pages/ShoppingList"));
+const AddRecipe = lazy(() => import("./pages/AddRecipe"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 
@@ -20,6 +21,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/saved-recipes" element={<SavedRecipes />} />
             <Route path="/shopping-list" element={<ShoppingList />} />
+            <Route path="/add-recipe" element={<AddRecipe />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
