@@ -36,14 +36,16 @@ bug-tracking: Stores a file that keeps track of all our bugs
 ## Building the back-end
 
 ## Building the front-end
-- Run `npm install` to install all the dependencies
-- Run `npm run build` to build the front end
-- Run `npm run start` to start the application
+- Run `npm install` to install all the dependencies.
+- Run `npm run build` to build the front end.
+- Run `npm run start` to start the application.
  
 # Testing the System
-## Testing the front-end
 
 ## Testing the back-end
+
+## Testing the front-end
+- Run `npm run test` to run tests.
 
 
 
