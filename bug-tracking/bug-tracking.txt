@@ -1,1 +1,8 @@
 # Bug Tracking
+- Recipe Search Page:
+    - Upon refresh, search returns to whatever input was originally sent to the page
+    - Steps to reproduce:
+        - Search recipe from Home page
+        - Upon reaching Recipe Search page, enter new search
+        - Refresh the page
+        - Observe that the search results return to the original search
