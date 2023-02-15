@@ -39,6 +39,7 @@ bug-tracking: Stores a file that keeps track of all our bugs
 - Run `npm install` to install all the dependencies.
 - Run `npm run build` to build the front end.
 - Run `npm run start` to start the application.
+- Access the website at http://localhost:8080
  
 # Testing the System
 
