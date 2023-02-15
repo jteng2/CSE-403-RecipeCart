@@ -72,14 +72,15 @@ export default function RecipeEntry(props) {
         </RecipeDialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Ingredients: Food, food, food, food, food, food, food, food
+            Ingredients: {props.ingredients ?
+               props.ingredients :
+               "Food, food, food, food, food, food, food, food"}
           </Typography>
           <Typography gutterBottom>
             Directions: Step 1, Step 2, Step 3, Step 4, Step 5, Step 6
           </Typography>
           <Typography gutterBottom>
-            Prep: 20 minutes
-          </Typography>
+            Prep: {props.time_to_cook ? props.time_to_cook + " minutes" : "20 minutes"}          </Typography>
         </DialogContent>
       </RecipeDialog>
     </div>
