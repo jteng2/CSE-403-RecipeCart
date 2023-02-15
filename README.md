@@ -29,4 +29,4 @@ reports: weekly updates on each collaboraters' progress and goals
 bug-tracking: Stores a file that keeps track of all our bugs
 
 # Functional Use Case
-- Currently, our only use case that is operational a user searching for a recipe.
+- Currently, our only use case that is operational is a user searching for a recipe.
