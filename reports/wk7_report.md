@@ -14,7 +14,7 @@ The frontend made progress on making the RecipeCart use cases doable on the webs
 ### This week's goals
 
 - Back-end (Devi, Charles, Jason): Implement connection to Mongo. Implement communication between frontend and backend. Implement more use cases. Write any more needed tests for each.
-- Front-end (Caleb, Ricky): 
+- Front-end (Caleb, Ricky): Get the add recipe feature working. Build components such as the saved recipes/search result recipe cards and the account info component. Write more tests for the components we have and the components we plan to build. Get user tracking throughout the website working.
 - UI design (Devi, Charles, Jason): 
 
 Also, establish some protocol for communication between the front-end and back-end parts of the system (i.e. how to structure HTTP requests/responses), and document this protocol.
@@ -32,7 +32,7 @@ Also, establish some protocol for communication between the front-end and back-e
 
 - Charles: I wrote tests for the data access layer, for the business logic entities, and for the one use case we decided to do for the beta release. The business logic entities and that one use case are implemented and pass all tests, but they aren't currently used due to lack of connection of backend and frontend. I also designed some API routes for backend-frontend communication, but haven't implemented that yet.
 - Devi:
-- Ricky:
+- Ricky: I helped build some of the core react components that we needed. I still plan to build the account info component and shopping item component. I set up some dummy data which we used for our components when doing our demo. Furthermore, I still have to write tests for our components.
 - Caleb:
 - Jason: I helped write starter code for back-end, but haven't written any tests. Charles has done most of the back-end testing/starter code. We haven't gotten Mongo setup yet, but we plan to today/tomorrow.
 
@@ -40,6 +40,6 @@ Also, establish some protocol for communication between the front-end and back-e
 
 - Charles: Implement communication between the backend and frontend, and write tests for the testable parts of that module. If time allows, write tests for/implement more use cases. 
 - Devi: 
-- Ricky:
+- Ricky: This week I plan to design and build components such as our search result/saved recipes recipe cards and account/settings info component. Furthermore, we plan to write tests since we are behind on our tests.
 - Caleb:
 - Jason: Finish writing code for back-end to make it mostly operational, and when finished, write tests/debug problems for back-end.
