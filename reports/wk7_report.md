@@ -15,7 +15,7 @@ The frontend made progress on making the RecipeCart use cases doable on the webs
 
 - Back-end (Devi, Charles, Jason): Implement connection to Mongo. Implement communication between frontend and backend. Implement more use cases. Write any more needed tests for each.
 - Front-end (Caleb, Ricky): 
-- UI design (Devi, Charles, Jason):
+- UI design (Devi, Charles, Jason): 
 
 Also, establish some protocol for communication between the front-end and back-end parts of the system (i.e. how to structure HTTP requests/responses), and document this protocol.
 
@@ -34,7 +34,7 @@ Also, establish some protocol for communication between the front-end and back-e
 - Devi:
 - Ricky:
 - Caleb:
-- Jason: 
+- Jason: I helped write starter code for back-end, but haven't written any tests. Charles has done most of the back-end testing/starter code. We haven't gotten Mongo setup yet, but we plan to today/tomorrow.
 
 ### This week's goals
 
@@ -42,4 +42,4 @@ Also, establish some protocol for communication between the front-end and back-e
 - Devi: 
 - Ricky:
 - Caleb:
-- Jason:
+- Jason: Finish writing code for back-end to make it mostly operational, and when finished, write tests/debug problems for back-end.
