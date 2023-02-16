@@ -33,7 +33,7 @@ Also, establish some protocol for communication between the front-end and back-e
 - Charles: I wrote tests for the data access layer, for the business logic entities, and for the one use case we decided to do for the beta release. The business logic entities and that one use case are implemented and pass all tests, but they aren't currently used due to lack of connection of backend and frontend. I also designed some API routes for backend-frontend communication, but haven't implemented that yet.
 - Devi:
 - Ricky: I helped build some of the core react components that we needed. I still plan to build the account info component and shopping item component. I set up some dummy data which we used for our components when doing our demo. Furthermore, I still have to write tests for our components.
-- Caleb:
+- Caleb: I helped build the fundamental components of the website. One issue I spent a long time debugging was the page refresh on form submission which in turn reset the state. Additionally, I had trouble implementing some of the components planned for the Beta Release without any connection to a database.
 - Jason: I helped write starter code for back-end, but haven't written any tests. Charles has done most of the back-end testing/starter code. We haven't gotten Mongo setup yet, but we plan to today/tomorrow.
 
 ### This week's goals
@@ -41,5 +41,5 @@ Also, establish some protocol for communication between the front-end and back-e
 - Charles: Implement communication between the backend and frontend, and write tests for the testable parts of that module. If time allows, write tests for/implement more use cases. 
 - Devi: 
 - Ricky: This week I plan to design and build components such as our search result/saved recipes recipe cards and account/settings info component. Furthermore, we plan to write tests since we are behind on our tests.
-- Caleb:
+- Caleb: This week I will work on user authentication and tracking throughout the website. This took a lower priority this week than originally planned due to the lack of connection to API. 
 - Jason: Finish writing code for back-end to make it mostly operational, and when finished, write tests/debug problems for back-end.
