@@ -6,9 +6,25 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import org.jetbrains.annotations.Nullable;
 
 /** This class contains general utility methods to help with the implementation of RecipeCart. */
 public class Utils {
+    /**
+     * Passes the given T into the given function if the T isn't null; returns null otherwise
+     *
+     * @param mayBeNull an object that might be null
+     * @param function a function (that usually doesn't accept nulls) to pass the non-null T into
+     * @param <T> , and what the function can take as input
+     * @param <U> the function's output type
+     * @return the output of the function applied to the T if it isn't null; null otherwise
+     */
+    public static @Nullable <T, U> U allowNull(
+            @Nullable T mayBeNull, Function<? super T, ? extends U> function) {
+        return mayBeNull == null ? null : function.apply(mayBeNull);
+    }
+
     /**
      * Throws an exception if the given collection is null or has null values.
      *
