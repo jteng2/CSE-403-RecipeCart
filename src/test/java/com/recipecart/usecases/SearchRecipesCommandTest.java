@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -25,11 +26,12 @@ public class SearchRecipesCommandTest {
     }
 
     private static Stream<Arguments> getTokensParams() {
-        return generateArguments(TestData::getSetTagNoNulls);
+        return generateArguments(TestData::getNonEmptySetStringNoNulls);
     }
 
     private static Stream<Arguments> getInvalidTokensParams() {
-        return generateArguments(TestData::getSetTagWithNulls);
+        return generateArgumentsWithStorage(
+                getMockStorageArrayGenerators(), TestData::getInvalidSearchTermSet);
     }
 
     @ParameterizedTest
@@ -42,7 +44,7 @@ public class SearchRecipesCommandTest {
 
     @ParameterizedTest
     @MethodSource("getTokensParams")
-    void testGetSearchTermsExceptions(Set<String> tokens) {
+    void testGetSearchTermsExceptions(@NotNull Set<String> tokens) {
         SearchRecipesCommand search = new SearchRecipesCommand(tokens);
 
         assertThrows(UnsupportedOperationException.class, search.getSearchTerms()::clear);
@@ -57,9 +59,30 @@ public class SearchRecipesCommandTest {
     }
 
     @ParameterizedTest
+    @MethodSource("getTokensParams")
+    void testNullStorageSource(Set<String> tokens) {
+        SearchRecipesCommand search = new SearchRecipesCommand(tokens);
+
+        search.execute();
+
+        assertTrue(search.isFinishedExecuting());
+        assertFalse(search.isSuccessful());
+        assertNull(search.getMatchingRecipes());
+        assertEquals(SearchRecipesCommand.NOT_OK_BAD_STORAGE, search.getExecutionMessage());
+    }
+
+    @ParameterizedTest
     @MethodSource("getInvalidTokensParams")
-    void testInvalidTokens(@Nullable Set<@Nullable String> invalidTokens) {
-        assertThrows(NullPointerException.class, () -> new SearchRecipesCommand(invalidTokens));
+    void testInvalidTokens(EntityStorage storage, @Nullable Set<@Nullable String> invalidTokens) {
+        SearchRecipesCommand search = new SearchRecipesCommand(invalidTokens);
+        search.setStorageSource(storage);
+
+        search.execute();
+
+        assertTrue(search.isFinishedExecuting());
+        assertFalse(search.isSuccessful());
+        assertNull(search.getMatchingRecipes());
+        assertEquals(SearchRecipesCommand.NOT_OK_BAD_SEARCH_TERMS, search.getExecutionMessage());
     }
 
     @ParameterizedTest
@@ -96,7 +119,7 @@ public class SearchRecipesCommandTest {
         assertTrue(search.isFinishedExecuting());
         assertFalse(search.isSuccessful());
         assertNull(search.getMatchingRecipes());
-        assertEquals(SearchRecipesCommand.NOT_OK_SEARCH_ERROR, search.getExecutionMessage());
+        assertEquals(SearchRecipesCommand.NOT_OK_ERROR, search.getExecutionMessage());
     }
 
     @ParameterizedTest

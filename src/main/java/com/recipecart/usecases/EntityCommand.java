@@ -8,6 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 /** This abstract class represents an action item that represents a use case involving entities. */
 public abstract class EntityCommand implements Command {
+    public static final String NOT_OK_BAD_STORAGE =
+            "Execution unsuccessful: an internal error has occurred while trying to execute this"
+                    + " task (as a result of internal improper handling of entity storage)";
+
     private boolean finishedExecuting = false;
     private boolean successful = false;
     private String executionMessage = null;

@@ -171,12 +171,32 @@ public class TestData {
         };
     }
 
+    public static Object[] getNonEmptySetStringNoNulls() {
+        return new Set[] {
+            Set.of("a", "b"),
+            Set.of("\n", "\0", "\t", "\r"),
+            Set.of("get", "non", "empty", "set", "string", "no", "nulls"),
+            Set.of("list", "set", "dict", "unordered_dict"),
+            Set.of("hello", "world")
+        };
+    }
+
     public static Object[] getSetStringWithNulls() {
         return new Set[] {
             null,
             TestUtils.setOfAllowNulls(null, "a"),
             TestUtils.setOfAllowNulls((Object) null),
             TestUtils.setOfAllowNulls(null, "c", "d"),
+            TestUtils.setOfAllowNulls("\n", "\0", null, "\t", "\r"),
+        };
+    }
+
+    public static Object[] getInvalidSearchTermSet() {
+        return new Set[] {
+            null,
+            TestUtils.setOfAllowNulls(null, "a"),
+            TestUtils.setOfAllowNulls((Object) null),
+            Set.of(),
             TestUtils.setOfAllowNulls("\n", "\0", null, "\t", "\r"),
         };
     }

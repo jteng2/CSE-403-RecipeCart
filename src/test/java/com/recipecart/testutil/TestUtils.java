@@ -334,6 +334,10 @@ public class TestUtils {
                 });
     }
 
+    public static List<Supplier<Object[]>> getMockStorageArrayGenerators() {
+        return List.of(TestData::getMockEntityStorages);
+    }
+
     public static List<Supplier<Object[]>> getStorageArrayGenerators() {
         return List.of(
                 // TestData::getMongoEntityStorages,
@@ -376,7 +380,7 @@ public class TestUtils {
                 Set.of("Healthy", "Chicken"),
                 Set.of("veggies", "fruit"),
                 Set.of("adobo", "Null", "Mangoes", "user", "withrice", "Tasty", "address"),
-                Set.of(),
+                Set.of("tasty", "healthy", "zero", "fruit"),
                 Set.of("Mangos, hellaveggies", "deleted", "zero"));
     }
 
@@ -394,7 +398,7 @@ public class TestUtils {
                 Set.of("Chicken Adobo", "hella veggies"),
                 Set.of("hella veggies", "Mangoes"),
                 Set.of("Chicken Adobo", "null", "Mangoes", "Deleted User"),
-                Set.of(),
+                Set.of("Chicken Adobo", "hella veggies", "null", "Mangoes"),
                 Set.of("Deleted User", "null"));
     }
 
