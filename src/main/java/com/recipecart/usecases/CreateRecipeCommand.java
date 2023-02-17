@@ -8,22 +8,18 @@ import org.jetbrains.annotations.Nullable;
 
 /** This class represents an action item for the use case for a user creating a new Recipe. */
 public final class CreateRecipeCommand extends EntityCommand {
-    private final @NotNull String creatorUsername;
+    public static final String OK_RECIPE_CREATED = "Recipe creation successful";
+
     private final @NotNull Recipe recipeToAdd;
 
     /**
-     * Creates an action item for a user to create a Recipe.
+     * Creates an action item for a user to create a Recipe. The given Recipe must have a non-null
+     * presentation name and a non-null author's username for the command to execute successfully.
      *
-     * @param creatorUsername the username of the user that creates the Recipe
      * @param recipeToAdd the Recipe that the user creates
      */
-    public CreateRecipeCommand(@NotNull String creatorUsername, @NotNull Recipe recipeToAdd) {
-        this.creatorUsername = creatorUsername;
+    public CreateRecipeCommand(@NotNull Recipe recipeToAdd) {
         this.recipeToAdd = recipeToAdd;
-    }
-
-    @NotNull public String getCreatorUsername() {
-        return creatorUsername;
     }
 
     @NotNull public Recipe getRecipeToAdd() {
@@ -47,10 +43,10 @@ public final class CreateRecipeCommand extends EntityCommand {
      * Has the given user create the given Recipe. If the Recipe's (non-presentation) name is null,
      * a name will be assigned to it. If it's not null and the name isn't taken, the Recipe will
      * take that name. If it's not null and the name is taken, this command's execution will be
-     * unsuccessful.
+     * unsuccessful. Also, if the Recipe's presentation name or author's username is null, then this
+     * command's execution will be unsuccessful.
      *
      * @throws IllegalStateException if this method has been called before on this command instance.
-     * @throws IllegalArgumentException if the given username has no associated user.
      */
     @Override
     public void execute() {
