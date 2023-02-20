@@ -1,11 +1,19 @@
 /* (C)2023 */
 package com.recipecart.database;
 
+import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoDatabase;
 import org.apache.commons.lang3.NotImplementedException;
+import org.bson.BsonDocument;
+import org.bson.BsonInt64;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -29,9 +37,20 @@ public class MongoClientKeeper {
      *     client based on if a connection was already made via MongoConnections.
      */
     public MongoClient getConnectionTo(ServerAddress hostAddress) {
-        throw new NotImplementedException();
+        // Need something for if hostAddress was previously called or need to
+        // add to map for future use.
+        String uri = hostAddress.getHost();
+        MongoClient mongo = MongoClients.create(uri);
+        MongoDatabase database = mongo.getDatabase("admin");
+        try {
+            Bson ping = new BsonDocument("ping", new BsonInt64(1));
+            Document commandResult = database.runCommand(ping);
+            System.out.println("Connected successfully to server.");
+        } catch (MongoException me) {
+            System.err.println("An error occurred while attempting to run a command: " + me);
+        }
+        return mongo;
     }
-
     /**
      * @return the singleton MongoConnections
      */
