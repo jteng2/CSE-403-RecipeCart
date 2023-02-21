@@ -2,10 +2,7 @@
 package com.recipecart.utils;
 
 import com.recipecart.entities.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -189,5 +186,21 @@ public class Utils {
 
     public static User renameUser(User User, String toRename) {
         return new User.Builder(User).setUsername(toRename).build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////// Methods for converting data structures ///////////////////////////////////
+
+    public static Set<String> fromTags(Set<Tag> tags) {
+        Set<String> tagNames = new HashSet<>();
+        tags.forEach((tag) -> tagNames.add(tag.getName()));
+        return tagNames;
+    }
+
+    public static <T> Map<String, T> fromIngredients(Map<Ingredient, ? extends T> ingredientMap) {
+        Map<String, T> ingredientNameMap = new HashMap<>();
+        ingredientMap.forEach(
+                (ingredient, value) -> ingredientNameMap.put(ingredient.getName(), value));
+        return ingredientNameMap;
     }
 }
