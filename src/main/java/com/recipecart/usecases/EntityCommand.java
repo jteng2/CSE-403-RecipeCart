@@ -29,7 +29,7 @@ public abstract class EntityCommand implements Command {
      *
      * @param storage the place to save/load entities
      */
-    void setStorageSource(@NotNull EntityStorage storage) {
+    public void setStorageSource(@NotNull EntityStorage storage) {
         this.storage = storage;
     }
 
