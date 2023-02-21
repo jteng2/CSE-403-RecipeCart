@@ -77,16 +77,16 @@ public final class SearchRecipesCommand extends EntityCommand {
         if (baseMessage != null) {
             return baseMessage;
         }
-        if (!isSearchTermsValid()) {
+        if (!areSearchTermsValid()) {
             return NOT_OK_BAD_SEARCH_TERMS;
         }
         return null;
     }
 
-    private boolean isSearchTermsValid() {
-        return !(getSearchTerms() == null
-                || getSearchTerms().isEmpty()
-                || getSearchTerms().contains(null));
+    private boolean areSearchTermsValid() {
+        return getSearchTerms() != null
+                && !getSearchTerms().isEmpty()
+                && !getSearchTerms().contains(null);
     }
 
     /**
@@ -114,7 +114,7 @@ public final class SearchRecipesCommand extends EntityCommand {
     }
 
     private Set<Recipe> searchRecipes() {
-        assert getStorageSource() != null; // storage source is always valid
+        assert getStorageSource() != null; // storage source is always valid at this point
         return getStorageSource().getLoader().searchRecipes(getSearchTerms());
     }
 
