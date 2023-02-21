@@ -14,6 +14,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class represents a place to load various RecipeCart entities from a Mongo database (that
@@ -165,6 +166,11 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
      */
     @Override
     public @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public @NotNull String generateUniqueRecipeName(@Nullable String presentationName) {
         throw new NotImplementedException();
     }
 
