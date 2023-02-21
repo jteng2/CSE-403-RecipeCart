@@ -113,6 +113,49 @@ public abstract class EntityCommand implements Command {
         executionMessage = message;
     }
 
+    protected void checkExecutionAlreadyDone() {
+        if (isFinishedExecuting()) {
+            throw new IllegalStateException("Cannot conduct search twice");
+        }
+    }
+
+    /**
+     * Appropriately finishes execution of a command if it's invalid.
+     *
+     * @return true if the command is invalid (and thus finished), false otherwise
+     */
+    protected boolean finishInvalidCommand() {
+        String invalidMessage = getInvalidCommandMessage();
+        if (invalidMessage != null) {
+            setExecutionMessage(invalidMessage);
+            finishExecuting();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gets a message that explains what's invalid about this command. Meant to be overridden.
+     *
+     * @return the message, or null if the command is valid.
+     */
+    protected String getInvalidCommandMessage() {
+        if (!isStorageSourceValid()) {
+            return NOT_OK_BAD_STORAGE;
+        }
+        return null;
+    }
+
+    protected boolean isStorageSourceValid() {
+        return getStorageSource() != null;
+    }
+
+    protected void finishExecutingFromError(Exception e) {
+        e.printStackTrace();
+        setExecutionMessage(NOT_OK_ERROR);
+        finishExecuting();
+    }
+
     /**
      * Executes this command, performing the use case represented by the implementing class. This
      * method must call finishExecuting, beSuccessful, and setExecutionMessage in a way that
