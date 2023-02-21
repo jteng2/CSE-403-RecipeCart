@@ -156,6 +156,12 @@ public abstract class EntityCommand implements Command {
         finishExecuting();
     }
 
+    protected void finishExecutingImpossibleOutcome(Exception e) {
+        e.printStackTrace();
+        setExecutionMessage(NOT_OK_IMPOSSIBLE_OUTCOME);
+        finishExecuting();
+    }
+
     /**
      * Executes this command, performing the use case represented by the implementing class. This
      * method must call finishExecuting, beSuccessful, and setExecutionMessage in a way that
