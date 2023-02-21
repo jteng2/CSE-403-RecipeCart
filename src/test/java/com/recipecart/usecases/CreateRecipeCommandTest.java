@@ -9,12 +9,13 @@ import com.recipecart.database.BadEntityLoader;
 import com.recipecart.database.BadEntitySaver;
 import com.recipecart.database.MockEntitySaveAndLoader;
 import com.recipecart.entities.Recipe;
+import com.recipecart.entities.User;
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.testutil.TestData;
+import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.Utils;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,20 +31,87 @@ public class CreateRecipeCommandTest {
         return generateArgumentsWithStorage(getMockStorageArrayGenerators(), TestData::getRecipes);
     }
 
+    private static Stream<Arguments> getStorageWithRecipeNonEmptyDataStructures() {
+        return generateArgumentsWithStorage(
+                getMockStorageArrayGenerators(), TestData::getRecipesNonEmptyDataStructures);
+    }
+
+    private static void setupStorage(
+            Recipe recipe,
+            EntityStorage storage,
+            boolean setupIngredients,
+            boolean setupTags,
+            boolean setupUser) {
+        if (setupIngredients) {
+            storage.getSaver().updateIngredients(recipe.getRequiredIngredients().keySet());
+        }
+        if (setupTags) {
+            storage.getSaver().updateTags(recipe.getTags());
+        }
+        if (setupUser && recipe.getAuthorUsername() != null) {
+            User author = new User.Builder().setUsername(recipe.getAuthorUsername()).build();
+            storage.getSaver().updateUsers(Collections.singletonList(author));
+        }
+    }
+
+    private static void setupStorage(Recipe recipe, EntityStorage storage) {
+        setupStorage(recipe, storage, true, true, true);
+    }
+
+    private static CreateRecipeCommand createAndExecuteCommand(
+            RecipeForm recipeForm, EntityStorage storageSource) {
+        CreateRecipeCommand command = new CreateRecipeCommand(recipeForm);
+        command.setStorageSource(storageSource);
+        command.execute();
+
+        return command;
+    }
+
+    private static CreateRecipeCommand createAndExecuteCommand(
+            Recipe recipe, EntityStorage storageSource) {
+        return createAndExecuteCommand(new RecipeForm(recipe), storageSource);
+    }
+
+    private static void assertUnsuccessfulExecution(CreateRecipeCommand command, String message) {
+        assertTrue(command.isFinishedExecuting());
+        assertFalse(command.isSuccessful());
+        assertNull(command.getCreatedRecipe());
+        assertEquals(message, command.getExecutionMessage());
+    }
+
+    private static void assertSuccessfulExecution(CreateRecipeCommand command, String message) {
+        assertTrue(command.isFinishedExecuting());
+        assertTrue(command.isSuccessful());
+        assertEquals(message, command.getExecutionMessage());
+
+        Recipe createdRecipe = command.getCreatedRecipe();
+        assertNotNull(createdRecipe);
+        assertNotNull(createdRecipe.getName());
+    }
+
+    private static void assertUserHasRecipe(Recipe creation, EntityStorage storage)
+            throws IOException {
+        String username = creation.getAuthorUsername();
+        assertNotNull(username);
+        User user = storage.getLoader().getUsersByNames(Collections.singletonList(username)).get(0);
+        assertTrue(user.getAuthoredRecipes().contains(creation));
+    }
+
     @ParameterizedTest
     @MethodSource("getRecipe")
     void testGetRecipeToAdd(Recipe toAdd) {
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
+        RecipeForm toAddForm = new RecipeForm(toAdd);
+        CreateRecipeCommand command = new CreateRecipeCommand(toAddForm);
 
-        Recipe fromCommand = command.getRecipeToAdd();
+        RecipeForm fromCommand = command.getToAdd();
         assertNotNull(fromCommand);
-        assertEquals(toAdd, fromCommand);
+        assertEquals(toAddForm, fromCommand);
     }
 
     @ParameterizedTest
     @MethodSource("getRecipe")
     void testGetCreatedRecipeBeforeExecution(Recipe toAdd) {
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
+        CreateRecipeCommand command = new CreateRecipeCommand(new RecipeForm(toAdd));
 
         assertThrows(IllegalStateException.class, command::getCreatedRecipe);
     }
@@ -52,74 +120,68 @@ public class CreateRecipeCommandTest {
     @MethodSource("getStorageWithRecipe")
     void testCreateRecipe_AssignedNameSame(EntityStorage storageSource, Recipe toAdd)
             throws IOException {
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
-        command.setStorageSource(storageSource);
+        setupStorage(toAdd, storageSource);
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
-        command.execute();
-
-        assertTrue(command.isFinishedExecuting());
-        assertTrue(command.isSuccessful());
-        assertEquals(OK_RECIPE_CREATED_WITH_GIVEN_NAME, command.getExecutionMessage());
-
+        assertSuccessfulExecution(command, OK_RECIPE_CREATED_WITH_GIVEN_NAME);
         Recipe createdRecipe = command.getCreatedRecipe();
         assertNotNull(createdRecipe);
         assertEquals(toAdd, createdRecipe);
 
+        assertNotNull(toAdd.getName());
         assertTrue(storageSource.getLoader().recipeNameExists(toAdd.getName()));
         Recipe fromStorage =
                 storageSource.getLoader().getRecipesByNames(List.of(toAdd.getName())).get(0);
         assertEquals(fromStorage, toAdd);
+
+        assertUserHasRecipe(createdRecipe, storageSource);
     }
 
     @ParameterizedTest
     @MethodSource("getStorageWithRecipe")
     void testCreateRecipe_AssignedNameDifferent(EntityStorage storageSource, Recipe baseRecipe)
             throws IOException {
+        setupStorage(baseRecipe, storageSource);
         Recipe toAdd = Utils.renameRecipe(baseRecipe, null);
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
-        command.setStorageSource(storageSource);
 
-        command.execute();
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
-        assertTrue(command.isFinishedExecuting());
-        assertTrue(command.isSuccessful());
-        assertEquals(OK_RECIPE_CREATED_NAME_ASSIGNED, command.getExecutionMessage());
+        assertSuccessfulExecution(command, OK_RECIPE_CREATED_NAME_ASSIGNED);
 
         Recipe createdRecipe = command.getCreatedRecipe();
         assertNotNull(createdRecipe);
+        assertNotNull(createdRecipe.getName());
         assertEquals(Utils.renameRecipe(baseRecipe, createdRecipe.getName()), createdRecipe);
 
         Recipe fromStorage =
-                storageSource.getLoader().getRecipesByNames(List.of(baseRecipe.getName())).get(0);
+                storageSource
+                        .getLoader()
+                        .getRecipesByNames(List.of(createdRecipe.getName()))
+                        .get(0);
         assertEquals(fromStorage, createdRecipe);
+
+        assertUserHasRecipe(createdRecipe, storageSource);
     }
 
     @ParameterizedTest
     @MethodSource("getStorageWithRecipe")
     void testCreateRecipeNameTaken(EntityStorage storageSource, Recipe toAdd) {
+        setupStorage(toAdd, storageSource);
         Recipe withReservedName = new Recipe.Builder().setName(toAdd.getName()).build();
         storageSource.getSaver().updateRecipes(Collections.singletonList(withReservedName));
 
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
-        command.setStorageSource(storageSource);
-        command.execute();
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
-        assertTrue(command.isFinishedExecuting());
-        assertFalse(command.isSuccessful());
-        assertNull(command.getCreatedRecipe());
-        assertEquals(NOT_OK_NAME_TAKEN, command.getExecutionMessage());
+        assertUnsuccessfulExecution(command, NOT_OK_NAME_TAKEN);
     }
 
     @ParameterizedTest
     @MethodSource("getRecipe")
     void testNullStorageSource(Recipe toAdd) {
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
+        CreateRecipeCommand command = new CreateRecipeCommand(new RecipeForm(toAdd));
         command.execute();
 
-        assertTrue(command.isFinishedExecuting());
-        assertFalse(command.isSuccessful());
-        assertNull(command.getCreatedRecipe());
-        assertEquals(NOT_OK_BAD_STORAGE, command.getExecutionMessage());
+        assertUnsuccessfulExecution(command, NOT_OK_BAD_STORAGE);
     }
 
     @Test
@@ -129,57 +191,173 @@ public class CreateRecipeCommandTest {
         command.setStorageSource(new EntityStorage(saveAndLoader, saveAndLoader));
         command.execute();
 
-        assertTrue(command.isFinishedExecuting());
-        assertFalse(command.isSuccessful());
-        assertNull(command.getCreatedRecipe());
-        assertEquals(NOT_OK_INVALID_RECIPE, command.getExecutionMessage());
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
     }
 
     @ParameterizedTest
     @MethodSource("getStorageWithRecipe")
-    void testCreateInvalidRecipePresentationName(EntityStorage storageSource, Recipe baseRecipe) {
+    void testCreateRecipeNullPresentationName(EntityStorage storageSource, Recipe baseRecipe) {
+        setupStorage(baseRecipe, storageSource);
         Recipe toAdd = Utils.renameRecipePresentationName(baseRecipe, null);
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
-        command.setStorageSource(storageSource);
-        command.execute();
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
-        assertTrue(command.isFinishedExecuting());
-        assertFalse(command.isSuccessful());
-        assertNull(command.getCreatedRecipe());
-        assertEquals(NOT_OK_INVALID_RECIPE, command.getExecutionMessage());
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
     }
 
     @ParameterizedTest
     @MethodSource("getStorageWithRecipe")
-    void testCreateInvalidRecipeAuthorName(EntityStorage storageSource, Recipe toAdd) {
-        CreateRecipeCommand command =
-                new CreateRecipeCommand(new Recipe.Builder(toAdd).setAuthorUsername(null).build());
-        command.setStorageSource(storageSource);
-        command.execute();
+    void testCreateRecipeNullAuthorName(EntityStorage storageSource, Recipe baseRecipe) {
+        setupStorage(baseRecipe, storageSource);
+        Recipe toAdd = new Recipe.Builder(baseRecipe).setAuthorUsername(null).build();
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
-        assertTrue(command.isFinishedExecuting());
-        assertFalse(command.isSuccessful());
-        assertNull(command.getCreatedRecipe());
-        assertEquals(NOT_OK_INVALID_RECIPE, command.getExecutionMessage());
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStorageWithRecipeNonEmptyDataStructures")
+    void testCreateRecipeNullDirections(EntityStorage storageSource, Recipe baseRecipe) {
+        setupStorage(baseRecipe, storageSource);
+        List<String> directions = new ArrayList<>(baseRecipe.getDirections());
+        directions.add(null);
+        RecipeForm toAdd =
+                new RecipeForm(
+                        baseRecipe.getName(),
+                        baseRecipe.getPresentationName(),
+                        baseRecipe.getAuthorUsername(),
+                        baseRecipe.getPrepTime(),
+                        baseRecipe.getCookTime(),
+                        baseRecipe.getImageUri(),
+                        baseRecipe.getNumServings(),
+                        baseRecipe.getAvgRating(),
+                        baseRecipe.getNumRatings(),
+                        directions,
+                        Utils.fromTags(baseRecipe.getTags()),
+                        Utils.fromIngredients(baseRecipe.getRequiredIngredients()));
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
+
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStorageWithRecipeNonEmptyDataStructures")
+    void testCreateRecipeNullIngredientNames(EntityStorage storageSource, Recipe baseRecipe) {
+        setupStorage(baseRecipe, storageSource);
+        Map<String, Double> requiredIngredients =
+                Utils.fromIngredients(baseRecipe.getRequiredIngredients());
+        requiredIngredients.put(null, 1.0);
+        RecipeForm toAdd =
+                new RecipeForm(
+                        baseRecipe.getName(),
+                        baseRecipe.getPresentationName(),
+                        baseRecipe.getAuthorUsername(),
+                        baseRecipe.getPrepTime(),
+                        baseRecipe.getCookTime(),
+                        baseRecipe.getImageUri(),
+                        baseRecipe.getNumServings(),
+                        baseRecipe.getAvgRating(),
+                        baseRecipe.getNumRatings(),
+                        baseRecipe.getDirections(),
+                        Utils.fromTags(baseRecipe.getTags()),
+                        requiredIngredients);
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
+
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStorageWithRecipeNonEmptyDataStructures")
+    void testCreateRecipeNullIngredientValues(EntityStorage storageSource, Recipe baseRecipe) {
+        setupStorage(baseRecipe, storageSource);
+        Map<String, Double> requiredIngredients =
+                Utils.fromIngredients(baseRecipe.getRequiredIngredients());
+        requiredIngredients.put("Null ingredient", null);
+        RecipeForm toAdd =
+                new RecipeForm(
+                        baseRecipe.getName(),
+                        baseRecipe.getPresentationName(),
+                        baseRecipe.getAuthorUsername(),
+                        baseRecipe.getPrepTime(),
+                        baseRecipe.getCookTime(),
+                        baseRecipe.getImageUri(),
+                        baseRecipe.getNumServings(),
+                        baseRecipe.getAvgRating(),
+                        baseRecipe.getNumRatings(),
+                        baseRecipe.getDirections(),
+                        Utils.fromTags(baseRecipe.getTags()),
+                        requiredIngredients);
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
+
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStorageWithRecipeNonEmptyDataStructures")
+    void testCreateRecipeNullTagNames(EntityStorage storageSource, Recipe baseRecipe) {
+        setupStorage(baseRecipe, storageSource);
+        Set<String> tags = Utils.fromTags(baseRecipe.getTags());
+        tags.add(null);
+        RecipeForm toAdd =
+                new RecipeForm(
+                        baseRecipe.getName(),
+                        baseRecipe.getPresentationName(),
+                        baseRecipe.getAuthorUsername(),
+                        baseRecipe.getPrepTime(),
+                        baseRecipe.getCookTime(),
+                        baseRecipe.getImageUri(),
+                        baseRecipe.getNumServings(),
+                        baseRecipe.getAvgRating(),
+                        baseRecipe.getNumRatings(),
+                        baseRecipe.getDirections(),
+                        tags,
+                        Utils.fromIngredients(baseRecipe.getRequiredIngredients()));
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
+
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStorageWithRecipeNonEmptyDataStructures")
+    void testCreateRecipeInvalidUsernames(EntityStorage storageSource, Recipe toAdd) {
+        setupStorage(toAdd, storageSource, true, true, false);
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
+
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStorageWithRecipeNonEmptyDataStructures")
+    void testCreateRecipeInvalidIngredientNames(EntityStorage storageSource, Recipe toAdd) {
+        setupStorage(toAdd, storageSource, false, true, true);
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
+
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getStorageWithRecipeNonEmptyDataStructures")
+    void testCreateRecipeInvalidTagNames(EntityStorage storageSource, Recipe toAdd) {
+        setupStorage(toAdd, storageSource, true, false, true);
+        CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
+
+        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
     }
 
     @ParameterizedTest
     @MethodSource("getRecipe")
     void testCreateRecipeWithError(Recipe toAdd) {
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
+        CreateRecipeCommand command = new CreateRecipeCommand(new RecipeForm(toAdd));
         command.setStorageSource(new EntityStorage(new BadEntitySaver(), new BadEntityLoader()));
         command.execute();
 
-        assertTrue(command.isFinishedExecuting());
-        assertFalse(command.isSuccessful());
-        assertNull(command.getCreatedRecipe());
-        assertEquals(NOT_OK_ERROR, command.getExecutionMessage());
+        assertUnsuccessfulExecution(command, NOT_OK_ERROR);
     }
 
     @ParameterizedTest
     @MethodSource("getStorageWithRecipe")
     void testExceptionsAfterRecipeCreation(EntityStorage storageSource, Recipe toAdd) {
-        CreateRecipeCommand command = new CreateRecipeCommand(toAdd);
+        setupStorage(toAdd, storageSource);
+        CreateRecipeCommand command = new CreateRecipeCommand(new RecipeForm(toAdd));
         command.setStorageSource(storageSource);
         command.execute();
 
