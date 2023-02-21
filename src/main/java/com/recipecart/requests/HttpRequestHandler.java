@@ -4,6 +4,7 @@ package com.recipecart.requests;
 import static spark.Spark.*;
 
 import com.google.gson.Gson;
+import com.recipecart.entities.Recipe;
 import com.recipecart.execution.EntityCommander;
 import com.recipecart.usecases.*;
 import com.recipecart.utils.Utils;
@@ -111,11 +112,12 @@ public class HttpRequestHandler {
 
         if (isAuthorized(bodyDetails)) {
             CreateRecipeCommand createRecipeCommand =
-                    new CreateRecipeCommand(bodyDetails.getRecipe());
+                    new CreateRecipeCommand(bodyDetails.getRecipeForm());
             String executionMessage = handleCommand(createRecipeCommand, response);
 
+            Recipe createdRecipe = createRecipeCommand.getCreatedRecipe();
             return new ResponseBodies.RecipeCreation(
-                    executionMessage, createRecipeCommand.getCreatedRecipe().getName());
+                    executionMessage, Utils.allowNull(createdRecipe, Recipe::getName));
         } else {
             return new RequestBodies.RecipeCreation(handleUnauthorized(response), null);
         }
