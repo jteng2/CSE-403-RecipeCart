@@ -71,7 +71,9 @@ public class HttpRequestHandler {
     }
 
     private boolean isAuthorized(RequestBodies.WithLoginRequired requestBodyDetails) {
-        return loginChecker.checkValidity(requestBodyDetails.getEncryptedJwtToken());
+        return true;
+        // use the line of code below once checkValidity is implemented
+        // return loginChecker.checkValidity(requestBodyDetails.getEncryptedJwtToken());
     }
 
     private String handleUnauthorized(Response response) {
@@ -94,7 +96,7 @@ public class HttpRequestHandler {
 
     private Set<String> getQueryArgumentWords(Request request, String queryParam) {
         String rawSearchTerms = request.queryParams(queryParam);
-        return Utils.allowNull(rawSearchTerms, (str) -> Set.of(str.split("[+]")));
+        return Utils.allowNull(rawSearchTerms, (str) -> Set.of(str.split("\\s+")));
     }
 
     private Object handleSearchRecipesRequest(Request request, Response response) {
