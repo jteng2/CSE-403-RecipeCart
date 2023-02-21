@@ -115,12 +115,15 @@ The body will be JSON containing the recipe details, as well as the name of the 
 ```
 ### Response
 A 201 (Created) status code will be returned if the recipe was successfully created. The response will contain the unique recipe name assigned to the recipe (`assignedName`). A 400 (Bad request) status code will be returned if the recipe data is invalid. Recipe data is invalid if any of the following are true:
-* The `presentationName`, `authorUserName`, `encryptedJwtToken`, or `recipe` is missing or null.
+* The `presentationName`, `authorUsername`, `encryptedJwtToken`, or `recipe` is missing or null.
 * A `name` is specified, but there already exists a recipe with the same `name`.
-* Any of the tag names don't correspond to existing tags.
-* Any of the ingredient names don't correspond to existing ingredients.
+* Any of the `directions` elements are null.
+* Any of the `tags` elements are null or don't correspond to existing tags.
+* Any of the `requiredIngredients` keys are null or don't correspond to existing ingredients.
+* Any of the `requiredIngredients` values are null.
+* The `authorUsername` doesn't correspond to an existing user.
 
-A 401 (Unauthorized) status code will be returned if the JWT token from `encryptedJwtToken` is invalid.  
+Note: the fields `directions`, `tags`, and `requiredIngredients` can be null themselves; they just can't have null elements. A 401 (Unauthorized) status code will be returned if the JWT token from `encryptedJwtToken` is invalid.  
 The response will also contain a message with some details about what happened when handling the request (i.e. what error occurred if any, etc.)
 ### Example response
 ```
