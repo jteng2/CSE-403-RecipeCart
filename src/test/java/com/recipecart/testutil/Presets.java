@@ -33,6 +33,20 @@ public class Presets {
         return valid ? TestData::getNotNullStrings : TestData::getNullStrings;
     }
 
+    private static Supplier<Object[]> getListStringNoNullsSupplier(boolean nonEmpty) {
+        return nonEmpty ? TestData::getNonEmptyListStringNoNulls : TestData::getListStringNoNulls;
+    }
+
+    private static Supplier<Object[]> getSetTagNoNullsSupplier(boolean nonEmpty) {
+        return nonEmpty ? TestData::getNonEmptySetTagNoNulls : TestData::getSetTagNoNulls;
+    }
+
+    private static Supplier<Object[]> getMapIngredientDoubleNoNullsSupplier(boolean nonEmpty) {
+        return nonEmpty
+                ? TestData::getNonEmptyMapIngredientDoubleNoNulls
+                : TestData::getMapIngredientDoubleNoNulls;
+    }
+
     public static Supplier<Stream<Arguments>> tagArgs(
             int numTags, boolean staircase, boolean valid) {
         return () ->
@@ -83,7 +97,7 @@ public class Presets {
     }
 
     public static Supplier<Stream<Arguments>> recipeArgs(
-            int numRecipes, boolean staircase, boolean valid) {
+            int numRecipes, boolean staircase, boolean valid, boolean nonEmptyDataStructures) {
         return () ->
                 TestUtils.generateMultiArguments(
                         List.of(
@@ -92,12 +106,12 @@ public class Presets {
                                 TestData::getIntegers,
                                 TestData::getInts,
                                 TestData::getPrimitiveDoubles,
-                                TestData::getListStringNoNulls,
-                                TestData::getSetTagNoNulls,
-                                TestData::getMapIngredientDoubleNoNulls),
+                                getListStringNoNullsSupplier(nonEmptyDataStructures),
+                                getSetTagNoNullsSupplier(nonEmptyDataStructures),
+                                getMapIngredientDoubleNoNullsSupplier(nonEmptyDataStructures)),
                         new int[] {
-                            numRecipes,
                             numRecipes * 3,
+                            numRecipes,
                             numRecipes * 3,
                             numRecipes,
                             numRecipes,
@@ -108,20 +122,8 @@ public class Presets {
                         staircase);
     }
 
-    public static Supplier<Stream<Arguments>> recipeArgs(int numRecipes, boolean staircase) {
-        return recipeArgs(numRecipes, staircase, true);
-    }
-
     public static Supplier<Stream<Arguments>> recipeArgs(int numRecipes) {
-        return recipeArgs(numRecipes, true);
-    }
-
-    public static Supplier<Stream<Arguments>> invalidRecipeArgs(int numRecipes, boolean staircase) {
-        return recipeArgs(numRecipes, staircase, false);
-    }
-
-    public static Supplier<Stream<Arguments>> invalidRecipeArgs(int numRecipes) {
-        return invalidRecipeArgs(numRecipes, true);
+        return recipeArgs(numRecipes, true, true, false);
     }
 
     public static Supplier<Stream<Arguments>> userArgs(
@@ -204,10 +206,10 @@ public class Presets {
     // For the unsafe casts in methods "recipe" and "user", the corresponding object's type has been
     // checked to be of the type to be cast to.
     @SuppressWarnings("unchecked")
-    public static Recipe recipe(int recipeNum, boolean valid) {
+    public static Recipe recipe(int recipeNum, boolean valid, boolean nonEmptyDataStructure) {
         checkPresetNum(recipeNum);
 
-        Supplier<Stream<Arguments>> args = valid ? recipeArgs(1, true) : invalidRecipeArgs(1, true);
+        Supplier<Stream<Arguments>> args = recipeArgs(1, true, valid, nonEmptyDataStructure);
         Object[] fields = getFields(args, recipeNum);
 
         return new Recipe.Builder()
@@ -227,11 +229,15 @@ public class Presets {
     }
 
     public static Recipe recipe(int recipeNum) {
-        return recipe(recipeNum, true);
+        return recipe(recipeNum, true, false);
+    }
+
+    public static Recipe recipeWithNonEmptyDataStructures(int recipeNum) {
+        return recipe(recipeNum, true, true);
     }
 
     public static Recipe invalidRecipe(int recipeNum) {
-        return recipe(recipeNum, false);
+        return recipe(recipeNum, false, false);
     }
 
     // Gets the (userNum)'th preset User

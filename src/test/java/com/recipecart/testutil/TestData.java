@@ -136,6 +136,14 @@ public class TestData {
         return users;
     }
 
+    public static Object[] getRecipesNonEmptyDataStructures() {
+        Object[] recipes = new Recipe[NUM_PARAM_COMBOS];
+        for (int i = 0; i < recipes.length; i++) {
+            recipes[i] = Presets.recipeWithNonEmptyDataStructures(i);
+        }
+        return recipes;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Methods that generate Java-library data structures
     //  - "NoNulls" means that none of the elements in the data structures will be null
@@ -146,6 +154,16 @@ public class TestData {
             List.of("a", "b"),
             List.of("\n", "\0", "\t", "\r"),
             new LinkedList<String>(),
+            List.of("list", "set", "dict", "unordered_dict"),
+            List.of("hello", "world")
+        };
+    }
+
+    public static Object[] getNonEmptyListStringNoNulls() {
+        return new List[] {
+            List.of("a", "b"),
+            List.of("\n", "\0", "\t", "\r"),
+            List.of("a"),
             List.of("list", "set", "dict", "unordered_dict"),
             List.of("hello", "world")
         };
@@ -211,6 +229,16 @@ public class TestData {
         };
     }
 
+    public static Object[] getNonEmptySetTagNoNulls() {
+        return new Set[] {
+            Set.of(Presets.tag(0)),
+            Set.of(Presets.tag(1), Presets.tag(2)),
+            Set.of(Presets.tag(4), Presets.tag(2)),
+            Set.of(Presets.tag(0), Presets.tag(1), Presets.tag(2), Presets.tag(3), Presets.tag(4)),
+            Set.of(Presets.tag(3), Presets.tag(4), Presets.tag(0))
+        };
+    }
+
     public static Object[] getSetTagWithNulls() {
         return new Set[] {
             TestUtils.setOfAllowNulls((Object) null),
@@ -225,6 +253,26 @@ public class TestData {
         return new Map[] {
             Map.of(Presets.ingredient(0), 2.0),
             Map.of(),
+            Map.of(Presets.ingredient(1), 0.1, Presets.ingredient(2), Double.MAX_VALUE),
+            Map.of(
+                    Presets.ingredient(0),
+                    0.01,
+                    Presets.ingredient(1),
+                    100.0,
+                    Presets.ingredient(2),
+                    2.0,
+                    Presets.ingredient(3),
+                    Double.NaN,
+                    Presets.ingredient(4),
+                    Double.NEGATIVE_INFINITY),
+            Map.of(Presets.ingredient(0), -5.0)
+        };
+    }
+
+    public static Object[] getNonEmptyMapIngredientDoubleNoNulls() {
+        return new Map[] {
+            Map.of(Presets.ingredient(0), 2.0),
+            Map.of(Presets.ingredient(4), 10000000000., Presets.ingredient(3), 0.0),
             Map.of(Presets.ingredient(1), 0.1, Presets.ingredient(2), Double.MAX_VALUE),
             Map.of(
                     Presets.ingredient(0),
