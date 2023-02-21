@@ -8,9 +8,19 @@ import org.jetbrains.annotations.Nullable;
 
 /** This class represents an action item for the use case for a user creating a new Recipe. */
 public final class CreateRecipeCommand extends EntityCommand {
-    public static final String OK_RECIPE_CREATED = "Recipe creation successful";
+    public static final String
+            OK_RECIPE_CREATED_WITH_GIVEN_NAME =
+                    "Recipe creation successful: the given unique (non-presentation) recipe name"
+                            + " was available.",
+            OK_RECIPE_CREATED_NAME_ASSIGNED =
+                    "Recipe creation successful: the recipe was assigned a new unique"
+                            + " (non-presentation)  name",
+            NOT_OK_INVALID_RECIPE = "Recipe creation unsuccessful: the recipe was invalid or null",
+            NOT_OK_NAME_TAKEN =
+                    "Recipe creation unsuccessful: the given unique (non-presentation) recipe name"
+                            + " is already taken.";
 
-    private final @NotNull Recipe recipeToAdd;
+    private final Recipe recipeToAdd;
 
     /**
      * Creates an action item for a user to create a Recipe. The given Recipe must have a non-null
@@ -22,7 +32,7 @@ public final class CreateRecipeCommand extends EntityCommand {
         this.recipeToAdd = recipeToAdd;
     }
 
-    @NotNull public Recipe getRecipeToAdd() {
+    public Recipe getRecipeToAdd() {
         return recipeToAdd;
     }
 

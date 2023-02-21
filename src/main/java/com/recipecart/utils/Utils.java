@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /** This class contains general utility methods to help with the implementation of RecipeCart. */
@@ -156,5 +157,37 @@ public class Utils {
      */
     public static void nullCheckUserName(User user) {
         nullCheckUserNames(Collections.singletonList(user));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Methods for renaming entities ///////////////////////////////////
+
+    @SuppressWarnings("unused") // currently, newName is the only field of tag
+    public static Tag renameTag(@NotNull Tag tag, String newName) {
+        return new Tag(newName);
+    }
+
+    public static Ingredient renameIngredient(Ingredient ingredient, String toRename) {
+        return new Ingredient(toRename, ingredient.getUnits(), ingredient.getImageUri());
+    }
+
+    public static Recipe renameRecipe(Recipe recipe, String toRename) {
+        return new Recipe.Builder(recipe).setName(toRename).build();
+    }
+
+    public static Recipe renameRecipePresentationName(Recipe recipe, String toRename) {
+        return new Recipe.Builder(recipe).setPresentationName(toRename).build();
+    }
+
+    public static Recipe renameRecipeFull(
+            Recipe recipe, String toRename, String toRenamePresentation) {
+        return new Recipe.Builder(recipe)
+                .setName(toRename)
+                .setPresentationName(toRenamePresentation)
+                .build();
+    }
+
+    public static User renameUser(User User, String toRename) {
+        return new User.Builder(User).setUsername(toRename).build();
     }
 }

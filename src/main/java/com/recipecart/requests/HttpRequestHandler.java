@@ -34,7 +34,9 @@ public class HttpRequestHandler {
                     200,
                     SearchRecipesCommand.OK_NO_MATCHES_FOUND,
                     200,
-                    CreateRecipeCommand.OK_RECIPE_CREATED,
+                    CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME,
+                    201,
+                    CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED,
                     201);
 
     private final @NotNull EntityCommander commander;
