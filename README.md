@@ -40,6 +40,8 @@ bug-tracking: Stores a file that keeps track of all our bugs
 On IntelliJ, the Gradle build and run tasks can also be done on the Gradle tab without having to use the command line.
 
 ## Building the front-end
+- Install Node (v18) from [Node.js](https://nodejs.org/en/download/)
+- Navigate to the `/front-end/` directory
 - Run `npm install` to install all the dependencies.
 - Run `npm run build` to build the front end.
 - Run `npm run start` to start the application.
