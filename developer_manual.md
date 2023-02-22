@@ -1,16 +1,18 @@
-# How to obtain the source code
-All source code for RecipeCart is located in this repository. The `backend-general` branch contains newer changes in the backend that have yet to be merged into the `main` branch.
+# Developer Manual
 
-# The layout of your directory structure.
+## How to obtain the source code
+All source code for RecipeCart is located in this repository.
+
+## The layout of your directory structure.
 The README.md file contains information on the directory structure of this repository, in the "Repository Layout" section.
 
-# How to build the software.
+## How to build the software.
 The README.md file contains steps and information for building (both the frontend and backend of) this software, in the "Building the System" section.
 
-# How to test the software.
+## How to test the software.
 The README.md file contains steps and information for testing (both the frontend and backend of) this software, in the "Testing the System" section.
 
-# How to add new tests
+## How to add new tests
 ### Backend
 The backend is tested via JUnit unit tests.
 These tests are located in the `src/test` directory.
@@ -25,7 +27,7 @@ More info on JUnit parameterized tests (and JUnit tests in general) here: https:
 ### Frontend
 The tests for the frontend are located in the `/front-end/tests/` directory. These tests are for JavaScript code and are run via Jest. The naming convention of `filename.test.js` must be followed for the tests to be run properly. To add a test, create a new file or add to an existing test file if relevant. Ensure React is imported, then create a test using the format `test('testName', () => {TEST HERE});`.
 
-# How to build a release of the software
+## How to build a release of the software
 Building a release of the software involves the same steps as building the software, and running it on the server of your choice.
 But the build does have to pass on both the machine running it and the remote repository on the corresponding branch (primarily `main`).
 If it doesn't pass, the appropriate fixes must be made.
