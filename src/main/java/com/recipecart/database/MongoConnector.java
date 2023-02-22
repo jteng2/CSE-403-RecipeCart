@@ -24,7 +24,7 @@ public class MongoConnector {
 
     /**
      * Creates a MongoConnector that's connected to the database whose address is in the given file.
-     * The file needs to be a JSON file, with the format of
+     * The file needs to be a JSON file, with the format of:
      *
      * <pre>{@code
      * {
