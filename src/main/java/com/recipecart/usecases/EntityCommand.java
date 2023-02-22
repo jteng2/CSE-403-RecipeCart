@@ -8,6 +8,10 @@ import org.jetbrains.annotations.Nullable;
 
 /** This abstract class represents an action item that represents a use case involving entities. */
 public abstract class EntityCommand implements Command {
+    public static final String NOT_OK_BAD_STORAGE =
+            "Execution unsuccessful: an internal error has occurred while trying to execute this"
+                    + " task (as a result of internal improper handling of entity storage)";
+
     private boolean finishedExecuting = false;
     private boolean successful = false;
     private String executionMessage = null;
@@ -25,7 +29,7 @@ public abstract class EntityCommand implements Command {
      *
      * @param storage the place to save/load entities
      */
-    void setStorageSource(@NotNull EntityStorage storage) {
+    public void setStorageSource(@NotNull EntityStorage storage) {
         this.storage = storage;
     }
 
@@ -107,6 +111,55 @@ public abstract class EntityCommand implements Command {
         }
         Objects.requireNonNull(message);
         executionMessage = message;
+    }
+
+    protected void checkExecutionAlreadyDone() {
+        if (isFinishedExecuting()) {
+            throw new IllegalStateException("Cannot conduct search twice");
+        }
+    }
+
+    /**
+     * Appropriately finishes execution of a command if it's invalid.
+     *
+     * @return true if the command is invalid (and thus finished), false otherwise
+     */
+    protected boolean finishInvalidCommand() {
+        String invalidMessage = getInvalidCommandMessage();
+        if (invalidMessage != null) {
+            setExecutionMessage(invalidMessage);
+            finishExecuting();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gets a message that explains what's invalid about this command. Meant to be overridden.
+     *
+     * @return the message, or null if the command is valid.
+     */
+    protected String getInvalidCommandMessage() {
+        if (!isStorageSourceValid()) {
+            return NOT_OK_BAD_STORAGE;
+        }
+        return null;
+    }
+
+    protected boolean isStorageSourceValid() {
+        return getStorageSource() != null;
+    }
+
+    protected void finishExecutingFromError(Exception e) {
+        e.printStackTrace();
+        setExecutionMessage(NOT_OK_ERROR);
+        finishExecuting();
+    }
+
+    protected void finishExecutingImpossibleOutcome(Exception e) {
+        e.printStackTrace();
+        setExecutionMessage(NOT_OK_IMPOSSIBLE_OUTCOME);
+        finishExecuting();
     }
 
     /**

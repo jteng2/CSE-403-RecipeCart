@@ -2,13 +2,27 @@
 package com.recipecart.utils;
 
 import com.recipecart.entities.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** This class contains general utility methods to help with the implementation of RecipeCart. */
 public class Utils {
+    /**
+     * Passes the given T into the given function if the T isn't null; returns null otherwise
+     *
+     * @param mayBeNull an object that might be null
+     * @param function a function (that usually doesn't accept nulls) to pass the non-null T into
+     * @param <T> , and what the function can take as input
+     * @param <U> the function's output type
+     * @return the output of the function applied to the T if it isn't null; null otherwise
+     */
+    public static @Nullable <T, U> U allowNull(
+            @Nullable T mayBeNull, Function<? super T, ? extends U> function) {
+        return mayBeNull == null ? null : function.apply(mayBeNull);
+    }
+
     /**
      * Throws an exception if the given collection is null or has null values.
      *
@@ -140,5 +154,53 @@ public class Utils {
      */
     public static void nullCheckUserName(User user) {
         nullCheckUserNames(Collections.singletonList(user));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Methods for renaming entities ///////////////////////////////////
+
+    @SuppressWarnings("unused") // currently, newName is the only field of tag
+    public static Tag renameTag(@NotNull Tag tag, String newName) {
+        return new Tag(newName);
+    }
+
+    public static Ingredient renameIngredient(Ingredient ingredient, String toRename) {
+        return new Ingredient(toRename, ingredient.getUnits(), ingredient.getImageUri());
+    }
+
+    public static Recipe renameRecipe(Recipe recipe, String toRename) {
+        return new Recipe.Builder(recipe).setName(toRename).build();
+    }
+
+    public static Recipe renameRecipePresentationName(Recipe recipe, String toRename) {
+        return new Recipe.Builder(recipe).setPresentationName(toRename).build();
+    }
+
+    public static Recipe renameRecipeFull(
+            Recipe recipe, String toRename, String toRenamePresentation) {
+        return new Recipe.Builder(recipe)
+                .setName(toRename)
+                .setPresentationName(toRenamePresentation)
+                .build();
+    }
+
+    public static User renameUser(User User, String toRename) {
+        return new User.Builder(User).setUsername(toRename).build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////// Methods for converting data structures ///////////////////////////////////
+
+    public static Set<String> fromTags(Set<Tag> tags) {
+        Set<String> tagNames = new HashSet<>();
+        tags.forEach((tag) -> tagNames.add(tag.getName()));
+        return tagNames;
+    }
+
+    public static <T> Map<String, T> fromIngredients(Map<Ingredient, ? extends T> ingredientMap) {
+        Map<String, T> ingredientNameMap = new HashMap<>();
+        ingredientMap.forEach(
+                (ingredient, value) -> ingredientNameMap.put(ingredient.getName(), value));
+        return ingredientNameMap;
     }
 }

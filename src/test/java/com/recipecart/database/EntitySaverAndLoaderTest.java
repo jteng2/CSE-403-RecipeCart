@@ -20,6 +20,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class EntitySaverAndLoaderTest {
 
+    static Stream<Arguments> stringParams() {
+        return generateArgumentsWithStorage(
+                getStorageArrayGenerators(), TestData::getNotNullStrings);
+    }
+
     static Stream<Arguments> listTagParams() {
         return generateArgumentsWithStorage(
                 getStorageArrayGenerators(), TestData::getListTagNoNulls);
@@ -409,6 +414,18 @@ public class EntitySaverAndLoaderTest {
     @MethodSource("listUserParamsSomeInvalid")
     void testSaveUsersSomeInvalid(EntityStorage storage, List<User> users) {
         assertThrows(IllegalArgumentException.class, () -> storage.getSaver().updateUsers(users));
+    }
+
+    @ParameterizedTest
+    @MethodSource("stringParams")
+    void testGenerateUniqueRecipeName(EntityStorage storage, String baseName) {
+        Recipe toAdd = new Recipe.Builder().setName(baseName).build();
+        storage.getSaver().updateRecipes(Collections.singletonList(toAdd));
+
+        String generatedName = storage.getLoader().generateUniqueRecipeName(baseName);
+        assertNotNull(generatedName);
+        assertFalse(storage.getLoader().recipeNameExists(generatedName));
+        assertNotEquals(baseName, generatedName);
     }
 
     // This unchecked exception exists so that Function objects can have functions that

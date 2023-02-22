@@ -181,6 +181,6 @@ public class EntityCommandTest {
         command.execute();
 
         assertFalse(command.isSuccessful());
-        assertEquals(Command.NOT_OK_GENERAL, command.getExecutionMessage());
+        assertEquals(Command.DEFAULT_MESSAGE, command.getExecutionMessage());
     }
 }
