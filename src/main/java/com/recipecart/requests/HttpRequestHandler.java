@@ -4,6 +4,7 @@ package com.recipecart.requests;
 import static spark.Spark.*;
 
 import com.google.gson.Gson;
+import com.recipecart.entities.Recipe;
 import com.recipecart.execution.EntityCommander;
 import com.recipecart.usecases.*;
 import com.recipecart.utils.Utils;
@@ -34,7 +35,9 @@ public class HttpRequestHandler {
                     200,
                     SearchRecipesCommand.OK_NO_MATCHES_FOUND,
                     200,
-                    CreateRecipeCommand.OK_RECIPE_CREATED,
+                    CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME,
+                    201,
+                    CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED,
                     201);
 
     private final @NotNull EntityCommander commander;
@@ -68,7 +71,9 @@ public class HttpRequestHandler {
     }
 
     private boolean isAuthorized(RequestBodies.WithLoginRequired requestBodyDetails) {
-        return loginChecker.checkValidity(requestBodyDetails.getEncryptedJwtToken());
+        return true;
+        // use the line of code below once checkValidity is implemented
+        // return loginChecker.checkValidity(requestBodyDetails.getEncryptedJwtToken());
     }
 
     private String handleUnauthorized(Response response) {
@@ -91,7 +96,7 @@ public class HttpRequestHandler {
 
     private Set<String> getQueryArgumentWords(Request request, String queryParam) {
         String rawSearchTerms = request.queryParams(queryParam);
-        return Utils.allowNull(rawSearchTerms, (str) -> Set.of(str.split("[+]")));
+        return Utils.allowNull(rawSearchTerms, (str) -> Set.of(str.split("\\s+")));
     }
 
     private Object handleSearchRecipesRequest(Request request, Response response) {
@@ -109,11 +114,12 @@ public class HttpRequestHandler {
 
         if (isAuthorized(bodyDetails)) {
             CreateRecipeCommand createRecipeCommand =
-                    new CreateRecipeCommand(bodyDetails.getRecipe());
+                    new CreateRecipeCommand(bodyDetails.getRecipeForm());
             String executionMessage = handleCommand(createRecipeCommand, response);
 
+            Recipe createdRecipe = createRecipeCommand.getCreatedRecipe();
             return new ResponseBodies.RecipeCreation(
-                    executionMessage, createRecipeCommand.getCreatedRecipe().getName());
+                    executionMessage, Utils.allowNull(createdRecipe, Recipe::getName));
         } else {
             return new RequestBodies.RecipeCreation(handleUnauthorized(response), null);
         }

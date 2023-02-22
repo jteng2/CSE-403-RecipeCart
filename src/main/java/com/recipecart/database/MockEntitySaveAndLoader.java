@@ -8,6 +8,7 @@ import com.recipecart.utils.Utils;
 import java.io.IOException;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This class implements the storage EntitySaver and EntityLoader using a Map. This class is meant
@@ -217,6 +218,26 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         Utils.nullCheckUserNames(users);
         for (User user : users) {
             savedUsers.put(user.getUsername(), user);
+        }
+    }
+
+    @Override
+    public @NotNull String generateUniqueRecipeName(@Nullable String presentationName) {
+        String baseName;
+        if (presentationName == null) {
+            baseName = "";
+        } else {
+            baseName = presentationName.trim().replaceAll("\\s+", "-");
+            if (!recipeNameExists(baseName)) {
+                return baseName;
+            }
+        }
+
+        for (long i = 0; ; i++) {
+            String generatedName = baseName + i;
+            if (!recipeNameExists(generatedName)) {
+                return generatedName;
+            }
         }
     }
 }

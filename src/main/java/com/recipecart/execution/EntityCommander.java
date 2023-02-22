@@ -3,7 +3,6 @@ package com.recipecart.execution;
 
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.usecases.EntityCommand;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,6 +31,7 @@ public class EntityCommander {
      * @param command the command to execute
      */
     public void execute(@NotNull EntityCommand command) {
-        throw new NotImplementedException();
+        command.setStorageSource(getStorageSource());
+        command.execute();
     }
 }

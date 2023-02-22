@@ -13,7 +13,10 @@ public interface Command {
             DEFAULT_MESSAGE = NOT_OK_GENERAL,
             NOT_OK_ERROR =
                     "Execution unsuccessful: an internal error has occurred while trying to execute"
-                            + " this task";
+                            + " this task",
+            NOT_OK_IMPOSSIBLE_OUTCOME =
+                    "Execution unsuccessful: an internal error that shouldn't happen has occurred."
+                            + " If you're seeing this, something has gone very wrong.";
 
     /**
      * @return true if this command has finished executing, false otherwise.

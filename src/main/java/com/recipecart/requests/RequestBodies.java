@@ -1,7 +1,7 @@
 /* (C)2023 */
 package com.recipecart.requests;
 
-import com.recipecart.entities.Recipe;
+import com.recipecart.utils.RecipeForm;
 
 /**
  * This helper class contains static Java class representations of the (JSON) bodies of various HTTP
@@ -24,14 +24,14 @@ class RequestBodies {
 
     /** Follows the "Create recipe" API route. */
     static class RecipeCreation extends WithLoginRequired {
-        private final Recipe recipe;
+        private final RecipeForm recipe;
 
-        RecipeCreation(String encryptedJwtToken, Recipe recipe) {
+        RecipeCreation(String encryptedJwtToken, RecipeForm recipe) {
             super(encryptedJwtToken);
             this.recipe = recipe;
         }
 
-        Recipe getRecipe() {
+        RecipeForm getRecipeForm() {
             return recipe;
         }
     }

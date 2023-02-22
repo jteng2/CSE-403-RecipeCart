@@ -2,6 +2,7 @@
 package com.recipecart.usecases;
 
 import static com.recipecart.testutil.TestUtils.*;
+import static com.recipecart.usecases.SearchRecipesCommand.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.recipecart.database.BadEntityLoader;
@@ -68,7 +69,7 @@ public class SearchRecipesCommandTest {
         assertTrue(search.isFinishedExecuting());
         assertFalse(search.isSuccessful());
         assertNull(search.getMatchingRecipes());
-        assertEquals(SearchRecipesCommand.NOT_OK_BAD_STORAGE, search.getExecutionMessage());
+        assertEquals(EntityCommand.NOT_OK_BAD_STORAGE, search.getExecutionMessage());
     }
 
     @ParameterizedTest
@@ -82,7 +83,7 @@ public class SearchRecipesCommandTest {
         assertTrue(search.isFinishedExecuting());
         assertFalse(search.isSuccessful());
         assertNull(search.getMatchingRecipes());
-        assertEquals(SearchRecipesCommand.NOT_OK_BAD_SEARCH_TERMS, search.getExecutionMessage());
+        assertEquals(NOT_OK_BAD_SEARCH_TERMS, search.getExecutionMessage());
     }
 
     @ParameterizedTest
@@ -103,15 +104,13 @@ public class SearchRecipesCommandTest {
         assertEquals(expected.size(), matches.size());
         assertEquals(expected, matches);
         assertEquals(
-                matches.size() == 0
-                        ? SearchRecipesCommand.OK_NO_MATCHES_FOUND
-                        : SearchRecipesCommand.OK_MATCHES_FOUND,
+                matches.size() == 0 ? OK_NO_MATCHES_FOUND : OK_MATCHES_FOUND,
                 search.getExecutionMessage());
     }
 
     @ParameterizedTest
     @MethodSource("getTokensParams")
-    void testUnsuccessfulSearch(Set<String> tokens) {
+    void testSearchWithError(Set<String> tokens) {
         SearchRecipesCommand search = new SearchRecipesCommand(tokens);
         search.setStorageSource(new EntityStorage(new BadEntitySaver(), new BadEntityLoader()));
         search.execute();
@@ -119,7 +118,7 @@ public class SearchRecipesCommandTest {
         assertTrue(search.isFinishedExecuting());
         assertFalse(search.isSuccessful());
         assertNull(search.getMatchingRecipes());
-        assertEquals(SearchRecipesCommand.NOT_OK_ERROR, search.getExecutionMessage());
+        assertEquals(NOT_OK_ERROR, search.getExecutionMessage());
     }
 
     @ParameterizedTest

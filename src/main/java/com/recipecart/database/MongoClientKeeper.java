@@ -4,12 +4,10 @@ package com.recipecart.database;
 import com.mongodb.MongoException;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
-import org.apache.commons.lang3.NotImplementedException;
+import java.util.HashMap;
+import java.util.Map;
 import org.bson.BsonDocument;
 import org.bson.BsonInt64;
 import org.bson.Document;
