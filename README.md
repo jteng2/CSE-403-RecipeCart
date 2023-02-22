@@ -57,6 +57,8 @@ It's configured so that the build will fail if there's any formatting errors.
 There's a Gradle task `./gradlew spotlessApply` that automatically corrects these formatting errors.
 Typically when editing code, this task is done right before building.
 ## Building the front-end
+- Install Node (v18) from [Node.js](https://nodejs.org/en/download/)
+- Navigate to the `/front-end/` directory
 - Run `npm install` to install all the dependencies.
 - Run `npm run build` to build the front end.
 - Run `npm run start` to start the application.
