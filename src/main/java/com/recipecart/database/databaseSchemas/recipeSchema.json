@@ -1,0 +1,33 @@
+[{
+  "_id": {
+    "$oid": "63f5826a11c26151ee03c588"
+  },
+  "name": "name_1",
+  "presentation_name": "pname_1",
+  "author_username": "aname_1",
+  "prep_time": "prep_time_1",
+  "cook_time": "cook_time_1",
+  "image": "image.png",
+  "avg_rating": 4.5,
+  "num_ratings": 65,
+  "num_servings": 3,
+  "directions": [
+    "step 1",
+    "step 2",
+    "step 3"
+  ],
+  "tags": [
+    "tag_id1",
+    "tag_id2"
+  ],
+  "ingredients": [
+    {
+      "ingredient_id": "ingredient_id1",
+      "quantity": 9
+    },
+    {
+      "ingredient_id": "ingredient_id2",
+      "quantity": 2
+    }
+  ]
+}]
