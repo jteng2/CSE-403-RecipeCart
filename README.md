@@ -46,7 +46,7 @@ Main Folders: front-end, back-end, database, and reports
 - Next follow the steps for "Building the back-end" and "Building the front-end".
 
 ## Building the back-end
-The backend uses the Gradle build system to make sure that the backend builds correctly. Also, the backed uses **Java 11** as its Java version, so make sure you have to correct version, or there may be errors building.
+The backend uses the Gradle build system to make sure that the backend builds correctly. Also, the backend uses **Java 11** as its Java version, so make sure you have to correct version, or there may be errors building.
 - Run `./gradlew` while on the top-level directory of the repository to run the Gradle wrapper, which installs/sets up Gradle for the project.
 - Run `./gradlew build` to build the back-end.
 - Run `./gradlew run` to start the application's backend. (This will currently fail, as the main method is not yet implemented.)
