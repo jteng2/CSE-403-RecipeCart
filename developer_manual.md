@@ -23,6 +23,7 @@ Also, parameterized tests are heavily utilitzed in the unit tests, and they're a
 More info on JUnit parameterized tests (and JUnit tests in general) here: https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests.
 
 ### Frontend
+The tests for the frontend are located in the `/front-end/tests/` directory. These tests are for JavaScript code and are run via Jest. The naming convention of `filename.test.js` must be followed for the tests to be run properly. To add a test, create a new file or add to an existing test file if relevant. Ensure React is imported, then create a test using the format `test('testName', () => {TEST HERE});`.
 
 # How to build a release of the software
 Building a release of the software involves the same steps as building the software, and running it on the server of your choice.
