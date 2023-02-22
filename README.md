@@ -71,6 +71,7 @@ Typically when editing code, this task is done right before building.
 - One other thing to note is that some exception stacktrackes may be printed when running these tests, even if all tests pass. Do not be alarmed of this, as some tests test for if an exception is being handled, and printing the stacktrace of the exception is one of the behaviors that those exception handlers do. Just note if the tests pass or not.
 
 ## Testing the front-end
+- Navigate to `/front-end/` directory
 - Run `npm run test` to run tests.
 
 # Functional Use Cases
