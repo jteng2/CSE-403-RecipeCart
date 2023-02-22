@@ -3,17 +3,13 @@ package com.recipecart.database;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-
+import com.mongodb.client.MongoDatabase;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
-
-import com.mongodb.client.MongoDatabase;
-import org.apache.commons.lang3.NotImplementedException;
 import org.bson.Document;
 
 /**
@@ -41,7 +37,6 @@ public class MongoConnector {
      *
      * @param filename the file with the database address details
      */
-
     public MongoConnector(String filename) throws FileNotFoundException {
         Gson gson = new Gson();
         JsonObject json = gson.fromJson(new FileReader(filename), JsonObject.class);
@@ -57,9 +52,12 @@ public class MongoConnector {
         MongoClient mongoClient = MongoClients.create("mongodb://" + hostname + ":" + port);
         MongoDatabase database = mongoClient.getDatabase(databaseName);
         MongoCollection<Document> tagCollection = database.getCollection(tagCollectionName.get(1));
-        MongoCollection<Document> ingredientCollection = database.getCollection(ingredientCollectionName.get(1));
-        MongoCollection<Document> recipeCollection = database.getCollection(recipeCollectionName.get(1));
-        MongoCollection<Document> userCollection = database.getCollection(userCollectionName.get(1));
+        MongoCollection<Document> ingredientCollection =
+                database.getCollection(ingredientCollectionName.get(1));
+        MongoCollection<Document> recipeCollection =
+                database.getCollection(recipeCollectionName.get(1));
+        MongoCollection<Document> userCollection =
+                database.getCollection(userCollectionName.get(1));
     }
     // possible helper functions that can help with implementations of MongoConnector
 
