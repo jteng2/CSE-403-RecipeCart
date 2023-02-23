@@ -31,13 +31,14 @@ Also, establish some protocol for communication between the front-end and back-e
 ### Progress and Issues
 
 - Charles:
-- Devi:
+- Devi: This week I helped with the implementation and documentation reports, reviewing the user and developer documenst, and building the backend databases. I finished adding the started database and adding the schema to the github. I also set up meeting events ahead of time to create a better meeting plan.
+
 - Ricky:
 - Caleb:
 - Jason: 
 ### This week's goals
-
 - Charles:
+- Devi: Next week, I hope to be working on a remaining use cases and do research for the login component.
 - Ricky:
 - Caleb: 
 - Jason: 
