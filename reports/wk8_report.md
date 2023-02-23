@@ -3,8 +3,8 @@
 ### Last week's goals
 
 As a whole, implement CI to automatically run a collection of unit tests on each commit. 
-- Back-end (Devi, Charles, Jason):  Implement connection to Mongo. Implement communication between frontend and backend. Implement more use cases. Write any more needed tests for each.
-- Front-end (Caleb, Ricky): Get the add recipe feature working. Build components such as the saved recipes/search result recipe cards and the account info component. Write more tests for the components we have and the components we plan to build. Get user tracking throughout the website working.
+- Back-end (Devi, Charles, Jason): Get the backend to communicate with a Mongo database. Implement a use case. Write tests that covers that use case (and stuff it depends on).
+- Front-end (Caleb, Ricky): Finalize user authentication and tracking througout website. Fully functional components. Display dynamic data from backend.
 - UI design (Devi, Charles, Jason):
 
 ### Progress and Issues
@@ -22,21 +22,21 @@ Also, establish some protocol for communication between the front-end and back-e
 # Individual Contributions
 
 ### Last week's goals
-- Charles: I wrote tests for the data access layer, for the business logic entities, and for the one use case we decided to do for the beta release. The business logic entities and that one use case are implemented and pass all tests, but they aren't currently used due to lack of connection of backend and frontend. I also designed some API routes for backend-frontend communication, but haven't implemented that yet.
-- Devi: This week I helped with the beta release presentation, reviewing the architecture and design document, and building the backend databases. I set up the remote mongo and started writing the recipes and user ids.
-- Ricky: I helped build some of the core react components that we needed. I still plan to build the account info component and shopping item component. I set up some dummy data which we used for our components when doing our demo. Furthermore, I still have to write tests for our components.
-- Caleb: I helped build the fundamental components of the website. One issue I spent a long time debugging was the page refresh on form submission which in turn reset the state. Additionally, I had trouble implementing some of the components planned for the Beta Release without any connection to a database.
-- Jason: I helped write starter code for back-end, but haven't written any tests. Charles has done most of the back-end testing/starter code. We haven't gotten Mongo setup yet, but we plan to today/tomorrow.
+- Charles: Implement communication between the backend and frontend, and write tests for the testable parts of that module. If time allows, write tests for/implement more use cases. 
+- Devi: In the coming week I hope to finish the database with the starter data and write the requests to the database so it can be accessed. This will help complete a few of use cases and major goals.
+- Ricky: This week I plan to design and build components such as our search result/saved recipes recipe cards and account/settings info component. Furthermore, we plan to write tests since we are behind on our tests.
+- Caleb: This week I will work on user authentication and tracking throughout the website. This took a lower priority this week than originally planned due to the lack of connection to API. 
+- Jason: Finish writing code for back-end to make it mostly operational, and when finished, write tests/debug problems for back-end.
 
 ### Progress and Issues
 
-- Charles:
+- Charles: This week I implemented (and wrote tests for) another use case (creating a recipe) in the backend, and I got the backend to be able to connect with the frontend (i.e. implemented the API routes). I also implemented the main method, so the backend can now actually run; although, it uses the "mock" data access layer that was used for testing other parts of the backend. Although the connection seems to work, I didn't get enough time to write the tests for it.
 - Devi: This week I helped with the implementation and documentation reports, reviewing the user and developer documenst, and building the backend databases. I finished adding the started database and adding the schema to the github. I also set up meeting events ahead of time to create a better meeting plan.
 - Ricky:
 - Caleb: This week I helped implement a few more features on the front-end and did research for user-authentication. I helped figure out GitHub Issues and documented the setup process for hosting and using the frontend.
 - Jason:  Written code to connect to mongo and access collections. Not fully done, but got a way to connect to mongo.
 ### This week's goals
-- Charles:
+- Charles: Write tests for the backend part of the frontend-backend connector. Implement and write tests for more use cases.
 - Devi: Next week, I hope to be working on a remaining use cases and do research for the login component.
 - Ricky:
 - Caleb: This week I will finalize user authentication and update our existing use cases to properly access the database via our RESTful API. Additionally, I will finalize the user profile page to work with user login. 
