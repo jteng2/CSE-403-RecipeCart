@@ -1,7 +1,6 @@
 /* (C)2023 */
 package com.recipecart.requests;
 
-import com.recipecart.entities.Recipe;
 import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.Utils;
 import java.util.ArrayList;

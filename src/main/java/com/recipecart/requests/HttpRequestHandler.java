@@ -9,7 +9,6 @@ import com.recipecart.execution.EntityCommander;
 import com.recipecart.usecases.*;
 import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +110,9 @@ public class HttpRequestHandler {
 
         if (searchRecipesCommand.getMatchingRecipes() != null) {
             List<RecipeForm> matches = new ArrayList<>();
-            searchRecipesCommand.getMatchingRecipes().forEach((match) -> matches.add(new RecipeForm(match)));
+            searchRecipesCommand
+                    .getMatchingRecipes()
+                    .forEach((match) -> matches.add(new RecipeForm(match)));
             return new ResponseBodies.RecipeSearch(message, matches);
         } else {
             return new ResponseBodies.RecipeSearch(message, null);
