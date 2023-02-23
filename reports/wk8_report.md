@@ -32,12 +32,12 @@ Also, establish some protocol for communication between the front-end and back-e
 
 - Charles: This week I implemented (and wrote tests for) another use case (creating a recipe) in the backend, and I got the backend to be able to connect with the frontend (i.e. implemented the API routes). I also implemented the main method, so the backend can now actually run; although, it uses the "mock" data access layer that was used for testing other parts of the backend. Although the connection seems to work, I didn't get enough time to write the tests for it.
 - Devi: This week I helped with the implementation and documentation reports, reviewing the user and developer documenst, and building the backend databases. I finished adding the started database and adding the schema to the github. I also set up meeting events ahead of time to create a better meeting plan.
-- Ricky:
+- Ricky: This week I helped a helped work on a few more of the features we would have on our website.
 - Caleb: This week I helped implement a few more features on the front-end and did research for user-authentication. I helped figure out GitHub Issues and documented the setup process for hosting and using the frontend.
 - Jason:  Written code to connect to mongo and access collections. Not fully done, but got a way to connect to mongo.
 ### This week's goals
 - Charles: Write tests for the backend part of the frontend-backend connector. Implement and write tests for more use cases.
 - Devi: Next week, I hope to be working on a remaining use cases and do research for the login component.
-- Ricky:
+- Ricky: Work on more of the use cases and build out more of the features.
 - Caleb: This week I will finalize user authentication and update our existing use cases to properly access the database via our RESTful API. Additionally, I will finalize the user profile page to work with user login. 
 - Jason: Finish connecting to mongo and help with any tests.
