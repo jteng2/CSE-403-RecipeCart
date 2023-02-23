@@ -13,7 +13,7 @@ The frontend made progress on making the RecipeCart use cases doable on the webs
 
 ### This week's goals
 
-- Back-end (Devi, Charles, Jason):
+- Back-end (Devi, Charles, Jason): Finish coding use-cases and connecting to mongo
 - Front-end (Caleb, Ricky):
 - UI design (Devi, Charles, Jason): 
 
@@ -34,10 +34,10 @@ Also, establish some protocol for communication between the front-end and back-e
 - Devi: This week I helped with the implementation and documentation reports, reviewing the user and developer documenst, and building the backend databases. I finished adding the started database and adding the schema to the github. I also set up meeting events ahead of time to create a better meeting plan.
 - Ricky:
 - Caleb: This week I helped implement a few more features on the front-end and did research for user-authentication. I helped figure out GitHub Issues and documented the setup process for hosting and using the frontend.
-- Jason: 
+- Jason:  Written code to connect to mongo and access collections. Not fully done, but got a way to connect to mongo.
 ### This week's goals
 - Charles:
 - Devi: Next week, I hope to be working on a remaining use cases and do research for the login component.
 - Ricky:
-- Caleb: This week I will finalize user authentication and update our existing use cases to properly access the database via our RESTful API. Additionally, I will finalize the user profile page to work with user login.
-- Jason: 
+- Caleb: This week I will finalize user authentication and update our existing use cases to properly access the database via our RESTful API. Additionally, I will finalize the user profile page to work with user login. 
+- Jason: Finish connecting to mongo and help with any tests.
