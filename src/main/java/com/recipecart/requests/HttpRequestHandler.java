@@ -7,7 +7,11 @@ import com.google.gson.Gson;
 import com.recipecart.entities.Recipe;
 import com.recipecart.execution.EntityCommander;
 import com.recipecart.usecases.*;
+import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
@@ -105,7 +109,13 @@ public class HttpRequestHandler {
         SearchRecipesCommand searchRecipesCommand = new SearchRecipesCommand(searchTerms);
         String message = handleCommand(searchRecipesCommand, response);
 
-        return new ResponseBodies.RecipeSearch(message, searchRecipesCommand.getMatchingRecipes());
+        if (searchRecipesCommand.getMatchingRecipes() != null) {
+            List<RecipeForm> matches = new ArrayList<>();
+            searchRecipesCommand.getMatchingRecipes().forEach((match) -> matches.add(new RecipeForm(match)));
+            return new ResponseBodies.RecipeSearch(message, matches);
+        } else {
+            return new ResponseBodies.RecipeSearch(message, null);
+        }
     }
 
     private Object handleCreateRecipeRequest(Request request, Response response) {

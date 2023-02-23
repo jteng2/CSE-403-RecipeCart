@@ -2,6 +2,7 @@
 package com.recipecart.requests;
 
 import com.recipecart.entities.Recipe;
+import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.Utils;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,14 +31,14 @@ class ResponseBodies {
 
     /** Follows the "Search for recipe" API route. */
     static class RecipeSearch extends WithMessage {
-        private final List<Recipe> matches;
+        private final List<RecipeForm> matches;
 
-        RecipeSearch(String message, Collection<Recipe> matches) {
+        RecipeSearch(String message, Collection<RecipeForm> matches) {
             super(message);
             this.matches = Utils.allowNull(matches, ArrayList::new);
         }
 
-        List<Recipe> getMatches() {
+        List<RecipeForm> getMatches() {
             return Collections.unmodifiableList(matches);
         }
     }

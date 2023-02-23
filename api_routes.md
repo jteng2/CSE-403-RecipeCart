@@ -41,14 +41,14 @@ Content-type: application/json
                 "Start stove with temperature on medium",
                 ...
             ],
-            "tags": {
-                {"name": "breakfast"},
-                {"name": "quick"},
+            "tags": [
+                "breakfast",
+                "quick",
                 ...
-            },
+            ],
             "requiredIngredients": {
-                {"name": "egg", "units": "eggs", "imageUri": "..."}: 2,
-                {"name": "cheese", "units": "cups", "imageUri": "..."}: 0.75,
+                "egg": 2,
+                "cheese": 0.75,
                 ...
             }
         },
@@ -100,11 +100,11 @@ The body will be JSON containing the recipe details, as well as the name of the 
             "Start stove with temperature on medium",
             ...
         ],
-        "tags": {
+        "tags": [
             "breakfast",
             "quick",
             ...
-        },
+        ],
         "requiredIngredients": {
             "egg": 2,
             "cheese": 0.75,
