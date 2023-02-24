@@ -309,18 +309,32 @@ public class TestUtils {
                 TestData::getMockEntityStorages);
     }
 
-    public static Stream<Arguments> generateArgumentsWithStorage(
-            List<Supplier<Object[]>> storageGenerators, Supplier<Object[]> generator) {
-        Stream<Arguments> concatenatedArgs = null;
-        for (Supplier<Object[]> storageGenerator : storageGenerators) {
-            Stream<Arguments> toConcatenate =
-                    generateMultiArguments(List.of(storageGenerator, generator), 1, true);
-            concatenatedArgs =
-                    concatenatedArgs == null
-                            ? toConcatenate
-                            : Stream.concat(concatenatedArgs, toConcatenate);
+    public static Stream<Arguments> generateArgumentsCombos(
+            List<Supplier<Object[]>> generators1, List<Supplier<Object[]>> generators2) {
+        Stream<Arguments> concatenatedArgs = Stream.empty();
+        for (Supplier<Object[]> g1 : generators1) {
+            for (Supplier<Object[]> g2 : generators2) {
+                Stream<Arguments> toConcatenate = generateMultiArguments(List.of(g1, g2), 1, true);
+                concatenatedArgs = Stream.concat(concatenatedArgs, toConcatenate);
+            }
         }
+        return concatenatedArgs;
+    }
 
+    public static Stream<Arguments> generateArgumentsCombos(
+            List<Supplier<Object[]>> generators1,
+            List<Supplier<Object[]>> generators2,
+            List<Supplier<Object[]>> generators3) {
+        Stream<Arguments> concatenatedArgs = Stream.empty();
+        for (Supplier<Object[]> g1 : generators1) {
+            for (Supplier<Object[]> g2 : generators2) {
+                for (Supplier<Object[]> g3 : generators3) {
+                    Stream<Arguments> toConcatenate =
+                            generateMultiArguments(List.of(g1, g2, g3), 1, true);
+                    concatenatedArgs = Stream.concat(concatenatedArgs, toConcatenate);
+                }
+            }
+        }
         return concatenatedArgs;
     }
 

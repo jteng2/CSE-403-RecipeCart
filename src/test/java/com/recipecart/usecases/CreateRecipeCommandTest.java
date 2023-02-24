@@ -29,17 +29,20 @@ public class CreateRecipeCommandTest {
     }
 
     private static Stream<Arguments> getStorageWithRecipe() {
-        return generateArgumentsWithStorage(getMockStorageArrayGenerators(), TestData::getRecipes);
+        return generateArgumentsCombos(
+                getMockStorageArrayGenerators(), Collections.singletonList(TestData::getRecipes));
     }
 
     private static Stream<Arguments> getStorageWithString() {
-        return generateArgumentsWithStorage(
-                getMockStorageArrayGenerators(), TestData::getNotNullStrings);
+        return generateArgumentsCombos(
+                getMockStorageArrayGenerators(),
+                Collections.singletonList(TestData::getNotNullStrings));
     }
 
     private static Stream<Arguments> getStorageWithRecipeNonEmptyDataStructures() {
-        return generateArgumentsWithStorage(
-                getMockStorageArrayGenerators(), TestData::getRecipesNonEmptyDataStructures);
+        return generateArgumentsCombos(
+                getMockStorageArrayGenerators(),
+                Collections.singletonList(TestData::getRecipesNonEmptyDataStructures));
     }
 
     private static void setupStorage(
