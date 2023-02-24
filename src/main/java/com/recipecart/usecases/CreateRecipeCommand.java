@@ -17,25 +17,24 @@ public final class CreateRecipeCommand extends EntityCommand {
     public static final String
             OK_RECIPE_CREATED_WITH_GIVEN_NAME =
                     "Recipe creation successful: the given unique (non-presentation) recipe name"
-                            + " was available.",
+                            + " was available",
             OK_RECIPE_CREATED_NAME_ASSIGNED =
                     "Recipe creation successful: the recipe was assigned a new unique"
                             + " (non-presentation) name",
             NOT_OK_INVALID_RECIPE = "Recipe creation unsuccessful: the recipe was invalid or null",
             NOT_OK_NAME_TAKEN =
                     "Recipe creation unsuccessful: the given unique (non-presentation) recipe name"
-                            + " is already taken.";
+                            + " is already taken";
 
     private final RecipeForm recipeFormToAdd;
     private Recipe createdRecipe = null;
 
     /**
-     * Creates an action item for a user to create a Recipe. The given Recipe must have a non-null
-     * presentation name and a non-null author's username for the command to execute successfully.
+     * Creates an action item for a user to create a Recipe.
      *
      * @param recipeToAdd the Recipe that the user creates
      */
-    public CreateRecipeCommand(@NotNull RecipeForm recipeToAdd) {
+    public CreateRecipeCommand(RecipeForm recipeToAdd) {
         this.recipeFormToAdd = recipeToAdd;
     }
 
@@ -174,7 +173,7 @@ public final class CreateRecipeCommand extends EntityCommand {
         try {
             Recipe recipeToAdd = createRecipeFromForm();
             created = saveNewRecipe(recipeToAdd, assignNewName);
-            addRecipeToUserAuthoredRecipes(created);
+            addRecipeToAuthoredRecipesOfAuthor(created);
         } catch (RuntimeException e) { // for data access layer failures
             finishExecutingFromError(e);
             return;
@@ -244,42 +243,36 @@ public final class CreateRecipeCommand extends EntityCommand {
     private Recipe saveNewRecipe(Recipe baseRecipe, boolean assignNewName) {
         assert getStorageSource() != null;
 
-        Recipe toAdd = getRecipeWithValidName(baseRecipe, assignNewName);
+        Recipe toAdd = assignNewName ? generateRecipeWithValidName(baseRecipe) : baseRecipe;
         getStorageSource().getSaver().updateRecipes(Collections.singletonList(toAdd));
         return toAdd;
     }
 
-    private Recipe getRecipeWithValidName(Recipe baseRecipe, boolean assignNewName) {
+    private Recipe generateRecipeWithValidName(Recipe baseRecipe) {
         assert getStorageSource() != null;
-
-        Recipe recipe;
-        if (assignNewName) {
-            String assignedName =
-                    getStorageSource()
-                            .getLoader()
-                            .generateUniqueRecipeName(baseRecipe.getPresentationName());
-            recipe = Utils.renameRecipe(baseRecipe, assignedName);
-        } else {
-            recipe = baseRecipe;
-        }
-        return recipe;
-    }
-
-    private void addRecipeToUserAuthoredRecipes(Recipe toAdd) throws IOException {
-        assert getStorageSource() != null;
-        assert toAdd.getAuthorUsername() != null;
-        User user =
+        String assignedName =
                 getStorageSource()
                         .getLoader()
-                        .getUsersByNames(List.of(toAdd.getAuthorUsername()))
-                        .get(0);
+                        .generateUniqueRecipeName(baseRecipe.getPresentationName());
+        return Utils.renameRecipe(baseRecipe, assignedName);
+    }
 
-        User updatedUser = addAuthoredRecipeToUser(toAdd, user);
-
+    private void addRecipeToAuthoredRecipesOfAuthor(Recipe toAdd) throws IOException {
+        assert getStorageSource() != null;
+        User updatedUser = addRecipeToAuthoredRecipesOfUser(toAdd, getAuthorOfRecipe(toAdd));
         getStorageSource().getSaver().updateUsers(Collections.singletonList(updatedUser));
     }
 
-    private User addAuthoredRecipeToUser(Recipe toAdd, User user) {
+    private User getAuthorOfRecipe(Recipe recipe) throws IOException {
+        assert getStorageSource() != null;
+        assert recipe.getAuthorUsername() != null;
+        return getStorageSource()
+                .getLoader()
+                .getUsersByNames(Collections.singletonList(recipe.getAuthorUsername()))
+                .get(0);
+    }
+
+    private User addRecipeToAuthoredRecipesOfUser(Recipe toAdd, User user) {
         List<Recipe> authoredRecipes = new ArrayList<>(user.getAuthoredRecipes());
         authoredRecipes.add(toAdd);
         return new User.Builder(user).setAuthoredRecipes(authoredRecipes).build();

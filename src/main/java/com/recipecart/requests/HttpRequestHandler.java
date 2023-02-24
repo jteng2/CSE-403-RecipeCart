@@ -41,7 +41,11 @@ public class HttpRequestHandler {
                     CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME,
                     201,
                     CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED,
-                    201);
+                    201,
+                    CreateRecipeCommand.NOT_OK_INVALID_RECIPE,
+                    400,
+                    CreateRecipeCommand.NOT_OK_NAME_TAKEN,
+                    400);
 
     private final @NotNull EntityCommander commander;
     private final @NotNull JwtValidator loginChecker;
@@ -70,7 +74,7 @@ public class HttpRequestHandler {
     public void startHandler() {
         port(listenPort);
         get("/search/recipes", APPLICATION_JSON, this::handleSearchRecipesRequest, gson::toJson);
-        post("/recipes/create", APPLICATION_JSON, this::handleCreateRecipeRequest, gson::toJson);
+        post("/create/recipe", APPLICATION_JSON, this::handleCreateRecipeRequest, gson::toJson);
     }
 
     private boolean isAuthorized(RequestBodies.WithLoginRequired requestBodyDetails) {
