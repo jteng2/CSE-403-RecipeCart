@@ -13,6 +13,19 @@ import org.jetbrains.annotations.NotNull;
  * change since those must be the same as the keys of the JSON objects they follow.
  */
 class ResponseBodies {
+    /**
+     * This is the base response, which its subclasses build upon. However, this class itself
+     * follows these API routes:
+     *
+     * <ul>
+     *   <li>"Create user"
+     *   <li>"Create ingredient"
+     *   <li>"Create tag"
+     *   <li>"Bookmark recipe"
+     *   <li>"Add ingredients to shopping list"
+     *   <li>"Add recipe ingredients to shopping list"
+     * </ul>
+     */
     static class WithMessage {
         private final @NotNull String message;
 

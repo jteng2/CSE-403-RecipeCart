@@ -35,4 +35,58 @@ class RequestBodies {
             return recipe;
         }
     }
+
+    /** Follows the "Create user" API route. */
+    static class UserCreation {
+        private final String username, emailAddress;
+
+        UserCreation(String username, String emailAddress) {
+            this.username = username;
+            this.emailAddress = emailAddress;
+        }
+
+        String getUsername() {
+            return username;
+        }
+
+        String getEmailAddress() {
+            return emailAddress;
+        }
+    }
+
+    /** Follows the "Create ingredient" API route. */
+    static class IngredientCreation {
+        private final String name, units, imageUri;
+
+        IngredientCreation(String name, String units, String imageUri) {
+            this.name = name;
+            this.units = units;
+            this.imageUri = imageUri;
+        }
+
+        String getName() {
+            return name;
+        }
+
+        String getUnits() {
+            return units;
+        }
+
+        String getImageUri() {
+            return imageUri;
+        }
+    }
+
+    /** Follows the "Create tag" API route. */
+    static class TagCreation {
+        private final String name;
+
+        TagCreation(String name) {
+            this.name = name;
+        }
+
+        String getName() {
+            return name;
+        }
+    }
 }

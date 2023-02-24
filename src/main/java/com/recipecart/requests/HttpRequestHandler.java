@@ -53,6 +53,13 @@ public class HttpRequestHandler {
         port(listenPort);
         get("/search/recipes", APPLICATION_JSON, this::handleSearchRecipesRequest, gson::toJson);
         post("/create/recipe", APPLICATION_JSON, this::handleCreateRecipeRequest, gson::toJson);
+        post("/create/user", APPLICATION_JSON, this::handleCreateUserRequest, gson::toJson);
+        post(
+                "/create/ingredient",
+                APPLICATION_JSON,
+                this::handleCreateIngredientRequest,
+                gson::toJson);
+        post("/create/tag", APPLICATION_JSON, this::handleCreateTagRequest, gson::toJson);
     }
 
     private boolean isAuthorized(RequestBodies.WithLoginRequired requestBodyDetails) {
@@ -106,20 +113,52 @@ public class HttpRequestHandler {
                 getRequestBodyDetails(request, RequestBodies.RecipeCreation.class);
 
         if (isAuthorized(bodyDetails)) {
-            CreateRecipeCommand createRecipeCommand =
-                    new CreateRecipeCommand(bodyDetails.getRecipeForm());
-            String executionMessage = handleCommand(createRecipeCommand, response);
+            CreateRecipeCommand command = new CreateRecipeCommand(bodyDetails.getRecipeForm());
+            String executionMessage = handleCommand(command, response);
 
-            Recipe createdRecipe = createRecipeCommand.getCreatedRecipe();
+            Recipe createdRecipe = command.getCreatedRecipe();
             return new ResponseBodies.RecipeCreation(
                     executionMessage,
                     Utils.allowNull(createdRecipe, Recipe::getName),
                     Utils.allowNull(
-                            createRecipeCommand.getCreatedTags(),
+                            command.getCreatedTags(),
                             (t) -> t.stream().map(Tag::toString).collect(Collectors.toSet())));
         } else {
             return new RequestBodies.RecipeCreation(handleUnauthorized(response), null);
         }
+    }
+
+    private Object handleCreateUserRequest(Request request, Response response) {
+        RequestBodies.UserCreation bodyDetails =
+                getRequestBodyDetails(request, RequestBodies.UserCreation.class);
+
+        CreateUserCommand command =
+                new CreateUserCommand(bodyDetails.getUsername(), bodyDetails.getEmailAddress());
+        String executionMessage = handleCommand(command, response);
+
+        return new ResponseBodies.WithMessage(executionMessage);
+    }
+
+    private Object handleCreateIngredientRequest(Request request, Response response) {
+        RequestBodies.IngredientCreation bodyDetails =
+                getRequestBodyDetails(request, RequestBodies.IngredientCreation.class);
+
+        CreateIngredientCommand command =
+                new CreateIngredientCommand(
+                        bodyDetails.getName(), bodyDetails.getUnits(), bodyDetails.getImageUri());
+        String executionMessage = handleCommand(command, response);
+
+        return new ResponseBodies.WithMessage(executionMessage);
+    }
+
+    private Object handleCreateTagRequest(Request request, Response response) {
+        RequestBodies.TagCreation bodyDetails =
+                getRequestBodyDetails(request, RequestBodies.TagCreation.class);
+
+        CreateTagCommand command = new CreateTagCommand(bodyDetails.getName());
+        String executionMessage = handleCommand(command, response);
+
+        return new ResponseBodies.WithMessage(executionMessage);
     }
 
     private static Map<String, Integer> initializeMessageToStatusCode() {
@@ -136,6 +175,15 @@ public class HttpRequestHandler {
         map.put(CreateRecipeCommand.NOT_OK_INVALID_RECIPE, 400);
         map.put(CreateRecipeCommand.NOT_OK_RECIPE_RESOURCES_NOT_FOUND, 404);
         map.put(CreateRecipeCommand.NOT_OK_RECIPE_NAME_TAKEN, 400);
+        map.put(CreateTagCommand.OK_TAG_CREATED, 201);
+        map.put(CreateTagCommand.NOT_OK_INVALID_TAG, 400);
+        map.put(CreateTagCommand.NOT_OK_TAG_NAME_TAKEN, 400);
+        map.put(CreateIngredientCommand.OK_INGREDIENT_CREATED, 201);
+        map.put(CreateIngredientCommand.NOT_OK_INVALID_INGREDIENT, 400);
+        map.put(CreateIngredientCommand.NOT_OK_INGREDIENT_NAME_TAKEN, 400);
+        map.put(CreateUserCommand.OK_USER_CREATED, 201);
+        map.put(CreateUserCommand.NOT_OK_INVALID_USER, 400);
+        map.put(CreateUserCommand.NOT_OK_USERNAME_TAKEN, 400);
 
         return map;
     }

@@ -11,7 +11,7 @@ public class CreateUserCommand extends SimpleCreateEntityCommand<User> {
             NOT_OK_INVALID_USER = "User creation unsuccessful: the user was invalid or null",
             NOT_OK_USERNAME_TAKEN = "User creation unsuccessful: the username is already taken";
 
-    protected CreateUserCommand(String username, String emailAddress) {
+    public CreateUserCommand(String username, String emailAddress) {
         super(new User.Builder().setUsername(username).setEmailAddress(emailAddress).build());
     }
 
