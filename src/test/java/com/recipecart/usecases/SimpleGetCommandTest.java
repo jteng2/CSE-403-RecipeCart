@@ -9,6 +9,8 @@ import com.recipecart.database.BadEntityLoader;
 import com.recipecart.database.BadEntitySaver;
 import com.recipecart.storage.EntitySaver;
 import com.recipecart.storage.EntityStorage;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +21,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 public abstract class SimpleGetCommandTest<T> {
     private SimpleGetCommand<T> getAndExecuteCommand(T entity, EntityStorage storage) {
         SimpleGetCommand<T> command = getGetEntityCommand(getName(entity));
-        addEntityToStorage(entity, storage.getSaver());
+        addEntitiesToStorage(Collections.singleton(entity), storage.getSaver());
         command.setStorageSource(storage);
         command.execute();
 
@@ -41,7 +43,7 @@ public abstract class SimpleGetCommandTest<T> {
         assertEquals(message, command.getExecutionMessage());
     }
 
-    protected abstract void addEntityToStorage(T entity, EntitySaver saver);
+    protected abstract void addEntitiesToStorage(Collection<T> entity, EntitySaver saver);
 
     protected abstract SimpleGetCommand<T> getGetEntityCommand(String name);
 
@@ -90,7 +92,7 @@ public abstract class SimpleGetCommandTest<T> {
     @MethodSource("getStorageWithEntity")
     void testNullName(EntityStorage storage, T entity) {
         SimpleGetCommand<T> command = getGetEntityCommand(null);
-        addEntityToStorage(entity, storage.getSaver());
+        addEntitiesToStorage(Collections.singleton(entity), storage.getSaver());
         command.setStorageSource(storage);
         command.execute();
 

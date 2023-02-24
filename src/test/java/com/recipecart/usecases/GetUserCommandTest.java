@@ -8,14 +8,15 @@ import com.recipecart.entities.User;
 import com.recipecart.storage.EntitySaver;
 import com.recipecart.testutil.TestData;
 import com.recipecart.testutil.TestUtils;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
 
 public class GetUserCommandTest extends SimpleGetCommandTest<User> {
     @Override
-    protected void addEntityToStorage(User entity, EntitySaver saver) {
-        saver.updateUsers(Collections.singletonList(entity));
+    protected void addEntitiesToStorage(Collection<User> entities, EntitySaver saver) {
+        saver.updateUsers(entities);
     }
 
     @Override

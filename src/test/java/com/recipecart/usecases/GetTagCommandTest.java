@@ -8,14 +8,15 @@ import com.recipecart.entities.Tag;
 import com.recipecart.storage.EntitySaver;
 import com.recipecart.testutil.TestData;
 import com.recipecart.testutil.TestUtils;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
 
 public class GetTagCommandTest extends SimpleGetCommandTest<Tag> {
     @Override
-    protected void addEntityToStorage(Tag entity, EntitySaver saver) {
-        saver.updateTags(Collections.singletonList(entity));
+    protected void addEntitiesToStorage(Collection<Tag> entities, EntitySaver saver) {
+        saver.updateTags(entities);
     }
 
     @Override
