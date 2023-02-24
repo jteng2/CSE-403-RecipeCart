@@ -6,6 +6,13 @@ import org.jetbrains.annotations.NotNull;
 
 /** This class represents an action item for the use case of a user bookmarking a recipe. */
 public final class BookmarkRecipeCommand extends EntityCommand {
+    public static final String OK_RECIPE_BOOKMARKED = "Recipe bookmarking successful.",
+            NOT_OK_INVALID_RECIPE_NAME =
+                    "Recipe bookmarking unsuccessful: the given recipe name was null or invalid.",
+            NOT_OK_INVALID_USERNAME =
+                    "Recipe bookmarking unsuccessful: the username of the bookmark-er was null or"
+                            + " invalid.";
+
     private final @NotNull String bookmarkerUsername;
     private final @NotNull String recipeName;
 
@@ -29,12 +36,11 @@ public final class BookmarkRecipeCommand extends EntityCommand {
     }
 
     /**
-     * Has the user bookmark the recipe. If the user already bookmarked the recipe, this command's
-     * execution will be unsuccessful.
+     * Has the user bookmark the recipe. The command will be unsuccessful if the given username has
+     * no associated user, the given recipe name has no associated recipe, or if the user already
+     * bookmarked the recipe.
      *
      * @throws IllegalStateException if this method has been called before on this command instance.
-     * @throws IllegalArgumentException if the given username has no associated user, or the given
-     *     recipe name has no associated recipe.
      */
     @Override
     public void execute() {

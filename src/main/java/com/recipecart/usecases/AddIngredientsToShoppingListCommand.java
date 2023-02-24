@@ -33,11 +33,12 @@ public final class AddIngredientsToShoppingListCommand extends ShoppingListComma
     }
 
     /**
-     * Have the ingredients be added to the user's shopping list.
+     * Have the ingredients be added to the user's shopping list. If the given username is null or
+     * has no associated user, or if any of the ingredient names are null don't correspond to
+     * existing ingredients, or if any of the ingredient values are null, then this command's
+     * execution will be unsuccessful
      *
      * @throws IllegalStateException if this method has been called before on this command instance.
-     * @throws IllegalArgumentException if the given username has no associated user, or if any of
-     *     the ingredient names don't correspond to existing ingredients
      */
     @Override
     public void execute() {
