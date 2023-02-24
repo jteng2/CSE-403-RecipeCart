@@ -111,11 +111,11 @@ public final class CreateRecipeCommand extends EntityCommand {
         if (baseMessage != null) {
             return baseMessage;
         }
+        if (!isRecipeToAddValid()) {
+            return NOT_OK_INVALID_RECIPE;
+        }
         try {
-            if (!isRecipeToAddValid()) {
-                return NOT_OK_INVALID_RECIPE;
-            }
-            if (!doIngredientsExist()) {
+            if (!doIngredientsExist() || !doesAuthorExist()) {
                 return NOT_OK_RECIPE_RESOURCES_NOT_FOUND;
             }
             if (!isRecipeNameAvailable()) {
@@ -160,8 +160,12 @@ public final class CreateRecipeCommand extends EntityCommand {
 
     private boolean isAuthorUsernameValid() {
         assert getStorageSource() != null;
-        return getToAdd().getAuthorUsername() != null
-                && getStorageSource().getLoader().usernameExists(getToAdd().getAuthorUsername());
+        return getToAdd().getAuthorUsername() != null;
+    }
+
+    private boolean doesAuthorExist() {
+        assert getStorageSource() != null;
+        return getStorageSource().getLoader().usernameExists(getToAdd().getAuthorUsername());
     }
 
     private boolean isRecipeNameAvailable() {

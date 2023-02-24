@@ -364,7 +364,7 @@ public class CreateRecipeCommandTest {
         setupStorage(toAdd, storageSource, true, true, false);
         CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
-        assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
+        assertUnsuccessfulExecution(command, NOT_OK_RECIPE_RESOURCES_NOT_FOUND);
     }
 
     @ParameterizedTest
