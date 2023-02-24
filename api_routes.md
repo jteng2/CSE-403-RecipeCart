@@ -3,6 +3,22 @@
 * Access these API routes by connecting to `localhost:4567` while running the backend.
 * Each request body and response body is in JSON.
 * Each request's response body will contain a `"message"` field with some details about what happened when handling the request (i.e. what error occurred if any, etc.)
+## Table of Contents
+1. [Get recipe](#get-recipe)
+2. [Get user](#get-user)
+3. [Get ingredient](#get-ingredient)
+4. [Get tag](#get-tag)
+5. [Create recipe](#create-recipe)
+6. [Create user](#create-user)
+7. [Create ingredient](#create-ingredient)
+8. [Create tag](#create-tag)
+9. [Search for recipe](#search-for-recipe)
+10. [Bookmark recipe](#bookmark-recipe)
+11. [Add ingredients to shopping list](#add-ingredients-to-shopping-list)
+12. [Add recipe ingredients to shopping list](#add-recipe-ingredients-to-shopping-list)
+
+<div id="get-recipe"></div>
+
 ## Get recipe
 This route is for getting the information of an existing recipe.
 ### Header
@@ -57,6 +73,8 @@ Content-type: application/json
     }
 }
 ```
+<div id="get-user"></div>
+
 ## Get user
 This route is for getting the information of an existing user. 
 ### Header
@@ -102,6 +120,8 @@ Content-type: application/json
     }
 }
 ```
+<div id="get-ingredient"></div>
+
 ## Get ingredient
 This route is for getting the information on an existing ingredient.
 ### Header
@@ -133,6 +153,8 @@ Content-type: application/json
     }
 }
 ```
+<div id="get-tag"></div>
+
 ## Get tag
 This route is for getting the information on an existing tag. Currently, the only information on a tag is its name, but this route exists in case more information for tags gets added in the future.
 ### Header
@@ -162,6 +184,8 @@ Content-type: application/json
     }
 }
 ```
+<div id="create-recipe"></div>
+
 ## Create recipe
 This route is for creating new recipes to be saved into the data access layer.
 ### Header
@@ -236,8 +260,9 @@ Content-type: application/json
     "createdTags": []
 }
 ```
+<div id="create-user"></div>
 
-## Create User
+## Create user
 This route is for creating a new user into the data access layer. This user won't start out with anything (i.e. they won't have any saved recipes, etc.).
 ### Header
 ```
@@ -280,7 +305,9 @@ Content-type: application/json
     "message": "User creation unsuccessful: username was already taken"
 }
 ```
-## Create Ingredient
+<div id="create-ingredient"></div>
+
+## Create ingredient
 This route is for creating new ingredients to be saved into the data access layer.
 ### Header
 ```
@@ -315,7 +342,9 @@ Content-type: application/json
     "message": "Ingredient creation successful"
 }
 ```
-## Create Tag
+<div id="create-tag"></div>
+
+## Create tag
 This route is for creating new tags to be saved into the data access layer.
 ### Header
 ```
@@ -348,6 +377,8 @@ Content-type: application/json
     "message": "Tag creation successful"
 }
 ```
+<div id="search-for-recipe"></div>
+
 ## Search for recipe
 This route is for searching for recipes (that aren't known yet to the user) based on given search terms.
 ### Header
@@ -418,7 +449,9 @@ Content-type: application/json
 }
 ```
 Note that `prepTime` and `cookTime` are in minutes.
-## Bookmark Recipe
+<div id="bookmark-recipe"></div>
+
+## Bookmark recipe
 This route is for having a user bookmark a recipe, so they can more easily retrive it later.
 ### Header
 ```
@@ -457,6 +490,8 @@ Content-type: application/json
     "message": "Recipe bookmarking successful"
 }
 ```
+<div id="add-ingredients-to-shopping-list"></div>
+
 ## Add ingredients to shopping list
 This route is for having a user add ingredients to their shopping list.
 ### Header
@@ -500,6 +535,8 @@ Content-type: application/json
     "message": "Ingredients successfully added to shopping list"
 }
 ```
+<div id="add-recipe-ingredients-to-shopping-list"></div>
+
 ## Add recipe ingredients to shopping list
 This route is for having a user add a recipe's ingredients to their shopping list.
 ### Header
