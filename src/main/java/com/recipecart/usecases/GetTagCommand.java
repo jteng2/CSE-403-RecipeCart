@@ -10,7 +10,7 @@ import java.util.Collections;
  * This class represents the action item for the use case of retrieving a tag from a given
  * EntityStorage.
  */
-public class GetTagCommand extends SimpleGetCommand<Tag> {
+public final class GetTagCommand extends SimpleGetCommand<Tag> {
     public static final String OK_TAG_RETRIEVED = "Tag retrieval successful",
             NOT_OK_TAG_NOT_FOUND =
                     "Tag retrieval unsuccessful: a tag with the given name could not be found";

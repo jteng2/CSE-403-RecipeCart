@@ -10,7 +10,7 @@ import java.util.Collections;
  * This class represents the action item for the use case of retrieving a user from a given
  * EntityStorage.
  */
-public class GetUserCommand extends SimpleGetCommand<User> {
+public final class GetUserCommand extends SimpleGetCommand<User> {
     public static final String OK_USER_RETRIEVED = "User retrieval successful",
             NOT_OK_USER_NOT_FOUND =
                     "User retrieval unsuccessful: a user with the given name could not be found";

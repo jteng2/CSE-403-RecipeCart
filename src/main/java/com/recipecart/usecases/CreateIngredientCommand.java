@@ -7,7 +7,7 @@ import com.recipecart.storage.EntitySaver;
 import java.util.Collection;
 
 /** This class represents an action item for the use case of a new ingredient being created. */
-public class CreateIngredientCommand extends SimpleCreateEntityCommand<Ingredient> {
+public final class CreateIngredientCommand extends SimpleCreateEntityCommand<Ingredient> {
     public static final String OK_INGREDIENT_CREATED = "Ingredient creation successful",
             NOT_OK_INVALID_INGREDIENT =
                     "Ingredient creation unsuccessful: the ingredient was invalid or null",

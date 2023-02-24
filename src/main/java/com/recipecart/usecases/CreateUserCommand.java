@@ -7,7 +7,7 @@ import com.recipecart.storage.EntitySaver;
 import java.util.Collection;
 
 /** This class represents an action item for the use case of a new user being created. */
-public class CreateUserCommand extends SimpleCreateEntityCommand<User> {
+public final class CreateUserCommand extends SimpleCreateEntityCommand<User> {
     public static final String OK_USER_CREATED = "User creation successful",
             NOT_OK_INVALID_USER = "User creation unsuccessful: the user was invalid or null",
             NOT_OK_USERNAME_TAKEN = "User creation unsuccessful: the username is already taken";

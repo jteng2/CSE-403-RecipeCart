@@ -10,7 +10,7 @@ import java.util.Collections;
  * This class represents the action item for the use case of retrieving a recipe from a given
  * EntityStorage.
  */
-public class GetRecipeCommand extends SimpleGetCommand<Recipe> {
+public final class GetRecipeCommand extends SimpleGetCommand<Recipe> {
     public static final String OK_RECIPE_RETRIEVED = "Recipe retrieval successful",
             NOT_OK_RECIPE_NOT_FOUND =
                     "Recipe retrieval unsuccessful: a recipe with the given name could not be"

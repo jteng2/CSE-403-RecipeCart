@@ -10,7 +10,7 @@ import java.util.Collections;
  * This class represents the action item for the use case of retrieving a ingredient from a given
  * EntityStorage.
  */
-public class GetIngredientCommand extends SimpleGetCommand<Ingredient> {
+public final class GetIngredientCommand extends SimpleGetCommand<Ingredient> {
     public static final String OK_INGREDIENT_RETRIEVED = "Ingredient retrieval successful",
             NOT_OK_INGREDIENT_NOT_FOUND =
                     "Ingredient retrieval unsuccessful: a ingredient with the given name could not"
