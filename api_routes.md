@@ -207,7 +207,7 @@ The body will be JSON containing the recipe details, as well as the name of the 
 }
 ```
 ### Response
-A 201 (Created) status code will be returned if the recipe was successfully created. The response will contain the unique recipe name assigned to the recipe (`assignedName`). If any of the tags don't correspond to an existing tag name, then new tags will be created for them.
+A 201 (Created) status code will be returned if the recipe was successfully created. The response will contain the unique recipe name assigned to the recipe (`assignedName`). If any of the tags don't correspond to an existing tag name, then new tags will be created for them, and they will be in the field `createdTags`.
 
 A 400 (Bad request) status code will be returned if the recipe data is invalid. Recipe data is invalid if any of the following are true:
 * The `presentationName`, `authorUsername`, `encryptedJwtToken`, or `recipe` is missing or null.
@@ -215,14 +215,14 @@ A 400 (Bad request) status code will be returned if the recipe data is invalid. 
 * Any of the `directions` elements are null.
 * Any of the `tags` elements are null.
 * Any of the `requiredIngredients` keys or values are null.
-* The `authorUsername` doesn't correspond to an existing user.
 
-A 404 (Not found) status code will be returned if any of the recipe's `requiredIngredients` keys don't correspond to existing ingredients.
+A 404 (Not found) status code will be returned if any of the following are true:
+* The `authorUsername` doesn't correspond to an existing user.
+* Any of the recipe's `requiredIngredients` keys don't correspond to existing ingredients.
 
 A 401 (Unauthorized) status code will be returned if the JWT token from `encryptedJwtToken` is invalid (not yet implemented).
 
 Note: the fields `directions`, `tags`, and `requiredIngredients` can be null themselves; they just can't have null elements.
-The response will also contain a message with some details about what happened when handling the request (i.e. what error occurred if any, etc.)
 ### Example response
 ```
 HTTP/1.1 201 Created
@@ -232,7 +232,8 @@ Content-type: application/json
 
 {
     "message": "Recipe creation successful: the recipe was assigned a new unique (non-presentation) name",
-    "assignedName": "tasty-cheese-omelette2"
+    "assignedName": "tasty-cheese-omelette2",
+    "createdTags": []
 }
 ```
 
@@ -255,7 +256,9 @@ The body will be JSON containing the username of the user, and their email addre
 }
 ```
 ### Response
-A 201 (Created) status code will be returned if the user is successfully created. A 400 (Bad request) status code will be returned if the username is null, missing, or already taken.
+A 201 (Created) status code will be returned if the user is successfully created.
+
+A 400 (Bad request) status code will be returned if the username is null, missing, or already taken.
 ### Example response
 ```
 HTTP/1.1 201 Created
