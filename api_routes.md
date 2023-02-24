@@ -291,7 +291,7 @@ Accept: application/json
 ...
 ```
 ### Body details
-The body will be JSON containing the ingredient name, what units it's measured in, and the URI of an image of it. Ingredient names are automatically converted to lowercase. The units are optional (for ingredients like "eggs"), and the image URI is optional.
+The body will be JSON containing the ingredient name, what units it's measured in, and the URI of an image of it. The units are optional (for ingredients like "eggs"), and the image URI is optional.
 ### Example body
 ```json
 {
@@ -303,7 +303,7 @@ The body will be JSON containing the ingredient name, what units it's measured i
 ### Response
 A 201 (Created) status code will be returned if the ingredient is successfully created.
 
-A 400 (Bad request) status code is returned if the name is null, missing, or already taken. Since ingredient names are automatically converted to lowercase, requesting "Flour" when "flour" is already created results in a 400.
+A 400 (Bad request) status code is returned if the name is null, missing, or already taken.
 ### Example response
 ```
 HTTP/1.1 201 Created
