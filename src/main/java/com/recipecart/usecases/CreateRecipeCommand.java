@@ -12,7 +12,7 @@ import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/** This class represents an action item for the use case for a user creating a new Recipe. */
+/** This class represents an action item for the use case for a user creating a new recipe. */
 public final class CreateRecipeCommand extends EntityCommand {
     public static final String
             OK_RECIPE_CREATED_WITH_GIVEN_NAME =
@@ -34,7 +34,8 @@ public final class CreateRecipeCommand extends EntityCommand {
     private Set<Tag> createdTags = null;
 
     /**
-     * Creates an action item for a user to create a Recipe.
+     * Creates an action item for a user to create a Recipe, and for that Recipe to be saved into a
+     * given EntityStorage.
      *
      * @param recipeToAdd the Recipe that the user creates
      */

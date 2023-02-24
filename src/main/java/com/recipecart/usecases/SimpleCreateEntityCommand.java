@@ -19,6 +19,12 @@ public abstract class SimpleCreateEntityCommand<T> extends EntityCommand {
     private final T toAdd;
     private T createdEntity = null;
 
+    /**
+     * Creates the action item of saving the given entity to the EntityStorage inputted into this
+     * command.
+     *
+     * @param toAdd the entity to save
+     */
     protected SimpleCreateEntityCommand(T toAdd) {
         this.toAdd = toAdd;
     }
