@@ -254,7 +254,7 @@ public final class CreateRecipeCommand extends EntityCommand {
         tagCreation.setStorageSource(getStorageSource());
         tagCreation.execute();
 
-        return tagCreation.getCreatedTag();
+        return tagCreation.getCreatedEntity();
     }
 
     private Recipe createRecipeFromForm() throws IOException {

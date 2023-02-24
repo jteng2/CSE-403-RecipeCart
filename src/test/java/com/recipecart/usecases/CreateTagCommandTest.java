@@ -1,7 +1,7 @@
 /* (C)2023 */
 package com.recipecart.usecases;
 
-import static com.recipecart.testutil.TestUtils.generateArgumentsWithStorage;
+import static com.recipecart.testutil.TestUtils.generateArgumentsCombos;
 import static com.recipecart.testutil.TestUtils.getMockStorageArrayGenerators;
 import static com.recipecart.usecases.CreateTagCommand.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +26,8 @@ public class CreateTagCommandTest {
     }
 
     private static Stream<Arguments> getStorageWithTag() {
-        return generateArgumentsWithStorage(getMockStorageArrayGenerators(), TestData::getTags);
+        return generateArgumentsCombos(
+                getMockStorageArrayGenerators(), Collections.singletonList(TestData::getTags));
     }
 
     private static CreateTagCommand createAndExecuteCommand(Tag tag, EntityStorage storage) {
@@ -40,7 +41,7 @@ public class CreateTagCommandTest {
     private static void assertUnsuccessfulExecution(CreateTagCommand command, String message) {
         assertTrue(command.isFinishedExecuting());
         assertFalse(command.isSuccessful());
-        assertNull(command.getCreatedTag());
+        assertNull(command.getCreatedEntity());
         assertEquals(message, command.getExecutionMessage());
     }
 
@@ -49,7 +50,7 @@ public class CreateTagCommandTest {
         assertTrue(command.isSuccessful());
         assertEquals(message, command.getExecutionMessage());
 
-        Tag createdTag = command.getCreatedTag();
+        Tag createdTag = command.getCreatedEntity();
         assertNotNull(createdTag);
         assertNotNull(createdTag.getName());
     }
@@ -59,7 +60,7 @@ public class CreateTagCommandTest {
     void testState(Tag toAdd) {
         CreateTagCommand command = new CreateTagCommand(toAdd);
 
-        assertEquals(toAdd, command.getToAdd());
+        assertEquals(toAdd, command.getEntityToAdd());
     }
 
     @ParameterizedTest
@@ -67,7 +68,7 @@ public class CreateTagCommandTest {
     void testGetCreatedTagBeforeExecution(Tag toAdd) {
         CreateTagCommand command = new CreateTagCommand(toAdd);
 
-        assertThrows(IllegalStateException.class, command::getCreatedTag);
+        assertThrows(IllegalStateException.class, command::getCreatedEntity);
     }
 
     @ParameterizedTest
