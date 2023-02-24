@@ -20,7 +20,7 @@ public final class GetUserCommand extends SimpleGetCommand<User> {
      *
      * @param name the name of the user to retrieve.
      */
-    GetUserCommand(String name) {
+    public GetUserCommand(String name) {
         super(name);
     }
 

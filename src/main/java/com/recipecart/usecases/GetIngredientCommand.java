@@ -21,7 +21,7 @@ public final class GetIngredientCommand extends SimpleGetCommand<Ingredient> {
      *
      * @param name the name of the ingredient to retrieve.
      */
-    GetIngredientCommand(String name) {
+    public GetIngredientCommand(String name) {
         super(name);
     }
 

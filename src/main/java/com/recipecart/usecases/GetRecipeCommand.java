@@ -21,7 +21,7 @@ public final class GetRecipeCommand extends SimpleGetCommand<Recipe> {
      *
      * @param name the name of the recipe to retrieve.
      */
-    GetRecipeCommand(String name) {
+    public GetRecipeCommand(String name) {
         super(name);
     }
 

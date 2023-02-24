@@ -1,7 +1,10 @@
 /* (C)2023 */
 package com.recipecart.requests;
 
+import com.recipecart.entities.Ingredient;
+import com.recipecart.entities.Tag;
 import com.recipecart.utils.RecipeForm;
+import com.recipecart.utils.UserForm;
 import com.recipecart.utils.Utils;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +72,58 @@ class ResponseBodies {
 
         Set<String> getCreatedTags() {
             return createdTags;
+        }
+    }
+
+    static class TagRetrieval extends WithMessage {
+        private final Tag retrievedTag;
+
+        TagRetrieval(@NotNull String message, Tag retrievedTag) {
+            super(message);
+            this.retrievedTag = retrievedTag;
+        }
+
+        Tag getRetrievedTag() {
+            return retrievedTag;
+        }
+    }
+
+    static class IngredientRetrieval extends WithMessage {
+        private final Ingredient retrievedIngredient;
+
+        IngredientRetrieval(@NotNull String message, Ingredient retrievedIngredient) {
+            super(message);
+            this.retrievedIngredient = retrievedIngredient;
+        }
+
+        Ingredient getRetrievedIngredient() {
+            return retrievedIngredient;
+        }
+    }
+
+    static class RecipeRetrieval extends WithMessage {
+        private final RecipeForm retrievedRecipe;
+
+        RecipeRetrieval(@NotNull String message, RecipeForm retrievedRecipeForm) {
+            super(message);
+            this.retrievedRecipe = retrievedRecipeForm;
+        }
+
+        RecipeForm getRetrievedRecipe() {
+            return retrievedRecipe;
+        }
+    }
+
+    static class UserRetrieval extends WithMessage {
+        private final UserForm retrievedUser;
+
+        UserRetrieval(@NotNull String message, UserForm retrievedUserForm) {
+            super(message);
+            this.retrievedUser = retrievedUserForm;
+        }
+
+        UserForm getRetrievedUser() {
+            return retrievedUser;
         }
     }
 }

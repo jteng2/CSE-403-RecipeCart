@@ -9,6 +9,7 @@ import com.recipecart.entities.Tag;
 import com.recipecart.execution.EntityCommander;
 import com.recipecart.usecases.*;
 import com.recipecart.utils.RecipeForm;
+import com.recipecart.utils.UserForm;
 import com.recipecart.utils.Utils;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,6 +61,14 @@ public class HttpRequestHandler {
                 this::handleCreateIngredientRequest,
                 gson::toJson);
         post("/create/tag", APPLICATION_JSON, this::handleCreateTagRequest, gson::toJson);
+        get("/tags/:tag", APPLICATION_JSON, this::handleGetTagRequest, gson::toJson);
+        get(
+                "/ingredients/:ingredient",
+                APPLICATION_JSON,
+                this::handleGetIngredientRequest,
+                gson::toJson);
+        get("/recipes/:recipe", APPLICATION_JSON, this::handleGetRecipeRequest, gson::toJson);
+        get("/users/:user", APPLICATION_JSON, this::handleGetUserRequest, gson::toJson);
     }
 
     private boolean isAuthorized(RequestBodies.WithLoginRequired requestBodyDetails) {
@@ -161,29 +170,85 @@ public class HttpRequestHandler {
         return new ResponseBodies.WithMessage(executionMessage);
     }
 
+    private Object handleGetTagRequest(Request request, Response response) {
+        String tagName = request.queryParams(":tag");
+
+        GetTagCommand command = new GetTagCommand(tagName);
+        String executionMessage = handleCommand(command, response);
+
+        return new ResponseBodies.TagRetrieval(executionMessage, command.getRetrievedEntity());
+    }
+
+    private Object handleGetIngredientRequest(Request request, Response response) {
+        String ingredientName = request.queryParams(":ingredient");
+
+        GetIngredientCommand command = new GetIngredientCommand(ingredientName);
+        String executionMessage = handleCommand(command, response);
+
+        return new ResponseBodies.IngredientRetrieval(
+                executionMessage, command.getRetrievedEntity());
+    }
+
+    private Object handleGetRecipeRequest(Request request, Response response) {
+        String recipeName = request.queryParams(":recipe");
+
+        GetRecipeCommand command = new GetRecipeCommand(recipeName);
+        String executionMessage = handleCommand(command, response);
+
+        return new ResponseBodies.RecipeRetrieval(
+                executionMessage, new RecipeForm(command.getRetrievedEntity()));
+    }
+
+    private Object handleGetUserRequest(Request request, Response response) {
+        String username = request.queryParams(":user");
+
+        GetUserCommand command = new GetUserCommand(username);
+        String executionMessage = handleCommand(command, response);
+
+        return new ResponseBodies.UserRetrieval(
+                executionMessage, new UserForm(command.getRetrievedEntity()));
+    }
+
     private static Map<String, Integer> initializeMessageToStatusCode() {
         Map<String, Integer> map = new HashMap<>();
 
         map.put(UNAUTHORIZED, 401);
         map.put(Command.NOT_OK_ERROR, 500);
         map.put(EntityCommand.NOT_OK_BAD_STORAGE, 500);
+
         map.put(SearchRecipesCommand.NOT_OK_BAD_SEARCH_TERMS, 400);
         map.put(SearchRecipesCommand.OK_MATCHES_FOUND, 200);
         map.put(SearchRecipesCommand.OK_NO_MATCHES_FOUND, 200);
+
         map.put(CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME, 201);
         map.put(CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED, 201);
         map.put(CreateRecipeCommand.NOT_OK_INVALID_RECIPE, 400);
         map.put(CreateRecipeCommand.NOT_OK_RECIPE_RESOURCES_NOT_FOUND, 404);
         map.put(CreateRecipeCommand.NOT_OK_RECIPE_NAME_TAKEN, 400);
+
         map.put(CreateTagCommand.OK_TAG_CREATED, 201);
         map.put(CreateTagCommand.NOT_OK_INVALID_TAG, 400);
         map.put(CreateTagCommand.NOT_OK_TAG_NAME_TAKEN, 400);
+
         map.put(CreateIngredientCommand.OK_INGREDIENT_CREATED, 201);
         map.put(CreateIngredientCommand.NOT_OK_INVALID_INGREDIENT, 400);
         map.put(CreateIngredientCommand.NOT_OK_INGREDIENT_NAME_TAKEN, 400);
+
         map.put(CreateUserCommand.OK_USER_CREATED, 201);
         map.put(CreateUserCommand.NOT_OK_INVALID_USER, 400);
         map.put(CreateUserCommand.NOT_OK_USERNAME_TAKEN, 400);
+
+        map.put(GetTagCommand.OK_TAG_RETRIEVED, 200);
+        map.put(GetTagCommand.NOT_OK_TAG_NOT_FOUND, 404);
+
+        map.put(GetIngredientCommand.OK_INGREDIENT_RETRIEVED, 200);
+        map.put(GetIngredientCommand.NOT_OK_INGREDIENT_NOT_FOUND, 404);
+
+        map.put(GetRecipeCommand.OK_RECIPE_RETRIEVED, 200);
+        map.put(GetRecipeCommand.NOT_OK_RECIPE_NOT_FOUND, 404);
+
+        map.put(GetUserCommand.OK_USER_RETRIEVED, 200);
+        map.put(GetUserCommand.NOT_OK_USER_NOT_FOUND, 404);
 
         return map;
     }

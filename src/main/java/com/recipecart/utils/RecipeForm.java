@@ -31,18 +31,19 @@ public final class RecipeForm {
      * @param recipe the recipe whose fields to copy
      */
     public RecipeForm(Recipe recipe) {
-        this.name = recipe.getName();
-        this.presentationName = recipe.getPresentationName();
-        this.authorUsername = recipe.getAuthorUsername();
-        this.prepTime = recipe.getPrepTime();
-        this.cookTime = recipe.getCookTime();
-        this.imageUri = recipe.getImageUri();
-        this.numServings = recipe.getNumServings();
-        this.avgRating = recipe.getAvgRating();
-        this.numRatings = recipe.getNumRatings();
-        this.directions = recipe.getDirections();
-        this.tags = Utils.fromTags(recipe.getTags());
-        this.requiredIngredients = Utils.fromIngredients(recipe.getRequiredIngredients());
+        this(
+                recipe.getName(),
+                recipe.getPresentationName(),
+                recipe.getAuthorUsername(),
+                recipe.getPrepTime(),
+                recipe.getCookTime(),
+                recipe.getImageUri(),
+                recipe.getNumServings(),
+                recipe.getAvgRating(),
+                recipe.getNumRatings(),
+                recipe.getDirections(),
+                Utils.fromTags(recipe.getTags()),
+                Utils.fromIngredients(recipe.getRequiredIngredients()));
     }
 
     public RecipeForm(

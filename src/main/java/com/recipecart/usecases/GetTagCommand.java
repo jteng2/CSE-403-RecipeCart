@@ -20,7 +20,7 @@ public final class GetTagCommand extends SimpleGetCommand<Tag> {
      *
      * @param name the name of the tag to retrieve.
      */
-    GetTagCommand(String name) {
+    public GetTagCommand(String name) {
         super(name);
     }
 
