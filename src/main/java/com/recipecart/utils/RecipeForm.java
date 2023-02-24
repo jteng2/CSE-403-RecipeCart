@@ -112,7 +112,7 @@ public final class RecipeForm {
         return Utils.allowNull(directions, Collections::unmodifiableList);
     }
 
-    @Nullable public Set<String> getTags() {
+    @Nullable public Set<String> getTagNames() {
         return Utils.allowNull(tags, Collections::unmodifiableSet);
     }
 

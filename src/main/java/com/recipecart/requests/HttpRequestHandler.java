@@ -5,14 +5,13 @@ import static spark.Spark.*;
 
 import com.google.gson.Gson;
 import com.recipecart.entities.Recipe;
+import com.recipecart.entities.Tag;
 import com.recipecart.execution.EntityCommander;
 import com.recipecart.usecases.*;
 import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.Utils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import spark.Request;
 import spark.Response;
@@ -24,28 +23,7 @@ import spark.Response;
 public class HttpRequestHandler {
     private static final String APPLICATION_JSON = "application/json";
     private static final String UNAUTHORIZED = "User is not properly authorized to do this task";
-    private static final Map<String, Integer> messageToStatusCode =
-            Map.of(
-                    UNAUTHORIZED,
-                    401,
-                    Command.NOT_OK_ERROR,
-                    500,
-                    EntityCommand.NOT_OK_BAD_STORAGE,
-                    500,
-                    SearchRecipesCommand.NOT_OK_BAD_SEARCH_TERMS,
-                    400,
-                    SearchRecipesCommand.OK_MATCHES_FOUND,
-                    200,
-                    SearchRecipesCommand.OK_NO_MATCHES_FOUND,
-                    200,
-                    CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME,
-                    201,
-                    CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED,
-                    201,
-                    CreateRecipeCommand.NOT_OK_INVALID_RECIPE,
-                    400,
-                    CreateRecipeCommand.NOT_OK_NAME_TAKEN,
-                    400);
+    private static final Map<String, Integer> messageToStatusCode = initializeMessageToStatusCode();
 
     private final @NotNull EntityCommander commander;
     private final @NotNull JwtValidator loginChecker;
@@ -134,9 +112,31 @@ public class HttpRequestHandler {
 
             Recipe createdRecipe = createRecipeCommand.getCreatedRecipe();
             return new ResponseBodies.RecipeCreation(
-                    executionMessage, Utils.allowNull(createdRecipe, Recipe::getName));
+                    executionMessage,
+                    Utils.allowNull(createdRecipe, Recipe::getName),
+                    Utils.allowNull(
+                            createRecipeCommand.getCreatedTags(),
+                            (t) -> t.stream().map(Tag::toString).collect(Collectors.toSet())));
         } else {
             return new RequestBodies.RecipeCreation(handleUnauthorized(response), null);
         }
+    }
+
+    private static Map<String, Integer> initializeMessageToStatusCode() {
+        Map<String, Integer> map = new HashMap<>();
+
+        map.put(UNAUTHORIZED, 401);
+        map.put(Command.NOT_OK_ERROR, 500);
+        map.put(EntityCommand.NOT_OK_BAD_STORAGE, 500);
+        map.put(SearchRecipesCommand.NOT_OK_BAD_SEARCH_TERMS, 400);
+        map.put(SearchRecipesCommand.OK_MATCHES_FOUND, 200);
+        map.put(SearchRecipesCommand.OK_NO_MATCHES_FOUND, 200);
+        map.put(CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME, 201);
+        map.put(CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED, 201);
+        map.put(CreateRecipeCommand.NOT_OK_INVALID_RECIPE, 400);
+        map.put(CreateRecipeCommand.NOT_OK_RECIPE_RESOURCES_NOT_FOUND, 404);
+        map.put(CreateRecipeCommand.NOT_OK_RECIPE_NAME_TAKEN, 400);
+
+        return map;
     }
 }

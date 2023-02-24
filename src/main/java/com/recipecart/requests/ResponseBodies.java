@@ -3,10 +3,7 @@ package com.recipecart.requests;
 
 import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.Utils;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,14 +42,20 @@ class ResponseBodies {
     /** Follows the "Create recipe" API route. */
     static class RecipeCreation extends WithMessage {
         private final String assignedName;
+        private final Set<String> createdTags;
 
-        RecipeCreation(String message, String assignedName) {
+        RecipeCreation(String message, String assignedName, Set<String> createdTags) {
             super(message);
             this.assignedName = assignedName;
+            this.createdTags = createdTags;
         }
 
         String getAssignedName() {
             return assignedName;
+        }
+
+        Set<String> getCreatedTags() {
+            return createdTags;
         }
     }
 }

@@ -22,12 +22,16 @@ public final class CreateRecipeCommand extends EntityCommand {
                     "Recipe creation successful: the recipe was assigned a new unique"
                             + " (non-presentation) name",
             NOT_OK_INVALID_RECIPE = "Recipe creation unsuccessful: the recipe was invalid or null",
-            NOT_OK_NAME_TAKEN =
+            NOT_OK_RECIPE_RESOURCES_NOT_FOUND =
+                    "Recipe creation unsuccessful: the user or ingredient name(s) doesn't"
+                            + " correspond to an existing user or ingredient",
+            NOT_OK_RECIPE_NAME_TAKEN =
                     "Recipe creation unsuccessful: the given unique (non-presentation) recipe name"
                             + " is already taken";
 
     private final RecipeForm recipeFormToAdd;
     private Recipe createdRecipe = null;
+    private Set<Tag> createdTags = null;
 
     /**
      * Creates an action item for a user to create a Recipe.
@@ -70,6 +74,37 @@ public final class CreateRecipeCommand extends EntityCommand {
         this.createdRecipe = createdRecipe;
     }
 
+    /**
+     * Returns any new Tags that were created and saved (that previously didn't exist in the
+     * EntityStorage this command was given) in the process of creating this Recipe (i.e. the tags
+     * whose names didn't yet have a corresponding tag in the storage)
+     *
+     * @throws IllegalStateException if this command instance hasn't finished executing yet.
+     * @return the (non-null) Tags that were created, if this command successfully executed (this
+     *     list can be empty); null otherwise
+     */
+    @Nullable public Set<@NotNull Tag> getCreatedTags() {
+        if (!isFinishedExecuting()) {
+            throw new IllegalStateException("Command hasn't finished executing yet");
+        }
+        return Utils.allowNull(createdTags, Collections::unmodifiableSet);
+    }
+
+    private void setCreatedTags(@NotNull Set<@NotNull Tag> tags) {
+        if (isFinishedExecuting()) {
+            throw new IllegalStateException(
+                    "Cannot set the created recipe after command has executed");
+        }
+        if (this.createdTags != null) {
+            throw new IllegalStateException("Can only set created recipe once");
+        }
+        Utils.requireAllNotNull(
+                tags,
+                "Cannot set created-tag set to null",
+                "Cannot have null elements in the created-tag set");
+        this.createdTags = tags;
+    }
+
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();
@@ -80,8 +115,11 @@ public final class CreateRecipeCommand extends EntityCommand {
             if (!isRecipeToAddValid()) {
                 return NOT_OK_INVALID_RECIPE;
             }
+            if (!doIngredientsExist()) {
+                return NOT_OK_RECIPE_RESOURCES_NOT_FOUND;
+            }
             if (!isRecipeNameAvailable()) {
-                return NOT_OK_NAME_TAKEN;
+                return NOT_OK_RECIPE_NAME_TAKEN;
             }
         } catch (RuntimeException e) { // for data access layer failures
             e.printStackTrace();
@@ -100,43 +138,24 @@ public final class CreateRecipeCommand extends EntityCommand {
     }
 
     private boolean areDirectionsValid() {
-        if (getToAdd().getDirections() == null) {
-            return true;
-        }
-        for (String direction : getToAdd().getDirections()) {
-            if (direction == null) {
-                return false;
-            }
-        }
-        return true;
+        return getToAdd().getDirections() == null || !getToAdd().getDirections().contains(null);
     }
 
     private boolean areTagNamesValid() {
-        if (getToAdd().getTags() == null) {
-            return true;
-        }
-        assert getStorageSource() != null;
-        for (String tagName : getToAdd().getTags()) {
-            if (tagName == null || !getStorageSource().getLoader().tagNameExists(tagName)) {
-                return false;
-            }
-        }
-        return true;
+        return getToAdd().getTagNames() == null || !getToAdd().getTagNames().contains(null);
     }
 
     private boolean areIngredientNamesValid() {
-        if (getToAdd().getRequiredIngredients() == null) {
-            return true;
-        }
+        return getToAdd().getRequiredIngredients() == null
+                || (!getToAdd().getRequiredIngredients().containsKey(null)
+                        && !getToAdd().getRequiredIngredients().containsValue(null));
+    }
+
+    private boolean doIngredientsExist() {
         assert getStorageSource() != null;
-        for (Map.Entry<String, Double> entry : getToAdd().getRequiredIngredients().entrySet()) {
-            if (entry.getKey() == null
-                    || entry.getValue() == null
-                    || !getStorageSource().getLoader().ingredientNameExists(entry.getKey())) {
-                return false;
-            }
-        }
-        return true;
+        return getToAdd().getRequiredIngredients() == null
+                || getToAdd().getRequiredIngredients().keySet().stream()
+                        .allMatch(getStorageSource().getLoader()::ingredientNameExists);
     }
 
     private boolean isAuthorUsernameValid() {
@@ -153,11 +172,23 @@ public final class CreateRecipeCommand extends EntityCommand {
     }
 
     /**
-     * Has the given user create the given Recipe. If the Recipe's (non-presentation) name is null,
-     * a name will be assigned to it. If it's not null and the name isn't taken, the Recipe will
-     * take that name. If it's not null and the name is taken, this command's execution will be
-     * unsuccessful. Also, if the Recipe's presentation name or author's username is null, then this
-     * command's execution will be unsuccessful.
+     * Has the given user create the given Recipe, and has that Recipe saved. If the Recipe's
+     * (non-presentation) name is null, a name will be assigned to it. If it's not null and the name
+     * isn't taken, the Recipe will take that name. The command will be unsuccessful if:
+     *
+     * <ul>
+     *   <li>The recipe name is non-null, but a recipe with that name already exists in the
+     *       EntityStorage
+     *   <li>If the Recipe's presentation name or author username is null
+     *   <li>If any of the directions, tags, or keys/values of the required ingredients are null
+     *   <li>If the author username doesn't correspond to an existing user in the EntityStorage this
+     *       command was given
+     *   <li>If any of the keys of the required ingredients don't correspond to an existing
+     *       ingredient in the EntityStorage this command was given
+     * </ul>
+     *
+     * If any of the Recipe's tags don't correspond to an existing tag in the EntityStorage this
+     * command was given, then new tags will be created and saved for them.
      *
      * @throws IllegalStateException if this method has been called before on this command instance.
      */
@@ -170,6 +201,11 @@ public final class CreateRecipeCommand extends EntityCommand {
 
         Recipe created;
         boolean assignNewName = getToAdd().getName() == null;
+        Set<Tag> createdTags = createMissingTags();
+        if (createdTags == null) {
+            finishExecutingFromError();
+            return;
+        }
         try {
             Recipe recipeToAdd = createRecipeFromForm();
             created = saveNewRecipe(recipeToAdd, assignNewName);
@@ -182,7 +218,39 @@ public final class CreateRecipeCommand extends EntityCommand {
             finishExecutingImpossibleOutcome(e);
             return;
         }
-        finishExecutingSuccessfulRecipeCreation(created, !assignNewName);
+        finishExecutingSuccessfulRecipeCreation(created, !assignNewName, createdTags);
+    }
+
+    // returns null if any missing tags don't get successfully created
+    private @Nullable Set<Tag> createMissingTags() {
+        if (getToAdd().getTagNames() != null) {
+            assert getStorageSource() != null;
+
+            Set<Tag> createdTags = new HashSet<>();
+            getToAdd().getTagNames().stream()
+                    .filter(this::tagIsMissing)
+                    .forEach((tagName) -> createdTags.add(createTag(tagName)));
+
+            if (createdTags.contains(null)) {
+                return null;
+            }
+            return createdTags;
+        }
+        return Collections.emptySet();
+    }
+
+    private boolean tagIsMissing(String tagName) {
+        assert getStorageSource() != null;
+        return !getStorageSource().getLoader().tagNameExists(tagName);
+    }
+
+    private Tag createTag(String tagName) {
+        assert getStorageSource() != null;
+        CreateTagCommand tagCreation = new CreateTagCommand(tagName);
+        tagCreation.setStorageSource(getStorageSource());
+        tagCreation.execute();
+
+        return tagCreation.getCreatedTag();
     }
 
     private Recipe createRecipeFromForm() throws IOException {
@@ -213,11 +281,11 @@ public final class CreateRecipeCommand extends EntityCommand {
     private void addLoadedTags(Recipe.Builder recipeBuilder) throws IOException {
         assert getStorageSource() != null;
 
-        if (getToAdd().getTags() != null) {
+        if (getToAdd().getTagNames() != null) {
             List<Tag> tags =
                     getStorageSource()
                             .getLoader()
-                            .getTagsByNames(new ArrayList<>(getToAdd().getTags()));
+                            .getTagsByNames(new ArrayList<>(getToAdd().getTagNames()));
             recipeBuilder.setTags(new HashSet<>(tags));
         }
     }
@@ -279,8 +347,9 @@ public final class CreateRecipeCommand extends EntityCommand {
     }
 
     private void finishExecutingSuccessfulRecipeCreation(
-            Recipe createdRecipe, boolean nameIsOriginal) {
+            Recipe createdRecipe, boolean nameIsOriginal, Set<Tag> createdTags) {
         setCreatedRecipe(createdRecipe);
+        setCreatedTags(createdTags);
         setExecutionMessage(
                 nameIsOriginal
                         ? OK_RECIPE_CREATED_WITH_GIVEN_NAME
