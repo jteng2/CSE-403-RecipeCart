@@ -269,6 +269,7 @@ This route is for creating a new user into the data access layer. This user won'
 POST /create/user HTTP/1.1
 ...
 Content-type: application/json
+Accept: application/json
 ...
 ```
 ### Body details
@@ -476,7 +477,7 @@ A 200 status code will be returned if the recipe was successfully bookmarked.
 
 A 404 status code will be returned if the username or recipe name don't correspond to an existing user or recipe, respectively.
 
-A 400 (Bad request) will be returned if any of the fields are null or missing.
+A 400 (Bad request) will be returned if any of the fields are null or missing, or if the user already has the recipe saved.
 
 A 401 (Unauthorized) status code will be returned if the JWT token from `encryptedJwtToken` is invalid.
 ### Example response
