@@ -549,7 +549,7 @@ Accept: application/json
 ...
 ```
 ### Body details
-The body will be JSON containing the username of the user, the recipe whose ingredients they want to add to their shopping list, and if they only want to add the recipe's ingredients that they're currently missing.
+The body will be JSON containing the username of the user, the recipe whose ingredients they want to add to their shopping list, and if they only want to add the recipe's ingredients that they're currently missing. If `addOnlyMissingIngredients` is missing or null, it will default to `false`.
 ### Example body
 ```
 {
@@ -564,7 +564,7 @@ A 200 status code will be returned if the recipe's ingredients are successfully 
 
 A 404 status code will be returned if the username or recipe name doesn't correspond to an existing user or recipe, respectively.
 
-A 400 (Bad request) status code will be returned if any of the fields are missing or null.
+A 400 (Bad request) status code will be returned if any of the fields (except `addOnlyMissingIngredients`) are missing or null.
 
 A 401 (Unauthorized) status code will be returned if the JWT token from encryptedJwtToken is invalid.
 ### Example response
