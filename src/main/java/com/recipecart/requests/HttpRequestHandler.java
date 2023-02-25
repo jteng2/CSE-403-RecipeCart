@@ -171,7 +171,7 @@ public class HttpRequestHandler {
     }
 
     private Object handleGetTagRequest(Request request, Response response) {
-        String tagName = request.queryParams(":tag");
+        String tagName = request.params(":tag");
 
         GetTagCommand command = new GetTagCommand(tagName);
         String executionMessage = handleCommand(command, response);
@@ -180,7 +180,7 @@ public class HttpRequestHandler {
     }
 
     private Object handleGetIngredientRequest(Request request, Response response) {
-        String ingredientName = request.queryParams(":ingredient");
+        String ingredientName = request.params(":ingredient");
 
         GetIngredientCommand command = new GetIngredientCommand(ingredientName);
         String executionMessage = handleCommand(command, response);
@@ -190,23 +190,23 @@ public class HttpRequestHandler {
     }
 
     private Object handleGetRecipeRequest(Request request, Response response) {
-        String recipeName = request.queryParams(":recipe");
+        String recipeName = request.params(":recipe");
 
         GetRecipeCommand command = new GetRecipeCommand(recipeName);
         String executionMessage = handleCommand(command, response);
 
         return new ResponseBodies.RecipeRetrieval(
-                executionMessage, new RecipeForm(command.getRetrievedEntity()));
+                executionMessage, Utils.allowNull(command.getRetrievedEntity(), RecipeForm::new));
     }
 
     private Object handleGetUserRequest(Request request, Response response) {
-        String username = request.queryParams(":user");
+        String username = request.params(":user");
 
         GetUserCommand command = new GetUserCommand(username);
         String executionMessage = handleCommand(command, response);
 
         return new ResponseBodies.UserRetrieval(
-                executionMessage, new UserForm(command.getRetrievedEntity()));
+                executionMessage, Utils.allowNull(command.getRetrievedEntity(), UserForm::new));
     }
 
     private static Map<String, Integer> initializeMessageToStatusCode() {
