@@ -172,10 +172,10 @@ public class BookmarkRecipeCommandTest {
     @MethodSource("getUserAndRecipe")
     void testBookmarkRecipeWithError(User baseUser, Recipe recipe) {
         User user = withoutSavedRecipes(baseUser);
-        EntityStorage storage = new EntityStorage(new BadEntitySaver(), new BadEntityLoader());
+        EntityStorage badStorage = new EntityStorage(new BadEntitySaver(), new BadEntityLoader());
         BookmarkRecipeCommand command =
                 new BookmarkRecipeCommand(user.getUsername(), recipe.getName());
-        command.setStorageSource(storage);
+        command.setStorageSource(badStorage);
         command.execute();
 
         assertUnsuccessfulExecution(command, NOT_OK_ERROR);
