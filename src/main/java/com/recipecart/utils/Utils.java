@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 
 /** This class contains general utility methods to help with the implementation of RecipeCart. */
 public class Utils {
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////// Methods for dealing with nulls //////////////////////////////////
     /**
      * Passes the given T into the given function if the T isn't null; returns null otherwise
      *
@@ -202,5 +204,17 @@ public class Utils {
         ingredientMap.forEach(
                 (ingredient, value) -> ingredientNameMap.put(ingredient.getName(), value));
         return ingredientNameMap;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////// Misc. methods ////////////////////////////////////////////////
+
+    public static <T> Map<T, Double> addMaps(Map<T, Double> map1, Map<T, Double> map2) {
+        Map<T, Double> sum = new HashMap<>(map1);
+        for (Map.Entry<T, Double> entry : map2.entrySet()) {
+            sum.putIfAbsent(entry.getKey(), 0.0);
+            sum.put(entry.getKey(), sum.get(entry.getKey()) + entry.getValue());
+        }
+        return sum;
     }
 }
