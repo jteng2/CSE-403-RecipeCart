@@ -1,6 +1,7 @@
 /* (C)2023 */
 package com.recipecart.testutil;
 
+import com.recipecart.database.FileEntitySaveAndLoader;
 import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.database.MongoEntityLoader;
 import com.recipecart.database.MongoEntitySaver;
@@ -11,8 +12,10 @@ import com.recipecart.entities.User;
 import com.recipecart.storage.EntityLoader;
 import com.recipecart.storage.EntitySaver;
 import com.recipecart.storage.EntityStorage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class provides the raw data/objects that the unit tests will use.
@@ -576,10 +579,30 @@ public class TestData {
         return storages;
     }
 
-    public static Object[] getMockEntityStorages() {
+    public static Object[] getMapEntityStorages() {
         EntityStorage[] storages = new EntityStorage[NUM_PARAM_COMBOS];
         for (int i = 0; i < storages.length; i++) {
             MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
+            storages[i] = new EntityStorage(saverAndLoader, saverAndLoader);
+        }
+        return storages;
+    }
+
+    public static Object[] getFileEntityStorages() {
+        EntityStorage[] storages = new EntityStorage[NUM_PARAM_COMBOS];
+        for (int i = 0; i < storages.length; i++) {
+            MapEntitySaveAndLoader saverAndLoader;
+            if (i == 0) {
+                saverAndLoader = new FileEntitySaveAndLoader();
+            } else {
+                saverAndLoader =
+                        new FileEntitySaveAndLoader("", i) {
+                            @Override
+                            public void save(@NotNull String filename) throws IOException {
+                                super.save(new ByteArrayOutputStream()); // save to nowhere
+                            }
+                        };
+            }
             storages[i] = new EntityStorage(saverAndLoader, saverAndLoader);
         }
         return storages;

@@ -61,7 +61,8 @@ public class TestDataTest {
                 TestData::getListUserSomeInvalid,
                 TestData::getListUserWithNulls,
                 // TestData::getMongoEntityStorages,
-                TestData::getMockEntityStorages);
+                TestData::getMapEntityStorages,
+                TestData::getFileEntityStorages);
     }
 
     // all methods in TestData whose return-value elements are always non-null
@@ -100,7 +101,8 @@ public class TestDataTest {
                 TestData::getListUserNoNulls,
                 TestData::getListUserSomeInvalid,
                 // TestData::getMongoEntityStorages,
-                TestData::getMockEntityStorages);
+                TestData::getMapEntityStorages,
+                TestData::getFileEntityStorages);
     }
 
     @ParameterizedTest
