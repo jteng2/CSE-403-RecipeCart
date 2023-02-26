@@ -3,12 +3,14 @@ package com.recipecart.database;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.List;
 import org.bson.Document;
 
@@ -44,10 +46,11 @@ public class MongoConnector {
         String hostname = json.get("hostname").getAsString();
         int port = json.get("port").getAsInt();
         String databaseName = json.get("database").getAsString();
-        List<String> tagCollectionName = gson.fromJson(json.get("tags"), List.class);
-        List<String> ingredientCollectionName = gson.fromJson(json.get("ingredients"), List.class);
-        List<String> recipeCollectionName = gson.fromJson(json.get("recipes"), List.class);
-        List<String> userCollectionName = gson.fromJson(json.get("users"), List.class);
+        Type listType = new TypeToken<List<String>>(){}.getType();
+        List<String> tagCollectionName = gson.fromJson(json.get("tags"), listType);
+        List<String> ingredientCollectionName = gson.fromJson(json.get("ingredients"), listType);
+        List<String> recipeCollectionName = gson.fromJson(json.get("recipes"), listType);
+        List<String> userCollectionName = gson.fromJson(json.get("users"), listType);
 
         MongoClient mongoClient = MongoClients.create("mongodb://" + hostname + ":" + port);
         MongoDatabase database = mongoClient.getDatabase(databaseName);
