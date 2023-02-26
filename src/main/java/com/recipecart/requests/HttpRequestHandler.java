@@ -9,9 +9,10 @@ import com.recipecart.entities.Tag;
 import com.recipecart.execution.EntityCommander;
 import com.recipecart.usecases.*;
 import com.recipecart.utils.RecipeForm;
-import com.recipecart.utils.UserForm;
 import com.recipecart.utils.Utils;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import spark.Request;
@@ -190,69 +191,65 @@ public class HttpRequestHandler {
     }
 
     private Object handleCreateUserRequest(Request request, Response response) {
-        RequestBodies.UserCreation bodyDetails =
-                getRequestBodyDetails(request, RequestBodies.UserCreation.class);
-
-        CreateUserCommand command =
-                new CreateUserCommand(bodyDetails.getUsername(), bodyDetails.getEmailAddress());
-        String executionMessage = handleCommand(command, response);
-
-        return new ResponseBodies.WithMessage(executionMessage);
+        return handleSimplePostRequest(
+                request,
+                response,
+                false,
+                RequestBodies.UserCreation.class,
+                (bodyDetails) ->
+                        new CreateUserCommand(
+                                bodyDetails.getUsername(), bodyDetails.getEmailAddress()));
     }
 
     private Object handleCreateIngredientRequest(Request request, Response response) {
-        RequestBodies.IngredientCreation bodyDetails =
-                getRequestBodyDetails(request, RequestBodies.IngredientCreation.class);
-
-        CreateIngredientCommand command =
-                new CreateIngredientCommand(
-                        bodyDetails.getName(), bodyDetails.getUnits(), bodyDetails.getImageUri());
-        String executionMessage = handleCommand(command, response);
-
-        return new ResponseBodies.WithMessage(executionMessage);
+        return handleSimplePostRequest(
+                request,
+                response,
+                false,
+                RequestBodies.IngredientCreation.class,
+                (bodyDetails) ->
+                        new CreateIngredientCommand(
+                                bodyDetails.getName(),
+                                bodyDetails.getUnits(),
+                                bodyDetails.getImageUri()));
     }
 
     private Object handleCreateTagRequest(Request request, Response response) {
-        RequestBodies.TagCreation bodyDetails =
-                getRequestBodyDetails(request, RequestBodies.TagCreation.class);
-
-        CreateTagCommand command = new CreateTagCommand(bodyDetails.getName());
-        String executionMessage = handleCommand(command, response);
-
-        return new ResponseBodies.WithMessage(executionMessage);
+        return handleSimplePostRequest(
+                request,
+                response,
+                false,
+                RequestBodies.TagCreation.class,
+                (bodyDetails) -> new CreateTagCommand(bodyDetails.getName()));
     }
 
     private Object handleGetTagRequest(Request request, Response response) {
-        String tagName = request.params(":tag");
-
-        GetTagCommand command = new GetTagCommand(tagName);
-        String executionMessage = handleCommand(command, response);
-
-        return new ResponseBodies.TagRetrieval(executionMessage, command.getRetrievedEntity());
+        return handleGetEntityRequest(
+                request, response, ":tag", GetTagCommand::new, ResponseBodies.TagRetrieval::new);
     }
 
     private Object handleGetIngredientRequest(Request request, Response response) {
-        String ingredientName = request.params(":ingredient");
-
-        GetIngredientCommand command = new GetIngredientCommand(ingredientName);
-        String executionMessage = handleCommand(command, response);
-
-        return new ResponseBodies.IngredientRetrieval(
-                executionMessage, command.getRetrievedEntity());
+        return handleGetEntityRequest(
+                request,
+                response,
+                ":ingredient",
+                GetIngredientCommand::new,
+                ResponseBodies.IngredientRetrieval::new);
     }
 
     private Object handleGetRecipeRequest(Request request, Response response) {
-        String recipeName = request.params(":recipe");
-
-        GetRecipeCommand command = new GetRecipeCommand(recipeName);
-        String executionMessage = handleCommand(command, response);
-
-        return new ResponseBodies.RecipeRetrieval(
-                executionMessage, Utils.allowNull(command.getRetrievedEntity(), RecipeForm::new));
+        return handleGetEntityRequest(
+                request,
+                response,
+                ":recipe",
+                GetRecipeCommand::new,
+                ResponseBodies.RecipeRetrieval::new);
     }
 
     private Object handleGetUserRequest(Request request, Response response) {
-        String username = request.params(":user");
+        return handleGetEntityRequest(
+                request, response, ":user", GetUserCommand::new, ResponseBodies.UserRetrieval::new);
+    }
 
     private Object handleBookmarkRecipeRequest(Request request, Response response) {
         return handleSimplePostRequest(
