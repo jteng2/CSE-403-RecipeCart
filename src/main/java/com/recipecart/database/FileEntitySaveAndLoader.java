@@ -30,7 +30,7 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
      * method.
      *
      * @param maxSaveCounter the number of EntitySaver method calls required to autosave
-     * @throws IllegalArgumentException if saveCounter is negative
+     * @throws IllegalArgumentException if saveCounter is zero or negative
      */
     public FileEntitySaveAndLoader(
             @NotNull String autosaveFilename, @NotNull Integer maxSaveCounter) {
@@ -38,7 +38,7 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
 
         Objects.requireNonNull(autosaveFilename);
         Objects.requireNonNull(maxSaveCounter);
-        if (maxSaveCounter < 0) {
+        if (maxSaveCounter <= 0) {
             throw new IllegalArgumentException("Max save counter cannot be negative");
         }
 
