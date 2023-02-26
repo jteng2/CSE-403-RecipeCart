@@ -112,7 +112,7 @@ class ResponseBodies {
         }
 
         RecipeRetrieval(@NotNull String message, Recipe retrievedRecipe) {
-            this(message, new RecipeForm(retrievedRecipe));
+            this(message, (RecipeForm) Utils.allowNull(retrievedRecipe, RecipeForm::new));
         }
 
         RecipeForm getRetrievedRecipe() {
@@ -129,7 +129,7 @@ class ResponseBodies {
         }
 
         UserRetrieval(@NotNull String message, User retrievedUser) {
-            this(message, new UserForm(retrievedUser));
+            this(message, (UserForm) Utils.allowNull(retrievedUser, UserForm::new));
         }
 
         UserForm getRetrievedUser() {
