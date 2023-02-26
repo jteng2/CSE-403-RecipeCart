@@ -42,8 +42,8 @@ public final class RecipeForm {
                 recipe.getAvgRating(),
                 recipe.getNumRatings(),
                 recipe.getDirections(),
-                Utils.fromTags(recipe.getTags()),
-                Utils.fromIngredients(recipe.getRequiredIngredients()));
+                Utils.fromTagSet(recipe.getTags()),
+                Utils.fromIngredientMap(recipe.getRequiredIngredients()));
     }
 
     public RecipeForm(
@@ -119,5 +119,41 @@ public final class RecipeForm {
 
     @Nullable public Map<String, Double> getRequiredIngredients() {
         return Utils.allowNull(requiredIngredients, Collections::unmodifiableMap);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeForm that = (RecipeForm) o;
+        return Double.compare(that.getAvgRating(), getAvgRating()) == 0
+                && getNumRatings() == that.getNumRatings()
+                && Objects.equals(getName(), that.getName())
+                && Objects.equals(getPresentationName(), that.getPresentationName())
+                && Objects.equals(getAuthorUsername(), that.getAuthorUsername())
+                && Objects.equals(getPrepTime(), that.getPrepTime())
+                && Objects.equals(getCookTime(), that.getCookTime())
+                && Objects.equals(getImageUri(), that.getImageUri())
+                && Objects.equals(getNumServings(), that.getNumServings())
+                && Objects.equals(getDirections(), that.getDirections())
+                && Objects.equals(getTagNames(), that.getTagNames())
+                && Objects.equals(getRequiredIngredients(), that.getRequiredIngredients());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                getName(),
+                getPresentationName(),
+                getAuthorUsername(),
+                getPrepTime(),
+                getCookTime(),
+                getImageUri(),
+                getNumServings(),
+                getAvgRating(),
+                getNumRatings(),
+                getDirections(),
+                getTagNames(),
+                getRequiredIngredients());
     }
 }

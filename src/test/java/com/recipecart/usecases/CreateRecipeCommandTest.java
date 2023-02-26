@@ -277,8 +277,8 @@ public class CreateRecipeCommandTest {
                         baseRecipe.getAvgRating(),
                         baseRecipe.getNumRatings(),
                         directions,
-                        Utils.fromTags(baseRecipe.getTags()),
-                        Utils.fromIngredients(baseRecipe.getRequiredIngredients()));
+                        Utils.fromTagSet(baseRecipe.getTags()),
+                        Utils.fromIngredientMap(baseRecipe.getRequiredIngredients()));
         CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
         assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);
@@ -289,7 +289,7 @@ public class CreateRecipeCommandTest {
     void testCreateRecipeNullIngredientNames(EntityStorage storageSource, Recipe baseRecipe) {
         setupStorage(baseRecipe, storageSource);
         Map<String, Double> requiredIngredients =
-                Utils.fromIngredients(baseRecipe.getRequiredIngredients());
+                Utils.fromIngredientMap(baseRecipe.getRequiredIngredients());
         requiredIngredients.put(null, 1.0);
         RecipeForm toAdd =
                 new RecipeForm(
@@ -303,7 +303,7 @@ public class CreateRecipeCommandTest {
                         baseRecipe.getAvgRating(),
                         baseRecipe.getNumRatings(),
                         baseRecipe.getDirections(),
-                        Utils.fromTags(baseRecipe.getTags()),
+                        Utils.fromTagSet(baseRecipe.getTags()),
                         requiredIngredients);
         CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
@@ -315,7 +315,7 @@ public class CreateRecipeCommandTest {
     void testCreateRecipeNullIngredientValues(EntityStorage storageSource, Recipe baseRecipe) {
         setupStorage(baseRecipe, storageSource);
         Map<String, Double> requiredIngredients =
-                Utils.fromIngredients(baseRecipe.getRequiredIngredients());
+                Utils.fromIngredientMap(baseRecipe.getRequiredIngredients());
         requiredIngredients.put("Null ingredient", null);
         RecipeForm toAdd =
                 new RecipeForm(
@@ -329,7 +329,7 @@ public class CreateRecipeCommandTest {
                         baseRecipe.getAvgRating(),
                         baseRecipe.getNumRatings(),
                         baseRecipe.getDirections(),
-                        Utils.fromTags(baseRecipe.getTags()),
+                        Utils.fromTagSet(baseRecipe.getTags()),
                         requiredIngredients);
         CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
@@ -340,7 +340,7 @@ public class CreateRecipeCommandTest {
     @MethodSource("getStorageWithRecipeNonEmptyDataStructures")
     void testCreateRecipeNullTagNames(EntityStorage storageSource, Recipe baseRecipe) {
         setupStorage(baseRecipe, storageSource);
-        Set<String> tags = Utils.fromTags(baseRecipe.getTags());
+        Set<String> tags = Utils.fromTagSet(baseRecipe.getTags());
         tags.add(null);
         RecipeForm toAdd =
                 new RecipeForm(
@@ -355,7 +355,7 @@ public class CreateRecipeCommandTest {
                         baseRecipe.getNumRatings(),
                         baseRecipe.getDirections(),
                         tags,
-                        Utils.fromIngredients(baseRecipe.getRequiredIngredients()));
+                        Utils.fromIngredientMap(baseRecipe.getRequiredIngredients()));
         CreateRecipeCommand command = createAndExecuteCommand(toAdd, storageSource);
 
         assertUnsuccessfulExecution(command, NOT_OK_INVALID_RECIPE);

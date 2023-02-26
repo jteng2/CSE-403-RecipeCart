@@ -193,17 +193,35 @@ public class Utils {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////// Methods for converting data structures ///////////////////////////////////
 
-    public static Set<String> fromTags(Set<Tag> tags) {
+    public static Set<String> fromTagSet(Set<Tag> tags) {
         Set<String> tagNames = new HashSet<>();
         tags.forEach((tag) -> tagNames.add(tag.getName()));
         return tagNames;
     }
 
-    public static <T> Map<String, T> fromIngredients(Map<Ingredient, ? extends T> ingredientMap) {
+    public static Set<String> fromIngredientSet(Set<Ingredient> ingredients) {
+        Set<String> ingredientNames = new HashSet<>();
+        ingredients.forEach((ingredient) -> ingredientNames.add(ingredient.getName()));
+        return ingredientNames;
+    }
+
+    public static List<String> fromRecipeList(List<Recipe> recipes) {
+        List<String> recipeNames = new ArrayList<>();
+        recipes.forEach((recipe) -> recipeNames.add(recipe.getName()));
+        return recipeNames;
+    }
+
+    public static <T> Map<String, T> fromIngredientMap(Map<Ingredient, ? extends T> ingredientMap) {
         Map<String, T> ingredientNameMap = new HashMap<>();
         ingredientMap.forEach(
                 (ingredient, value) -> ingredientNameMap.put(ingredient.getName(), value));
         return ingredientNameMap;
+    }
+
+    public static <T> Map<String, T> fromRecipeMap(Map<Recipe, ? extends T> recipeMap) {
+        Map<String, T> recipeNameMap = new HashMap<>();
+        recipeMap.forEach((recipe, value) -> recipeNameMap.put(recipe.getName(), value));
+        return recipeNameMap;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,11 +1,8 @@
 /* (C)2023 */
 package com.recipecart.utils;
 
-import com.recipecart.entities.Ingredient;
-import com.recipecart.entities.Recipe;
 import com.recipecart.entities.User;
 import java.util.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -16,11 +13,11 @@ import org.jetbrains.annotations.Nullable;
 public class UserForm {
     private final String username; // EntityStorage's "unique identifier" for User
     private final String emailAddress;
-    private final @Nullable List<@NotNull Recipe> authoredRecipes;
-    private final @Nullable List<@NotNull Recipe> savedRecipes;
-    private final @Nullable Map<@NotNull Recipe, @Nullable Double> ratedRecipes;
-    private final @Nullable Set<@NotNull Ingredient> ownedIngredients;
-    private final @Nullable Map<@NotNull Ingredient, @NotNull Double> shoppingList;
+    private final @Nullable List<String> authoredRecipes;
+    private final @Nullable List<String> savedRecipes;
+    private final @Nullable Map<String, Double> ratedRecipes;
+    private final @Nullable Set<String> ownedIngredients;
+    private final @Nullable Map<String, Double> shoppingList;
 
     /**
      * Copies the fields of the given User to this UserForm. For fields that contain entities such
@@ -32,21 +29,21 @@ public class UserForm {
         this(
                 user.getUsername(),
                 user.getEmailAddress(),
-                user.getAuthoredRecipes(),
-                user.getSavedRecipes(),
-                user.getRatedRecipes(),
-                user.getOwnedIngredients(),
-                user.getShoppingList());
+                Utils.fromRecipeList(user.getAuthoredRecipes()),
+                Utils.fromRecipeList(user.getSavedRecipes()),
+                Utils.fromRecipeMap(user.getRatedRecipes()),
+                Utils.fromIngredientSet(user.getOwnedIngredients()),
+                Utils.fromIngredientMap(user.getShoppingList()));
     }
 
     public UserForm(
             String username,
             String emailAddress,
-            @Nullable List<@NotNull Recipe> authoredRecipes,
-            @Nullable List<@NotNull Recipe> savedRecipes,
-            @Nullable Map<@NotNull Recipe, @Nullable Double> ratedRecipes,
-            @Nullable Set<@NotNull Ingredient> ownedIngredients,
-            @Nullable Map<@NotNull Ingredient, @NotNull Double> shoppingList) {
+            @Nullable List<String> authoredRecipes,
+            @Nullable List<String> savedRecipes,
+            @Nullable Map<String, Double> ratedRecipes,
+            @Nullable Set<String> ownedIngredients,
+            @Nullable Map<String, Double> shoppingList) {
         this.username = username;
         this.emailAddress = emailAddress;
         this.authoredRecipes = Utils.allowNull(authoredRecipes, ArrayList::new);
@@ -64,23 +61,49 @@ public class UserForm {
         return emailAddress;
     }
 
-    public List<Recipe> getAuthoredRecipes() {
+    public List<String> getAuthoredRecipes() {
         return Utils.allowNull(authoredRecipes, Collections::unmodifiableList);
     }
 
-    public List<Recipe> getSavedRecipes() {
+    public List<String> getSavedRecipes() {
         return Utils.allowNull(savedRecipes, Collections::unmodifiableList);
     }
 
-    public Map<Recipe, Double> getRatedRecipes() {
+    public Map<String, Double> getRatedRecipes() {
         return Utils.allowNull(ratedRecipes, Collections::unmodifiableMap);
     }
 
-    public Set<Ingredient> getOwnedIngredients() {
+    public Set<String> getOwnedIngredients() {
         return Utils.allowNull(ownedIngredients, Collections::unmodifiableSet);
     }
 
-    public Map<Ingredient, Double> getShoppingList() {
+    public Map<String, Double> getShoppingList() {
         return Utils.allowNull(shoppingList, Collections::unmodifiableMap);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserForm userForm = (UserForm) o;
+        return Objects.equals(getUsername(), userForm.getUsername())
+                && Objects.equals(getEmailAddress(), userForm.getEmailAddress())
+                && Objects.equals(getAuthoredRecipes(), userForm.getAuthoredRecipes())
+                && Objects.equals(getSavedRecipes(), userForm.getSavedRecipes())
+                && Objects.equals(getRatedRecipes(), userForm.getRatedRecipes())
+                && Objects.equals(getOwnedIngredients(), userForm.getOwnedIngredients())
+                && Objects.equals(getShoppingList(), userForm.getShoppingList());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                getUsername(),
+                getEmailAddress(),
+                getAuthoredRecipes(),
+                getSavedRecipes(),
+                getRatedRecipes(),
+                getOwnedIngredients(),
+                getShoppingList());
     }
 }
