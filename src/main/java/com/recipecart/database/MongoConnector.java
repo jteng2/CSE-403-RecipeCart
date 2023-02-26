@@ -46,7 +46,7 @@ public class MongoConnector {
         String hostname = json.get("hostname").getAsString();
         int port = json.get("port").getAsInt();
         String databaseName = json.get("database").getAsString();
-        Type listType = new TypeToken<List<String>>(){}.getType();
+        Type listType = new TypeToken<List<String>>() {}.getType();
         List<String> tagCollectionName = gson.fromJson(json.get("tags"), listType);
         List<String> ingredientCollectionName = gson.fromJson(json.get("ingredients"), listType);
         List<String> recipeCollectionName = gson.fromJson(json.get("recipes"), listType);
