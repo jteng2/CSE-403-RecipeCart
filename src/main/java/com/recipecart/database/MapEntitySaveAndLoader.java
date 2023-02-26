@@ -385,4 +385,21 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
             recipeReadLock.unlock();
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MapEntitySaveAndLoader that = (MapEntitySaveAndLoader) o;
+        return getSavedTags().equals(that.getSavedTags())
+                && getSavedIngredients().equals(that.getSavedIngredients())
+                && getSavedRecipes().equals(that.getSavedRecipes())
+                && getSavedUsers().equals(that.getSavedUsers());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                getSavedTags(), getSavedIngredients(), getSavedRecipes(), getSavedUsers());
+    }
 }

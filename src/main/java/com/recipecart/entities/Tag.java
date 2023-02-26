@@ -1,6 +1,7 @@
 /* (C)2023 */
 package com.recipecart.entities;
 
+import java.io.Serializable;
 import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  * This class represents an immutable tag that many Recipes can have. Two Recipes can have a tag in
  * common if they have a Tag with the same name, even if the Tags aren't equal by reference.
  */
-public final class Tag {
+public final class Tag implements Serializable {
     // EntityStorage's "unique identifier" for Tag
     private final @Nullable String name;
 

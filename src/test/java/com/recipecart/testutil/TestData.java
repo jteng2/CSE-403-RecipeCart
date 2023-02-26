@@ -25,7 +25,7 @@ public class TestData {
     // Arguments objects to be fed into ParameterizedTests.
 
     // each method in this class generates an Object[] of this length
-    static final int NUM_PARAM_COMBOS = 5;
+    public static final int NUM_PARAM_COMBOS = 5;
 
     // filename containing address info of the test mongo
     public static final String TEST_MONGO_FILE = "put filename here";
