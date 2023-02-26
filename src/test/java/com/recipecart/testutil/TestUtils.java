@@ -360,7 +360,7 @@ public class TestUtils {
                 Set.of("veggies", "fruit"),
                 Set.of("adobo", "Null", "Mangoes", "user", "withrice", "Tasty", "address"),
                 Set.of("tasty", "healthy", "zero", "fruit"),
-                Set.of("Mangos, hellaveggies", "deleted", "zero"));
+                Set.of("Mangos", "hellaveggies", "deleted", "zero"));
     }
 
     public static List<Set<String>> getExpectedEntityNameSets() {

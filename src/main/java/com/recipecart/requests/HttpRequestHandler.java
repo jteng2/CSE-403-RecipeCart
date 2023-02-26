@@ -4,6 +4,7 @@ package com.recipecart.requests;
 import static spark.Spark.*;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.recipecart.entities.Recipe;
 import com.recipecart.entities.Tag;
 import com.recipecart.execution.EntityCommander;
@@ -23,7 +24,7 @@ import spark.Response;
  * to perform that use case, then gives the front-end an output response.
  */
 public class HttpRequestHandler {
-    private static final int OK = 200,
+    static final int OK = 200,
             CREATED = 201,
             BAD_REQUEST = 400,
             UNAUTHORIZED = 401,
@@ -38,7 +39,7 @@ public class HttpRequestHandler {
     private final @NotNull JwtValidator loginChecker;
     private final int listenPort;
 
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 
     /**
      * Creates a handler that sends its commands to the given EntityCommander, validates logins with
