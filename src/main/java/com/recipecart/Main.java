@@ -1,7 +1,7 @@
 /* (C)2023 */
 package com.recipecart;
 
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.entities.Ingredient;
 import com.recipecart.entities.Recipe;
 import com.recipecart.entities.Tag;
@@ -19,7 +19,7 @@ public class Main {
     public static final int PORT = 4567;
 
     public static void main(String[] args) {
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
+        MapEntitySaveAndLoader saveAndLoader = new MapEntitySaveAndLoader();
         putInMockData(saveAndLoader);
 
         EntityStorage storage = new EntityStorage(saveAndLoader, saveAndLoader);
@@ -30,7 +30,7 @@ public class Main {
         requestHandler.startHandler();
     }
 
-    private static void putInMockData(MockEntitySaveAndLoader saveAndLoader) {
+    private static void putInMockData(MapEntitySaveAndLoader saveAndLoader) {
         List<Tag> tags = new ArrayList<>();
         for (String s : List.of("Tag1", "Tag2", "Tag3", "Tag4", "Tag5")) {
             tags.add(new Tag(s));

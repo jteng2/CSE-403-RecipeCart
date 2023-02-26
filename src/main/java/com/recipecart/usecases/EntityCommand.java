@@ -151,9 +151,15 @@ public abstract class EntityCommand implements Command {
     }
 
     protected void finishExecutingFromError(Exception e) {
-        e.printStackTrace();
+        if (e != null) {
+            e.printStackTrace();
+        }
         setExecutionMessage(NOT_OK_ERROR);
         finishExecuting();
+    }
+
+    protected void finishExecutingFromError() {
+        finishExecutingFromError(null);
     }
 
     protected void finishExecutingImpossibleOutcome(Exception e) {

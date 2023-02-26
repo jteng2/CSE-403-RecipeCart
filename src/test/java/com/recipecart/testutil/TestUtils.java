@@ -4,7 +4,7 @@ package com.recipecart.testutil;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.utils.TwoTuple;
@@ -286,7 +286,7 @@ public class TestUtils {
                 //            new MongoEntityLoader(TestData.TEST_MONGO_ADDRESS_FILE));
                 // },
                 () -> {
-                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
                     return new EntityStorage(saverAndLoader, saverAndLoader);
                 });
     }
@@ -294,7 +294,7 @@ public class TestUtils {
     public static List<Supplier<EntityStorage>> getMockStorageGenerators() {
         return List.of(
                 () -> {
-                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
                     return new EntityStorage(saverAndLoader, saverAndLoader);
                 });
     }
@@ -309,18 +309,32 @@ public class TestUtils {
                 TestData::getMockEntityStorages);
     }
 
-    public static Stream<Arguments> generateArgumentsWithStorage(
-            List<Supplier<Object[]>> storageGenerators, Supplier<Object[]> generator) {
-        Stream<Arguments> concatenatedArgs = null;
-        for (Supplier<Object[]> storageGenerator : storageGenerators) {
-            Stream<Arguments> toConcatenate =
-                    generateMultiArguments(List.of(storageGenerator, generator), 1, true);
-            concatenatedArgs =
-                    concatenatedArgs == null
-                            ? toConcatenate
-                            : Stream.concat(concatenatedArgs, toConcatenate);
+    public static Stream<Arguments> generateArgumentsCombos(
+            List<Supplier<Object[]>> generators1, List<Supplier<Object[]>> generators2) {
+        Stream<Arguments> concatenatedArgs = Stream.empty();
+        for (Supplier<Object[]> g1 : generators1) {
+            for (Supplier<Object[]> g2 : generators2) {
+                Stream<Arguments> toConcatenate = generateMultiArguments(List.of(g1, g2), 1, true);
+                concatenatedArgs = Stream.concat(concatenatedArgs, toConcatenate);
+            }
         }
+        return concatenatedArgs;
+    }
 
+    public static Stream<Arguments> generateArgumentsCombos(
+            List<Supplier<Object[]>> generators1,
+            List<Supplier<Object[]>> generators2,
+            List<Supplier<Object[]>> generators3) {
+        Stream<Arguments> concatenatedArgs = Stream.empty();
+        for (Supplier<Object[]> g1 : generators1) {
+            for (Supplier<Object[]> g2 : generators2) {
+                for (Supplier<Object[]> g3 : generators3) {
+                    Stream<Arguments> toConcatenate =
+                            generateMultiArguments(List.of(g1, g2, g3), 1, true);
+                    concatenatedArgs = Stream.concat(concatenatedArgs, toConcatenate);
+                }
+            }
+        }
         return concatenatedArgs;
     }
 
@@ -346,7 +360,7 @@ public class TestUtils {
                 Set.of("veggies", "fruit"),
                 Set.of("adobo", "Null", "Mangoes", "user", "withrice", "Tasty", "address"),
                 Set.of("tasty", "healthy", "zero", "fruit"),
-                Set.of("Mangos, hellaveggies", "deleted", "zero"));
+                Set.of("Mangos", "hellaveggies", "deleted", "zero"));
     }
 
     public static List<Set<String>> getExpectedEntityNameSets() {

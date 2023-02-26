@@ -11,6 +11,7 @@ import com.recipecart.entities.Recipe;
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.testutil.TestData;
 import com.recipecart.testutil.TestUtils;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,8 +32,9 @@ public class SearchRecipesCommandTest {
     }
 
     private static Stream<Arguments> getInvalidTokensParams() {
-        return generateArgumentsWithStorage(
-                getMockStorageArrayGenerators(), TestData::getInvalidSearchTermSet);
+        return generateArgumentsCombos(
+                getMockStorageArrayGenerators(),
+                Collections.singletonList(TestData::getInvalidSearchTermSet));
     }
 
     @ParameterizedTest

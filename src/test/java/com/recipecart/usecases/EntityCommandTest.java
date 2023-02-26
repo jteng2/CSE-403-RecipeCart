@@ -3,7 +3,7 @@ package com.recipecart.usecases;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.storage.EntityStorage;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -125,7 +125,7 @@ public class EntityCommandTest {
 
     @BeforeEach
     void initEntityStorage() {
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
+        MapEntitySaveAndLoader saveAndLoader = new MapEntitySaveAndLoader();
         storage = new EntityStorage(saveAndLoader, saveAndLoader);
     }
 

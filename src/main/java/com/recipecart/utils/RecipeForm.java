@@ -31,18 +31,19 @@ public final class RecipeForm {
      * @param recipe the recipe whose fields to copy
      */
     public RecipeForm(Recipe recipe) {
-        this.name = recipe.getName();
-        this.presentationName = recipe.getPresentationName();
-        this.authorUsername = recipe.getAuthorUsername();
-        this.prepTime = recipe.getPrepTime();
-        this.cookTime = recipe.getCookTime();
-        this.imageUri = recipe.getImageUri();
-        this.numServings = recipe.getNumServings();
-        this.avgRating = recipe.getAvgRating();
-        this.numRatings = recipe.getNumRatings();
-        this.directions = recipe.getDirections();
-        this.tags = Utils.fromTags(recipe.getTags());
-        this.requiredIngredients = Utils.fromIngredients(recipe.getRequiredIngredients());
+        this(
+                recipe.getName(),
+                recipe.getPresentationName(),
+                recipe.getAuthorUsername(),
+                recipe.getPrepTime(),
+                recipe.getCookTime(),
+                recipe.getImageUri(),
+                recipe.getNumServings(),
+                recipe.getAvgRating(),
+                recipe.getNumRatings(),
+                recipe.getDirections(),
+                Utils.fromTagSet(recipe.getTags()),
+                Utils.fromIngredientMap(recipe.getRequiredIngredients()));
     }
 
     public RecipeForm(
@@ -112,11 +113,47 @@ public final class RecipeForm {
         return Utils.allowNull(directions, Collections::unmodifiableList);
     }
 
-    @Nullable public Set<String> getTags() {
+    @Nullable public Set<String> getTagNames() {
         return Utils.allowNull(tags, Collections::unmodifiableSet);
     }
 
     @Nullable public Map<String, Double> getRequiredIngredients() {
         return Utils.allowNull(requiredIngredients, Collections::unmodifiableMap);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecipeForm that = (RecipeForm) o;
+        return Double.compare(that.getAvgRating(), getAvgRating()) == 0
+                && getNumRatings() == that.getNumRatings()
+                && Objects.equals(getName(), that.getName())
+                && Objects.equals(getPresentationName(), that.getPresentationName())
+                && Objects.equals(getAuthorUsername(), that.getAuthorUsername())
+                && Objects.equals(getPrepTime(), that.getPrepTime())
+                && Objects.equals(getCookTime(), that.getCookTime())
+                && Objects.equals(getImageUri(), that.getImageUri())
+                && Objects.equals(getNumServings(), that.getNumServings())
+                && Objects.equals(getDirections(), that.getDirections())
+                && Objects.equals(getTagNames(), that.getTagNames())
+                && Objects.equals(getRequiredIngredients(), that.getRequiredIngredients());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                getName(),
+                getPresentationName(),
+                getAuthorUsername(),
+                getPrepTime(),
+                getCookTime(),
+                getImageUri(),
+                getNumServings(),
+                getAvgRating(),
+                getNumRatings(),
+                getDirections(),
+                getTagNames(),
+                getRequiredIngredients());
     }
 }

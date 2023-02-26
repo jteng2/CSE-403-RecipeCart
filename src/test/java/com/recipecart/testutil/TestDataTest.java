@@ -17,6 +17,7 @@ public class TestDataTest {
     static Stream<Supplier<Object[]>> getGenerators() {
         return Stream.of(
                 TestData::getStrings,
+                TestData::getGoodStrings,
                 TestData::getNotNullStrings,
                 TestData::getNullStrings,
                 TestData::getIntegers,
@@ -66,6 +67,7 @@ public class TestDataTest {
     // all methods in TestData whose return-value elements are always non-null
     static Stream<Supplier<Object[]>> getNotNullGenerators() {
         return Stream.of(
+                TestData::getGoodStrings,
                 TestData::getNotNullStrings,
                 TestData::getInts,
                 TestData::getPrimitiveDoubles,

@@ -2,9 +2,12 @@
 package com.recipecart.usecases;
 
 import com.recipecart.entities.Ingredient;
+import com.recipecart.entities.User;
+import com.recipecart.storage.EntitySaver;
+import com.recipecart.utils.Utils;
+import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
-import org.apache.commons.lang3.NotImplementedException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -12,17 +15,103 @@ import org.jetbrains.annotations.Nullable;
  * shopping list.
  */
 public abstract class ShoppingListCommand extends EntityCommand {
-    private final @NotNull String shopperUsername;
+    public static final String OK_SHOPPING_LIST_UPDATED = "Shopping list update successful",
+            NOT_OK_INVALID_USERNAME =
+                    "Shopping list update unsuccessful: the given username is null or invalid",
+            NOT_OK_USER_NOT_FOUND =
+                    "Shopping list update unsuccessful: the given username doesn't correspond to an"
+                            + " existing user";
 
-    ShoppingListCommand(@NotNull String shopperUsername) {
+    private final String shopperUsername;
+    private Map<Ingredient, Double> resultShoppingList = null;
+
+    ShoppingListCommand(String shopperUsername) {
         this.shopperUsername = shopperUsername;
     }
 
     /**
      * @return the username of the user whose shopping list is involved with this command.
      */
-    @NotNull public String getShopperUsername() {
+    public String getShopperUsername() {
         return shopperUsername;
+    }
+
+    @Override
+    protected String getInvalidCommandMessage() {
+        String baseMessage = super.getInvalidCommandMessage();
+        if (baseMessage != null) {
+            return baseMessage;
+        }
+        if (!isUsernameValid()) {
+            return NOT_OK_INVALID_USERNAME;
+        }
+        try {
+            if (!doesUserExist()) {
+                return NOT_OK_USER_NOT_FOUND;
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return NOT_OK_ERROR;
+        }
+        return null;
+    }
+
+    private boolean isUsernameValid() {
+        return getShopperUsername() != null;
+    }
+
+    private boolean doesUserExist() {
+        assert getStorageSource() != null;
+        return getStorageSource().getLoader().usernameExists(getShopperUsername());
+    }
+
+    /**
+     * Updates the shopping list according to the spec of the implementing class. If the given
+     * username is null or doesn't correspond to an existing user in the given EntityStorage, this
+     * command's execution will be unsuccessful.
+     *
+     * @throws IllegalStateException if this method has been called before on this command instance.
+     */
+    @Override
+    public void execute() {
+        checkExecutionAlreadyDone();
+        if (finishInvalidCommand()) {
+            return;
+        }
+
+        Map<Ingredient, Double> updatedShoppingList;
+        try {
+            updatedShoppingList = performShoppingListUpdate();
+        } catch (RuntimeException e) {
+            finishExecutingFromError(e);
+            return;
+        } catch (IOException e) {
+            finishExecutingImpossibleOutcome(e);
+            return;
+        }
+
+        finishExecutingSuccessfulShoppingListUpdate(updatedShoppingList);
+    }
+
+    /**
+     * Performs the actual shopping list updating according to the spec of the implementing class.
+     *
+     * @return the updated shopping list
+     * @throws IOException (shouldn't happen, since the implementing command should check beforehand
+     *     if the entities it references by name exist)
+     */
+    protected abstract Map<Ingredient, Double> performShoppingListUpdate() throws IOException;
+
+    static User getUserWithUpdatedShoppingList(
+            User user, Map<Ingredient, Double> shoppingListUpdate) {
+        return new User.Builder(user).setShoppingList(shoppingListUpdate).build();
+    }
+
+    protected void saveUpdatedShoppingList(
+            User originalUser, Map<Ingredient, Double> updatedShoppingList) {
+        User updatedShopper = getUserWithUpdatedShoppingList(originalUser, updatedShoppingList);
+        assert getStorageSource() != null;
+        saveUser(updatedShopper, getStorageSource().getSaver());
     }
 
     /**
@@ -33,6 +122,45 @@ public abstract class ShoppingListCommand extends EntityCommand {
      *     otherwise.
      */
     @Nullable public Map<Ingredient, Double> getResultShoppingList() {
-        throw new NotImplementedException();
+        if (!isFinishedExecuting()) {
+            throw new IllegalStateException("Command hasn't finished executing yet");
+        }
+        return Utils.allowNull(resultShoppingList, Collections::unmodifiableMap);
+    }
+
+    protected User getShopper() throws IOException {
+        assert getStorageSource() != null;
+        return getStorageSource()
+                .getLoader()
+                .getUsersByNames(Collections.singletonList(getShopperUsername()))
+                .get(0);
+    }
+
+    static void saveUser(User user, EntitySaver saver) {
+        saver.updateUsers(Collections.singleton(user));
+    }
+
+    protected void setResultShoppingList(Map<Ingredient, Double> resultShoppingList) {
+        if (isFinishedExecuting()) {
+            throw new IllegalStateException(
+                    "Cannot set shopping list after command finished executing");
+        }
+        if (this.resultShoppingList != null) {
+            throw new IllegalStateException("Can only set the shopping list once");
+        }
+        Utils.requireAllMapNotNull(
+                resultShoppingList,
+                "Shopping list cannot be null",
+                "Shopping list ingredients cannot be null",
+                "Shopping list amounts cannot be null");
+        this.resultShoppingList = resultShoppingList;
+    }
+
+    protected void finishExecutingSuccessfulShoppingListUpdate(
+            Map<Ingredient, Double> resultShoppingList) {
+        setResultShoppingList(resultShoppingList);
+        setExecutionMessage(OK_SHOPPING_LIST_UPDATED);
+        beSuccessful();
+        finishExecuting();
     }
 }
