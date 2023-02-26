@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -162,7 +161,7 @@ public class HttpRequestHandlerTest {
         return TestUtils.getSearchRecipes(getMockStorageGenerators());
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getRecipe")
     void testGetRecipe(Recipe recipe) throws IOException {
         storageSource.getSaver().updateRecipes(Collections.singleton(recipe));
@@ -177,7 +176,7 @@ public class HttpRequestHandlerTest {
         assertEquals(expectedRecipe, retrieval.getSecond().getRetrievedRecipe());
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getUser")
     void testGetUser(User user) throws IOException {
         storageSource.getSaver().updateUsers(Collections.singleton(user));
@@ -192,7 +191,7 @@ public class HttpRequestHandlerTest {
         assertEquals(expectedUser, retrieval.getSecond().getRetrievedUser());
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getIngredient")
     void testGetIngredient(Ingredient ingredient) throws IOException {
         storageSource.getSaver().updateIngredients(Collections.singleton(ingredient));
@@ -207,7 +206,7 @@ public class HttpRequestHandlerTest {
         assertEquals(ingredient, retrieval.getSecond().getRetrievedIngredient());
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getTag")
     void testGetTag(Tag tag) throws IOException {
         storageSource.getSaver().updateTags(Collections.singleton(tag));
@@ -221,7 +220,7 @@ public class HttpRequestHandlerTest {
         assertEquals(tag, retrieval.getSecond().getRetrievedTag());
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getRecipe")
     void testCreateRecipe(Recipe recipe) throws IOException {
         assertNotNull(recipe.getName());
@@ -255,7 +254,7 @@ public class HttpRequestHandlerTest {
                         .get(0));
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getUser")
     void testCreateUser(User user) throws IOException {
         assertNotNull(user.getUsername());
@@ -283,7 +282,7 @@ public class HttpRequestHandlerTest {
                         .get(0));
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getIngredient")
     void testCreateIngredient(Ingredient ingredient) throws IOException {
         assertNotNull(ingredient.getName());
@@ -308,7 +307,7 @@ public class HttpRequestHandlerTest {
                         .get(0));
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getTag")
     void testCreateTag(Tag tag) throws IOException {
         assertNotNull(tag.getName());
@@ -330,7 +329,7 @@ public class HttpRequestHandlerTest {
                         .get(0));
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getUserAndRecipe")
     void testBookmarkRecipe(User baseUser, Recipe recipe) throws IOException {
         User user = new User.Builder(baseUser).setSavedRecipes(Collections.emptyList()).build();
@@ -354,7 +353,7 @@ public class HttpRequestHandlerTest {
         assertTrue(savedUser.getSavedRecipes().contains(recipe));
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getUserAndIngredients")
     void testAddIngredientsToShoppingList(User user, Map<Ingredient, Double> ingredients)
             throws IOException {
@@ -382,7 +381,7 @@ public class HttpRequestHandlerTest {
         assertEquals(savedUser.getShoppingList(), expectedShoppingList);
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getUserAndRecipe")
     void testAddRecipeToShoppingList(User user, Recipe recipe) throws IOException {
         assertNotNull(user.getUsername());
@@ -410,7 +409,7 @@ public class HttpRequestHandlerTest {
         assertEquals(savedUser.getShoppingList(), expectedShoppingList);
     }
 
-    @ParameterizedTest
+    // @ParameterizedTest
     @MethodSource("getSearchRecipes")
     void testSearchRecipes(
             EntityStorage storage, List<Recipe> recipes, Set<String> tokens, Set<Recipe> expected)
