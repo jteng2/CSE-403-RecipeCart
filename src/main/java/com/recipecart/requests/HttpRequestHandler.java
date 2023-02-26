@@ -22,8 +22,15 @@ import spark.Response;
  * to perform that use case, then gives the front-end an output response.
  */
 public class HttpRequestHandler {
+    private static final int OK = 200,
+            CREATED = 201,
+            BAD_REQUEST = 400,
+            UNAUTHORIZED = 401,
+            NOT_FOUND = 404,
+            INTERNAL_SERVER_ERROR = 500;
     private static final String APPLICATION_JSON = "application/json";
-    private static final String UNAUTHORIZED = "User is not properly authorized to do this task";
+    private static final String UNAUTHORIZED_MESSAGE =
+            "User is not properly authorized to do this task";
     private static final Map<String, Integer> messageToStatusCode = initializeMessageToStatusCode();
 
     private final @NotNull EntityCommander commander;
@@ -69,6 +76,17 @@ public class HttpRequestHandler {
                 gson::toJson);
         get("/recipes/:recipe", APPLICATION_JSON, this::handleGetRecipeRequest, gson::toJson);
         get("/users/:user", APPLICATION_JSON, this::handleGetUserRequest, gson::toJson);
+        post("/bookmark/recipe", APPLICATION_JSON, this::handleBookmarkRecipeRequest, gson::toJson);
+        post(
+                "/shopping-list/add-ingredients",
+                APPLICATION_JSON,
+                this::handleAddIngredientsToShoppingListRequest,
+                gson::toJson);
+        post(
+                "/shopping-list/add-recipe-ingredients",
+                APPLICATION_JSON,
+                this::handleAddRecipeToShoppingListRequest,
+                gson::toJson);
     }
 
     private boolean isAuthorized(RequestBodies.WithLoginRequired requestBodyDetails) {
@@ -78,9 +96,9 @@ public class HttpRequestHandler {
     }
 
     private String handleUnauthorized(Response response) {
-        response.status(messageToStatusCode.get(UNAUTHORIZED));
+        response.status(messageToStatusCode.get(UNAUTHORIZED_MESSAGE));
         response.type(APPLICATION_JSON);
-        return UNAUTHORIZED;
+        return UNAUTHORIZED_MESSAGE;
     }
 
     private String handleCommand(EntityCommand command, Response response) {
@@ -98,6 +116,40 @@ public class HttpRequestHandler {
     private Set<String> getQueryArgumentWords(Request request, String queryParam) {
         String rawSearchTerms = request.queryParams(queryParam);
         return Utils.allowNull(rawSearchTerms, (str) -> Set.of(str.split("\\s+")));
+    }
+
+    private <T> Object handleGetEntityRequest(
+            Request request,
+            Response response,
+            String paramName,
+            Function<String, ? extends SimpleGetCommand<T>> commandMaker,
+            BiFunction<String, ? super T, ? extends ResponseBodies.WithMessage> retrieval) {
+        String entityName = request.params(paramName);
+
+        SimpleGetCommand<T> command = commandMaker.apply(entityName);
+        String executionMessage = handleCommand(command, response);
+
+        return retrieval.apply(executionMessage, command.getRetrievedEntity());
+    }
+
+    private <T> Object handleSimplePostRequest(
+            Request request,
+            Response response,
+            boolean authenticationRequired,
+            Class<T> requestBodyClass,
+            Function<? super T, ? extends EntityCommand> commandMaker) {
+        T bodyDetails = getRequestBodyDetails(request, requestBodyClass);
+
+        String executionMessage;
+        if (!authenticationRequired
+                || isAuthorized((RequestBodies.WithLoginRequired) bodyDetails)) {
+            EntityCommand command = commandMaker.apply(bodyDetails);
+            executionMessage = handleCommand(command, response);
+        } else {
+            executionMessage = handleUnauthorized(response);
+        }
+
+        return new ResponseBodies.WithMessage(executionMessage);
     }
 
     private Object handleSearchRecipesRequest(Request request, Response response) {
@@ -133,7 +185,7 @@ public class HttpRequestHandler {
                             command.getCreatedTags(),
                             (t) -> t.stream().map(Tag::toString).collect(Collectors.toSet())));
         } else {
-            return new RequestBodies.RecipeCreation(handleUnauthorized(response), null);
+            return new ResponseBodies.RecipeCreation(handleUnauthorized(response), null, null);
         }
     }
 
@@ -202,53 +254,99 @@ public class HttpRequestHandler {
     private Object handleGetUserRequest(Request request, Response response) {
         String username = request.params(":user");
 
-        GetUserCommand command = new GetUserCommand(username);
-        String executionMessage = handleCommand(command, response);
+    private Object handleBookmarkRecipeRequest(Request request, Response response) {
+        return handleSimplePostRequest(
+                request,
+                response,
+                true,
+                RequestBodies.RecipeBookmarking.class,
+                (bodyDetails) ->
+                        new BookmarkRecipeCommand(
+                                bodyDetails.getUsername(), bodyDetails.getRecipeName()));
+    }
 
-        return new ResponseBodies.UserRetrieval(
-                executionMessage, Utils.allowNull(command.getRetrievedEntity(), UserForm::new));
+    private Object handleAddIngredientsToShoppingListRequest(Request request, Response response) {
+        return handleSimplePostRequest(
+                request,
+                response,
+                true,
+                RequestBodies.IngredientToShoppingListAddition.class,
+                (bodyDetails) ->
+                        new AddIngredientsToShoppingListCommand(
+                                bodyDetails.getUsername(), bodyDetails.getIngredients()));
+    }
+
+    private Object handleAddRecipeToShoppingListRequest(Request request, Response response) {
+        return handleSimplePostRequest(
+                request,
+                response,
+                true,
+                RequestBodies.RecipeToShoppingListAddition.class,
+                (bodyDetails) ->
+                        new AddRecipeToShoppingListCommand(
+                                bodyDetails.getUsername(),
+                                bodyDetails.getRecipeName(),
+                                bodyDetails.isAddOnlyMissingIngredients()));
     }
 
     private static Map<String, Integer> initializeMessageToStatusCode() {
         Map<String, Integer> map = new HashMap<>();
 
-        map.put(UNAUTHORIZED, 401);
-        map.put(Command.NOT_OK_ERROR, 500);
-        map.put(EntityCommand.NOT_OK_BAD_STORAGE, 500);
+        map.put(UNAUTHORIZED_MESSAGE, UNAUTHORIZED);
+        map.put(Command.NOT_OK_ERROR, INTERNAL_SERVER_ERROR);
+        map.put(Command.NOT_OK_IMPOSSIBLE_OUTCOME, INTERNAL_SERVER_ERROR);
+        map.put(EntityCommand.NOT_OK_BAD_STORAGE, INTERNAL_SERVER_ERROR);
 
-        map.put(SearchRecipesCommand.NOT_OK_BAD_SEARCH_TERMS, 400);
-        map.put(SearchRecipesCommand.OK_MATCHES_FOUND, 200);
-        map.put(SearchRecipesCommand.OK_NO_MATCHES_FOUND, 200);
+        map.put(SearchRecipesCommand.NOT_OK_BAD_SEARCH_TERMS, BAD_REQUEST);
+        map.put(SearchRecipesCommand.OK_MATCHES_FOUND, OK);
+        map.put(SearchRecipesCommand.OK_NO_MATCHES_FOUND, OK);
 
-        map.put(CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME, 201);
-        map.put(CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED, 201);
-        map.put(CreateRecipeCommand.NOT_OK_INVALID_RECIPE, 400);
-        map.put(CreateRecipeCommand.NOT_OK_RECIPE_RESOURCES_NOT_FOUND, 404);
-        map.put(CreateRecipeCommand.NOT_OK_RECIPE_NAME_TAKEN, 400);
+        map.put(CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME, CREATED);
+        map.put(CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED, CREATED);
+        map.put(CreateRecipeCommand.NOT_OK_INVALID_RECIPE, BAD_REQUEST);
+        map.put(CreateRecipeCommand.NOT_OK_RECIPE_RESOURCES_NOT_FOUND, NOT_FOUND);
+        map.put(CreateRecipeCommand.NOT_OK_RECIPE_NAME_TAKEN, BAD_REQUEST);
 
-        map.put(CreateTagCommand.OK_TAG_CREATED, 201);
-        map.put(CreateTagCommand.NOT_OK_INVALID_TAG, 400);
-        map.put(CreateTagCommand.NOT_OK_TAG_NAME_TAKEN, 400);
+        map.put(CreateTagCommand.OK_TAG_CREATED, CREATED);
+        map.put(CreateTagCommand.NOT_OK_INVALID_TAG, BAD_REQUEST);
+        map.put(CreateTagCommand.NOT_OK_TAG_NAME_TAKEN, BAD_REQUEST);
 
-        map.put(CreateIngredientCommand.OK_INGREDIENT_CREATED, 201);
-        map.put(CreateIngredientCommand.NOT_OK_INVALID_INGREDIENT, 400);
-        map.put(CreateIngredientCommand.NOT_OK_INGREDIENT_NAME_TAKEN, 400);
+        map.put(CreateIngredientCommand.OK_INGREDIENT_CREATED, CREATED);
+        map.put(CreateIngredientCommand.NOT_OK_INVALID_INGREDIENT, BAD_REQUEST);
+        map.put(CreateIngredientCommand.NOT_OK_INGREDIENT_NAME_TAKEN, BAD_REQUEST);
 
-        map.put(CreateUserCommand.OK_USER_CREATED, 201);
-        map.put(CreateUserCommand.NOT_OK_INVALID_USER, 400);
-        map.put(CreateUserCommand.NOT_OK_USERNAME_TAKEN, 400);
+        map.put(CreateUserCommand.OK_USER_CREATED, CREATED);
+        map.put(CreateUserCommand.NOT_OK_INVALID_USER, BAD_REQUEST);
+        map.put(CreateUserCommand.NOT_OK_USERNAME_TAKEN, BAD_REQUEST);
 
-        map.put(GetTagCommand.OK_TAG_RETRIEVED, 200);
-        map.put(GetTagCommand.NOT_OK_TAG_NOT_FOUND, 404);
+        map.put(GetTagCommand.OK_TAG_RETRIEVED, OK);
+        map.put(GetTagCommand.NOT_OK_TAG_NOT_FOUND, NOT_FOUND);
 
-        map.put(GetIngredientCommand.OK_INGREDIENT_RETRIEVED, 200);
-        map.put(GetIngredientCommand.NOT_OK_INGREDIENT_NOT_FOUND, 404);
+        map.put(GetIngredientCommand.OK_INGREDIENT_RETRIEVED, OK);
+        map.put(GetIngredientCommand.NOT_OK_INGREDIENT_NOT_FOUND, NOT_FOUND);
 
-        map.put(GetRecipeCommand.OK_RECIPE_RETRIEVED, 200);
-        map.put(GetRecipeCommand.NOT_OK_RECIPE_NOT_FOUND, 404);
+        map.put(GetRecipeCommand.OK_RECIPE_RETRIEVED, OK);
+        map.put(GetRecipeCommand.NOT_OK_RECIPE_NOT_FOUND, NOT_FOUND);
 
-        map.put(GetUserCommand.OK_USER_RETRIEVED, 200);
-        map.put(GetUserCommand.NOT_OK_USER_NOT_FOUND, 404);
+        map.put(GetUserCommand.OK_USER_RETRIEVED, OK);
+        map.put(GetUserCommand.NOT_OK_USER_NOT_FOUND, NOT_FOUND);
+
+        map.put(BookmarkRecipeCommand.OK_RECIPE_BOOKMARKED, OK);
+        map.put(BookmarkRecipeCommand.NOT_OK_INVALID_RECIPE_NAME, BAD_REQUEST);
+        map.put(BookmarkRecipeCommand.NOT_OK_INVALID_USERNAME, BAD_REQUEST);
+        map.put(BookmarkRecipeCommand.NOT_OK_RECIPE_NOT_FOUND, NOT_FOUND);
+        map.put(BookmarkRecipeCommand.NOT_OK_USER_NOT_FOUND, NOT_FOUND);
+        map.put(BookmarkRecipeCommand.NOT_OK_RECIPE_ALREADY_BOOKMARKED, BAD_REQUEST);
+
+        map.put(ShoppingListCommand.OK_SHOPPING_LIST_UPDATED, OK);
+        map.put(ShoppingListCommand.NOT_OK_INVALID_USERNAME, BAD_REQUEST);
+        map.put(ShoppingListCommand.NOT_OK_USER_NOT_FOUND, NOT_FOUND);
+
+        map.put(AddIngredientsToShoppingListCommand.NOT_OK_INVALID_INGREDIENTS, BAD_REQUEST);
+        map.put(AddIngredientsToShoppingListCommand.NOT_OK_INGREDIENT_NOT_FOUND, NOT_FOUND);
+
+        map.put(AddRecipeToShoppingListCommand.NOT_OK_INVALID_RECIPE, BAD_REQUEST);
+        map.put(AddRecipeToShoppingListCommand.NOT_OK_RECIPE_NOT_FOUND, NOT_FOUND);
 
         return map;
     }

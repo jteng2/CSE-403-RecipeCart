@@ -2,7 +2,9 @@
 package com.recipecart.requests;
 
 import com.recipecart.entities.Ingredient;
+import com.recipecart.entities.Recipe;
 import com.recipecart.entities.Tag;
+import com.recipecart.entities.User;
 import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.UserForm;
 import com.recipecart.utils.Utils;
@@ -109,6 +111,10 @@ class ResponseBodies {
             this.retrievedRecipe = retrievedRecipeForm;
         }
 
+        RecipeRetrieval(@NotNull String message, Recipe retrievedRecipe) {
+            this(message, new RecipeForm(retrievedRecipe));
+        }
+
         RecipeForm getRetrievedRecipe() {
             return retrievedRecipe;
         }
@@ -120,6 +126,10 @@ class ResponseBodies {
         UserRetrieval(@NotNull String message, UserForm retrievedUserForm) {
             super(message);
             this.retrievedUser = retrievedUserForm;
+        }
+
+        UserRetrieval(@NotNull String message, User retrievedUser) {
+            this(message, new UserForm(retrievedUser));
         }
 
         UserForm getRetrievedUser() {

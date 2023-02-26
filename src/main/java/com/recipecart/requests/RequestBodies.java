@@ -2,6 +2,9 @@
 package com.recipecart.requests;
 
 import com.recipecart.utils.RecipeForm;
+import com.recipecart.utils.Utils;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * This helper class contains static Java class representations of the (JSON) bodies of various HTTP
@@ -87,6 +90,77 @@ class RequestBodies {
 
         String getName() {
             return name;
+        }
+    }
+
+    /** Follows the "Bookmark recipe" API route. */
+    static class RecipeBookmarking extends WithLoginRequired {
+        private final String username;
+        private final String recipe;
+
+        RecipeBookmarking(String encryptedJwtToken, String username, String recipe) {
+            super(encryptedJwtToken);
+            this.username = username;
+            this.recipe = recipe;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getRecipeName() {
+            return recipe;
+        }
+    }
+
+    /** Follows the "Add ingredients to shopping list" API route. */
+    static class IngredientToShoppingListAddition extends WithLoginRequired {
+        private final String username;
+        private final Map<String, Double> ingredients;
+
+        IngredientToShoppingListAddition(
+                String encryptedJwtToken, String username, Map<String, Double> ingredients) {
+            super(encryptedJwtToken);
+            this.username = username;
+            this.ingredients = ingredients;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public Map<String, Double> getIngredients() {
+            return Utils.allowNull(ingredients, Collections::unmodifiableMap);
+        }
+    }
+
+    /** Follows the "Add recipe ingredients to shopping list" API route. */
+    static class RecipeToShoppingListAddition extends WithLoginRequired {
+        private final String username;
+        private final String recipe;
+        private final Boolean addOnlyMissingIngredients;
+
+        RecipeToShoppingListAddition(
+                String encryptedJwtToken,
+                String username,
+                String recipe,
+                Boolean addOnlyMissingIngredients) {
+            super(encryptedJwtToken);
+            this.username = username;
+            this.recipe = recipe;
+            this.addOnlyMissingIngredients = addOnlyMissingIngredients;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getRecipeName() {
+            return recipe;
+        }
+
+        public Boolean isAddOnlyMissingIngredients() {
+            return addOnlyMissingIngredients;
         }
     }
 }
