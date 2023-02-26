@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.entities.*;
 import com.recipecart.execution.EntityCommander;
 import com.recipecart.storage.EntityStorage;
@@ -107,7 +107,7 @@ public class HttpRequestHandlerTest {
 
     @BeforeAll
     static void initRequestHandler() {
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
+        MapEntitySaveAndLoader saveAndLoader = new MapEntitySaveAndLoader();
         EntityStorage storage = new EntityStorage(saveAndLoader, saveAndLoader);
         commander = new ModifiableCommander(storage);
         JwtValidator alwaysPassValidator =
@@ -123,7 +123,7 @@ public class HttpRequestHandlerTest {
 
     @BeforeEach
     void resetStorage() {
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
+        MapEntitySaveAndLoader saveAndLoader = new MapEntitySaveAndLoader();
         EntityStorage storage = new EntityStorage(saveAndLoader, saveAndLoader);
         commander.setStorageSource(storage);
         storageSource = storage;

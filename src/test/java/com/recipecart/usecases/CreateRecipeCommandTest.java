@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.recipecart.database.BadEntityLoader;
 import com.recipecart.database.BadEntitySaver;
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.entities.Recipe;
 import com.recipecart.entities.Tag;
 import com.recipecart.entities.User;
@@ -232,7 +232,7 @@ public class CreateRecipeCommandTest {
     @Test
     void testCreateNullRecipe() {
         CreateRecipeCommand command = new CreateRecipeCommand(null);
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
+        MapEntitySaveAndLoader saveAndLoader = new MapEntitySaveAndLoader();
         command.setStorageSource(new EntityStorage(saveAndLoader, saveAndLoader));
         command.execute();
 

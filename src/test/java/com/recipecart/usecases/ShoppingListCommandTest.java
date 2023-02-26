@@ -4,7 +4,7 @@ package com.recipecart.usecases;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.entities.User;
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.testutil.TestData;
@@ -20,7 +20,7 @@ public class ShoppingListCommandTest<T extends ShoppingListCommand> {
 
     @BeforeEach
     void initStorage() {
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
+        MapEntitySaveAndLoader saveAndLoader = new MapEntitySaveAndLoader();
         storage = new EntityStorage(saveAndLoader, saveAndLoader);
     }
 

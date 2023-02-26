@@ -4,7 +4,7 @@ package com.recipecart.testutil;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.utils.TwoTuple;
@@ -286,7 +286,7 @@ public class TestUtils {
                 //            new MongoEntityLoader(TestData.TEST_MONGO_ADDRESS_FILE));
                 // },
                 () -> {
-                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
                     return new EntityStorage(saverAndLoader, saverAndLoader);
                 });
     }
@@ -294,7 +294,7 @@ public class TestUtils {
     public static List<Supplier<EntityStorage>> getMockStorageGenerators() {
         return List.of(
                 () -> {
-                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
                     return new EntityStorage(saverAndLoader, saverAndLoader);
                 });
     }

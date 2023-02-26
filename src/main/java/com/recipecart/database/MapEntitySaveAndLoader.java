@@ -15,11 +15,8 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * This class implements the storage EntitySaver and EntityLoader using a Map. This class is meant
- * to be used for testing other parts of the backend.
- */
-public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
+/** This class implements the storage EntitySaver and EntityLoader using a Map. */
+public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
     private final ReadWriteLock tagLock = new ReentrantReadWriteLock(),
             ingredientLock = new ReentrantReadWriteLock(),
             recipeLock = new ReentrantReadWriteLock(),
@@ -38,7 +35,7 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     private final Map<String, Recipe> savedRecipes;
     private final Map<String, User> savedUsers;
 
-    public MockEntitySaveAndLoader() {
+    public MapEntitySaveAndLoader() {
         this.savedTags = new ConcurrentHashMap<>();
         this.savedIngredients = new ConcurrentHashMap<>();
         this.savedRecipes = new ConcurrentHashMap<>();

@@ -1,7 +1,7 @@
 /* (C)2023 */
 package com.recipecart.testutil;
 
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.database.MongoEntityLoader;
 import com.recipecart.database.MongoEntitySaver;
 import com.recipecart.entities.Ingredient;
@@ -579,7 +579,7 @@ public class TestData {
     public static Object[] getMockEntityStorages() {
         EntityStorage[] storages = new EntityStorage[NUM_PARAM_COMBOS];
         for (int i = 0; i < storages.length; i++) {
-            MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+            MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
             storages[i] = new EntityStorage(saverAndLoader, saverAndLoader);
         }
         return storages;

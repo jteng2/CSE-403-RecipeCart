@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.recipecart.database.BadEntityLoader;
 import com.recipecart.database.BadEntitySaver;
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.storage.EntitySaver;
 import com.recipecart.storage.EntityStorage;
 import java.util.Collection;
@@ -86,7 +86,7 @@ public abstract class SimpleCreateEntityCommandTest<T> {
 
     @Test
     void testNullEntity() {
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
+        MapEntitySaveAndLoader saveAndLoader = new MapEntitySaveAndLoader();
         SimpleCreateEntityCommand<T> command =
                 getAndExecuteCommand(null, new EntityStorage(saveAndLoader, saveAndLoader));
 

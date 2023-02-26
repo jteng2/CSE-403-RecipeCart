@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.recipecart.database.BadEntityLoader;
 import com.recipecart.database.BadEntitySaver;
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.entities.Recipe;
 import com.recipecart.entities.User;
 import com.recipecart.storage.EntityStorage;
@@ -27,7 +27,7 @@ public class BookmarkRecipeCommandTest {
 
     @BeforeEach
     void initStorage() {
-        MockEntitySaveAndLoader saveAndLoader = new MockEntitySaveAndLoader();
+        MapEntitySaveAndLoader saveAndLoader = new MapEntitySaveAndLoader();
         storage = new EntityStorage(saveAndLoader, saveAndLoader);
     }
 
