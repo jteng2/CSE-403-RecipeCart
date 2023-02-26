@@ -224,6 +224,94 @@ public class Utils {
         return recipeNameMap;
     }
 
+    public static <T> Map<T, RecipeForm> toRecipeFormMap(Map<? extends T, Recipe> recipeMap) {
+        Map<T, RecipeForm> recipeFormMap = new HashMap<>();
+        recipeMap.forEach((key, recipe) -> recipeFormMap.put(key, new RecipeForm(recipe)));
+        return recipeFormMap;
+    }
+
+    public static <T> Map<T, UserForm> toUserFormMap(Map<? extends T, User> userMap) {
+        Map<T, UserForm> userFormMap = new HashMap<>();
+        userMap.forEach((key, user) -> userFormMap.put(key, new UserForm(user)));
+        return userFormMap;
+    }
+
+    public static Recipe fromRecipeForm(
+            RecipeForm form, Map<String, Tag> allTags, Map<String, Ingredient> allIngredients) {
+        List<String> directions =
+                form.getDirections() == null ? Collections.emptyList() : form.getDirections();
+
+        Set<String> tagNames =
+                form.getTagNames() == null ? Collections.emptySet() : form.getTagNames();
+        Set<Tag> tags = new HashSet<>();
+        tagNames.forEach((key) -> tags.add(allTags.get(key)));
+
+        Map<String, Double> ingredientNames =
+                form.getRequiredIngredients() == null
+                        ? Collections.emptyMap()
+                        : form.getRequiredIngredients();
+        Map<Ingredient, Double> ingredients = new HashMap<>();
+        ingredientNames.forEach((name, value) -> ingredients.put(allIngredients.get(name), value));
+
+        return new Recipe.Builder()
+                .setName(form.getName())
+                .setPresentationName(form.getPresentationName())
+                .setAuthorUsername(form.getAuthorUsername())
+                .setPrepTime(form.getPrepTime())
+                .setCookTime(form.getCookTime())
+                .setImageUri(form.getImageUri())
+                .setNumServings(form.getNumServings())
+                .setAvgRating(form.getAvgRating())
+                .setNumRatings(form.getNumRatings())
+                .setDirections(directions)
+                .setTags(tags)
+                .setRequiredIngredients(ingredients)
+                .build();
+    }
+
+    public static User fromUserForm(
+            UserForm form, Map<String, Ingredient> allIngredients, Map<String, Recipe> allRecipes) {
+        List<String> authoredRecipeNames =
+                form.getAuthoredRecipes() == null
+                        ? Collections.emptyList()
+                        : form.getAuthoredRecipes();
+        List<Recipe> authoredRecipes = new ArrayList<>();
+        authoredRecipeNames.forEach((name) -> authoredRecipes.add(allRecipes.get(name)));
+
+        List<String> savedRecipeNames =
+                form.getSavedRecipes() == null ? Collections.emptyList() : form.getSavedRecipes();
+        List<Recipe> savedRecipes = new ArrayList<>();
+        savedRecipeNames.forEach((name) -> savedRecipes.add(allRecipes.get(name)));
+
+        Map<String, Double> ratedRecipeNames =
+                form.getRatedRecipes() == null ? Collections.emptyMap() : form.getRatedRecipes();
+        Map<Recipe, Double> ratedRecipes = new HashMap<>();
+        ratedRecipeNames.forEach((name, value) -> ratedRecipes.put(allRecipes.get(name), value));
+
+        Set<String> ownedIngredientNames =
+                form.getOwnedIngredients() == null
+                        ? Collections.emptySet()
+                        : form.getOwnedIngredients();
+        Set<Ingredient> ownedIngredients = new HashSet<>();
+        ownedIngredientNames.forEach((name) -> ownedIngredients.add(allIngredients.get(name)));
+
+        Map<String, Double> shoppingListNames =
+                form.getShoppingList() == null ? Collections.emptyMap() : form.getShoppingList();
+        Map<Ingredient, Double> shoppingList = new HashMap<>();
+        shoppingListNames.forEach(
+                (name, value) -> shoppingList.put(allIngredients.get(name), value));
+
+        return new User.Builder()
+                .setUsername(form.getUsername())
+                .setEmailAddress(form.getEmailAddress())
+                .setAuthoredRecipes(authoredRecipes)
+                .setSavedRecipes(savedRecipes)
+                .setRatedRecipes(ratedRecipes)
+                .setOwnedIngredients(ownedIngredients)
+                .setShoppingList(shoppingList)
+                .build();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////// Misc. methods ////////////////////////////////////////////////
 

@@ -21,7 +21,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
             ingredientLock = new ReentrantReadWriteLock(),
             recipeLock = new ReentrantReadWriteLock(),
             userLock = new ReentrantReadWriteLock();
-    private final Lock tagReadLock = tagLock.readLock(),
+    protected final Lock tagReadLock = tagLock.readLock(),
             ingredientReadLock = ingredientLock.readLock(),
             recipeReadLock = recipeLock.readLock(),
             userReadLock = userLock.readLock(),
@@ -40,6 +40,22 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         this.savedIngredients = new ConcurrentHashMap<>();
         this.savedRecipes = new ConcurrentHashMap<>();
         this.savedUsers = new ConcurrentHashMap<>();
+    }
+
+    protected Map<String, Tag> getSavedTags() {
+        return savedTags;
+    }
+
+    protected Map<String, Ingredient> getSavedIngredients() {
+        return savedIngredients;
+    }
+
+    protected Map<String, Recipe> getSavedRecipes() {
+        return savedRecipes;
+    }
+
+    protected Map<String, User> getSavedUsers() {
+        return savedUsers;
     }
 
     private static <K, V> List<V> getByIds(@NotNull List<@NotNull K> ids, Map<K, V> saved)
@@ -64,7 +80,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         List<Tag> tags;
         tagReadLock.lock();
         try {
-            tags = getByIds(names, savedTags);
+            tags = getByIds(names, getSavedTags());
         } finally {
             tagReadLock.unlock();
         }
@@ -77,7 +93,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         List<Ingredient> ingredients;
         ingredientReadLock.lock();
         try {
-            ingredients = getByIds(names, savedIngredients);
+            ingredients = getByIds(names, getSavedIngredients());
         } finally {
             ingredientReadLock.unlock();
         }
@@ -90,7 +106,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         List<Recipe> recipes;
         recipeReadLock.lock();
         try {
-            recipes = getByIds(names, savedRecipes);
+            recipes = getByIds(names, getSavedRecipes());
         } finally {
             recipeReadLock.unlock();
         }
@@ -103,7 +119,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         List<User> users;
         userReadLock.lock();
         try {
-            users = getByIds(usernames, savedUsers);
+            users = getByIds(usernames, getSavedUsers());
         } finally {
             userReadLock.unlock();
         }
@@ -117,7 +133,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         boolean exists;
         tagReadLock.lock();
         try {
-            exists = savedTags.containsKey(name);
+            exists = getSavedTags().containsKey(name);
         } finally {
             tagReadLock.unlock();
         }
@@ -131,7 +147,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         boolean exists;
         ingredientReadLock.lock();
         try {
-            exists = savedIngredients.containsKey(name);
+            exists = getSavedIngredients().containsKey(name);
         } finally {
             ingredientReadLock.unlock();
         }
@@ -145,7 +161,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         boolean exists;
         recipeReadLock.lock();
         try {
-            exists = savedRecipes.containsKey(name);
+            exists = getSavedRecipes().containsKey(name);
         } finally {
             recipeReadLock.unlock();
         }
@@ -159,7 +175,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         boolean exists;
         userReadLock.lock();
         try {
-            exists = savedUsers.containsKey(name);
+            exists = getSavedUsers().containsKey(name);
         } finally {
             userReadLock.unlock();
         }
@@ -211,8 +227,8 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         Set<Tag> matchedTags;
         tagReadLock.lock();
         try {
-            Set<String> matchedNames = findMatches(savedTags.keySet(), tokens, true);
-            matchedTags = getValuesOf(matchedNames, savedTags);
+            Set<String> matchedNames = findMatches(getSavedTags().keySet(), tokens, true);
+            matchedTags = getValuesOf(matchedNames, getSavedTags());
         } finally {
             tagReadLock.unlock();
         }
@@ -225,8 +241,8 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         Set<Ingredient> matchedIngredients;
         ingredientReadLock.lock();
         try {
-            Set<String> matchedNames = findMatches(savedIngredients.keySet(), tokens, true);
-            matchedIngredients = getValuesOf(matchedNames, savedIngredients);
+            Set<String> matchedNames = findMatches(getSavedIngredients().keySet(), tokens, true);
+            matchedIngredients = getValuesOf(matchedNames, getSavedIngredients());
         } finally {
             ingredientReadLock.unlock();
         }
@@ -251,10 +267,10 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         final boolean ignoreCase = true;
         recipeReadLock.lock();
         try {
-            Set<String> matchedNames = findMatches(savedRecipes.keySet(), tokens, ignoreCase);
-            matchedRecipes = getValuesOf(matchedNames, savedRecipes);
+            Set<String> matchedNames = findMatches(getSavedRecipes().keySet(), tokens, ignoreCase);
+            matchedRecipes = getValuesOf(matchedNames, getSavedRecipes());
             Set<Recipe> matchedPresentationRecipes =
-                    savedRecipes.values().stream()
+                    getSavedRecipes().values().stream()
                             .filter((recipe) -> matchesPresentationName(recipe, tokens, ignoreCase))
                             .collect(Collectors.toSet());
 
@@ -270,8 +286,8 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         Set<User> matchedUsers;
         userReadLock.lock();
         try {
-            Set<String> matchedNames = findMatches(savedUsers.keySet(), tokens, true);
-            matchedUsers = getValuesOf(matchedNames, savedUsers);
+            Set<String> matchedNames = findMatches(getSavedUsers().keySet(), tokens, true);
+            matchedUsers = getValuesOf(matchedNames, getSavedUsers());
         } finally {
             userReadLock.unlock();
         }
@@ -287,7 +303,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         tagWriteLock.lock();
         try {
             for (Tag tag : tags) {
-                savedTags.put(tag.getName(), tag);
+                getSavedTags().put(tag.getName(), tag);
             }
         } finally {
             tagWriteLock.unlock();
@@ -305,7 +321,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         ingredientWriteLock.lock();
         try {
             for (Ingredient ingredient : ingredients) {
-                savedIngredients.put(ingredient.getName(), ingredient);
+                getSavedIngredients().put(ingredient.getName(), ingredient);
             }
         } finally {
             ingredientWriteLock.unlock();
@@ -321,7 +337,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         recipeWriteLock.lock();
         try {
             for (Recipe recipe : recipes) {
-                savedRecipes.put(recipe.getName(), recipe);
+                getSavedRecipes().put(recipe.getName(), recipe);
             }
         } finally {
             recipeWriteLock.unlock();
@@ -337,7 +353,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         userWriteLock.lock();
         try {
             for (User user : users) {
-                savedUsers.put(user.getUsername(), user);
+                getSavedUsers().put(user.getUsername(), user);
             }
         } finally {
             userWriteLock.unlock();
