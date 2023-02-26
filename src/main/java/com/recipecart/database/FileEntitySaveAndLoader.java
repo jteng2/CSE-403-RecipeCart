@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
     private final @Nullable String autosaveFilename;
     private final @Nullable Integer maxSaveCounter;
+
+    private final Object saveCounterLock = new Object();
     private Integer saveCounter;
 
     /**
@@ -140,7 +142,7 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
 
     private void incrementSaveCounter() {
         if (maxSaveCounter != null) {
-            synchronized (maxSaveCounter) {
+            synchronized (saveCounterLock) {
                 try {
                     if (Objects.equals(++saveCounter, maxSaveCounter)) {
                         save(getAutosaveFilename());
