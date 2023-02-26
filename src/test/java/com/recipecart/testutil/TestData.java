@@ -45,6 +45,12 @@ public class TestData {
         };
     }
 
+    public static Object[] getGoodStrings() {
+        return new String[] {
+            "null", "Hello-world67", "EMPTY_STRING", "Integer.MAX_VALUE", "getGoodStrings"
+        };
+    }
+
     public static Object[] getNotNullStrings() {
         return new String[] {
             "",

@@ -30,7 +30,7 @@ public class Presets {
     //       than if you'd set the value to 1, since there's two entities to construct
 
     private static Supplier<Object[]> getIdSupplier(boolean valid) {
-        return valid ? TestData::getNotNullStrings : TestData::getNullStrings;
+        return valid ? TestData::getGoodStrings : TestData::getNullStrings;
     }
 
     private static Supplier<Object[]> getListStringNoNullsSupplier(boolean nonEmpty) {
