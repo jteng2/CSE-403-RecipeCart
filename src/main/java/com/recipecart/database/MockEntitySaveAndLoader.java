@@ -7,6 +7,11 @@ import com.recipecart.storage.EntitySaver;
 import com.recipecart.utils.Utils;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,18 +20,29 @@ import org.jetbrains.annotations.Nullable;
  * to be used for testing other parts of the backend.
  */
 public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
+    private final ReadWriteLock tagLock = new ReentrantReadWriteLock(),
+            ingredientLock = new ReentrantReadWriteLock(),
+            recipeLock = new ReentrantReadWriteLock(),
+            userLock = new ReentrantReadWriteLock();
+    private final Lock tagReadLock = tagLock.readLock(),
+            ingredientReadLock = ingredientLock.readLock(),
+            recipeReadLock = recipeLock.readLock(),
+            userReadLock = userLock.readLock(),
+            tagWriteLock = tagLock.writeLock(),
+            ingredientWriteLock = ingredientLock.writeLock(),
+            recipeWriteLock = recipeLock.writeLock(),
+            userWriteLock = userLock.writeLock();
+
     private final Map<String, Tag> savedTags;
     private final Map<String, Ingredient> savedIngredients;
     private final Map<String, Recipe> savedRecipes;
-    private final Map<Recipe, String> recipePresentationNames;
     private final Map<String, User> savedUsers;
 
     public MockEntitySaveAndLoader() {
-        this.savedTags = new HashMap<>();
-        this.savedIngredients = new HashMap<>();
-        this.savedRecipes = new HashMap<>();
-        this.recipePresentationNames = new HashMap<>();
-        this.savedUsers = new HashMap<>();
+        this.savedTags = new ConcurrentHashMap<>();
+        this.savedIngredients = new ConcurrentHashMap<>();
+        this.savedRecipes = new ConcurrentHashMap<>();
+        this.savedUsers = new ConcurrentHashMap<>();
     }
 
     private static <K, V> List<V> getByIds(@NotNull List<@NotNull K> ids, Map<K, V> saved)
@@ -48,49 +64,109 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
     @Override
     public @NotNull List<@NotNull Tag> getTagsByNames(@NotNull List<@NotNull String> names)
             throws IOException {
-        return getByIds(names, savedTags);
+        List<Tag> tags;
+        tagReadLock.lock();
+        try {
+            tags = getByIds(names, savedTags);
+        } finally {
+            tagReadLock.unlock();
+        }
+        return tags;
     }
 
     @Override
     public @NotNull List<@NotNull Ingredient> getIngredientsByNames(
             @NotNull List<@NotNull String> names) throws IOException {
-        return getByIds(names, savedIngredients);
+        List<Ingredient> ingredients;
+        ingredientReadLock.lock();
+        try {
+            ingredients = getByIds(names, savedIngredients);
+        } finally {
+            ingredientReadLock.unlock();
+        }
+        return ingredients;
     }
 
     @Override
     public @NotNull List<@NotNull Recipe> getRecipesByNames(@NotNull List<@NotNull String> names)
             throws IOException {
-        return getByIds(names, savedRecipes);
+        List<Recipe> recipes;
+        recipeReadLock.lock();
+        try {
+            recipes = getByIds(names, savedRecipes);
+        } finally {
+            recipeReadLock.unlock();
+        }
+        return recipes;
     }
 
     @Override
     public @NotNull List<@NotNull User> getUsersByNames(@NotNull List<@NotNull String> usernames)
             throws IOException {
-        return getByIds(usernames, savedUsers);
+        List<User> users;
+        userReadLock.lock();
+        try {
+            users = getByIds(usernames, savedUsers);
+        } finally {
+            userReadLock.unlock();
+        }
+        return users;
     }
 
     @Override
     public boolean tagNameExists(@NotNull String name) {
         Objects.requireNonNull(name);
-        return savedTags.containsKey(name);
+
+        boolean exists;
+        tagReadLock.lock();
+        try {
+            exists = savedTags.containsKey(name);
+        } finally {
+            tagReadLock.unlock();
+        }
+        return exists;
     }
 
     @Override
     public boolean ingredientNameExists(@NotNull String name) {
         Objects.requireNonNull(name);
-        return savedIngredients.containsKey(name);
+
+        boolean exists;
+        ingredientReadLock.lock();
+        try {
+            exists = savedIngredients.containsKey(name);
+        } finally {
+            ingredientReadLock.unlock();
+        }
+        return exists;
     }
 
     @Override
     public boolean recipeNameExists(@NotNull String name) {
         Objects.requireNonNull(name);
-        return savedRecipes.containsKey(name);
+
+        boolean exists;
+        recipeReadLock.lock();
+        try {
+            exists = savedRecipes.containsKey(name);
+        } finally {
+            recipeReadLock.unlock();
+        }
+        return exists;
     }
 
     @Override
     public boolean usernameExists(@NotNull String name) {
         Objects.requireNonNull(name);
-        return savedUsers.containsKey(name);
+
+        boolean exists;
+        userReadLock.lock();
+        try {
+            exists = savedUsers.containsKey(name);
+        } finally {
+            userReadLock.unlock();
+        }
+        return exists;
     }
 
     private static Set<String> toLowerCaseStrings(Collection<String> strings) {
@@ -125,24 +201,6 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return matches;
     }
 
-    private static <K> Set<K> findKeysOfMatchingValues(
-            Map<K, String> toSearch, @NotNull Set<@NotNull String> tokens, boolean ignoreCase) {
-        Utils.requireAllNotNull(tokens, "Tokens set cannot be null", "Tokens cannot be null");
-
-        Set<String> tokensToUse = ignoreCase ? toLowerCaseStrings(tokens) : tokens;
-
-        Set<K> matches = new HashSet<>();
-        for (K key : toSearch.keySet()) {
-            String value = toSearch.get(key);
-            if (value != null) {
-                if (matches(ignoreCase ? value.toLowerCase(Locale.ROOT) : value, tokensToUse)) {
-                    matches.add(key);
-                }
-            }
-        }
-        return matches;
-    }
-
     private static <K, V> Set<V> getValuesOf(Set<K> keys, Map<K, V> map) {
         Set<V> values = new HashSet<>();
         for (K key : keys) {
@@ -153,29 +211,74 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
 
     @Override
     public @NotNull Set<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
-        Set<String> matchedNames = findMatches(savedTags.keySet(), tokens, true);
-        return getValuesOf(matchedNames, savedTags);
+        Set<Tag> matchedTags;
+        tagReadLock.lock();
+        try {
+            Set<String> matchedNames = findMatches(savedTags.keySet(), tokens, true);
+            matchedTags = getValuesOf(matchedNames, savedTags);
+        } finally {
+            tagReadLock.unlock();
+        }
+        return matchedTags;
     }
 
     @Override
     public @NotNull Set<@NotNull Ingredient> searchIngredients(
             @NotNull Set<@NotNull String> tokens) {
-        Set<String> matchedNames = findMatches(savedIngredients.keySet(), tokens, true);
-        return getValuesOf(matchedNames, savedIngredients);
+        Set<Ingredient> matchedIngredients;
+        ingredientReadLock.lock();
+        try {
+            Set<String> matchedNames = findMatches(savedIngredients.keySet(), tokens, true);
+            matchedIngredients = getValuesOf(matchedNames, savedIngredients);
+        } finally {
+            ingredientReadLock.unlock();
+        }
+        return matchedIngredients;
+    }
+
+    private static boolean matchesPresentationName(
+            Recipe recipe, @NotNull Set<@NotNull String> tokens, boolean ignoreCase) {
+        Set<String> tokensToUse = ignoreCase ? toLowerCaseStrings(tokens) : tokens;
+
+        String presName = recipe.getPresentationName();
+        if (presName != null) {
+            presName = ignoreCase ? presName.toLowerCase(Locale.ROOT) : presName;
+            return matches(presName, tokensToUse);
+        }
+        return false;
     }
 
     @Override
     public @NotNull Set<@NotNull Recipe> searchRecipes(@NotNull Set<@NotNull String> tokens) {
-        Set<String> matchedNames = findMatches(savedRecipes.keySet(), tokens, true);
-        Set<Recipe> matchedRecipes = getValuesOf(matchedNames, savedRecipes);
-        matchedRecipes.addAll(findKeysOfMatchingValues(recipePresentationNames, tokens, true));
+        Set<Recipe> matchedRecipes;
+        final boolean ignoreCase = true;
+        recipeReadLock.lock();
+        try {
+            Set<String> matchedNames = findMatches(savedRecipes.keySet(), tokens, ignoreCase);
+            matchedRecipes = getValuesOf(matchedNames, savedRecipes);
+            Set<Recipe> matchedPresentationRecipes =
+                    savedRecipes.values().stream()
+                            .filter((recipe) -> matchesPresentationName(recipe, tokens, ignoreCase))
+                            .collect(Collectors.toSet());
+
+            matchedRecipes.addAll(matchedPresentationRecipes);
+        } finally {
+            recipeReadLock.unlock();
+        }
         return matchedRecipes;
     }
 
     @Override
     public @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
-        Set<String> matchedNames = findMatches(savedUsers.keySet(), tokens, true);
-        return getValuesOf(matchedNames, savedUsers);
+        Set<User> matchedUsers;
+        userReadLock.lock();
+        try {
+            Set<String> matchedNames = findMatches(savedUsers.keySet(), tokens, true);
+            matchedUsers = getValuesOf(matchedNames, savedUsers);
+        } finally {
+            userReadLock.unlock();
+        }
+        return matchedUsers;
     }
 
     @Override
@@ -183,8 +286,14 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         Utils.requireAllNotNull(
                 tags, "Tag collection cannot be null", "Elements of tags cannot be null");
         Utils.nullCheckTagNames(tags);
-        for (Tag tag : tags) {
-            savedTags.put(tag.getName(), tag);
+
+        tagWriteLock.lock();
+        try {
+            for (Tag tag : tags) {
+                savedTags.put(tag.getName(), tag);
+            }
+        } finally {
+            tagWriteLock.unlock();
         }
     }
 
@@ -195,8 +304,14 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
                 "Ingredient collection cannot be null",
                 "Elements of ingredients cannot be null");
         Utils.nullCheckIngredientNames(ingredients);
-        for (Ingredient ingredient : ingredients) {
-            savedIngredients.put(ingredient.getName(), ingredient);
+
+        ingredientWriteLock.lock();
+        try {
+            for (Ingredient ingredient : ingredients) {
+                savedIngredients.put(ingredient.getName(), ingredient);
+            }
+        } finally {
+            ingredientWriteLock.unlock();
         }
     }
 
@@ -205,9 +320,14 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         Utils.requireAllNotNull(
                 recipes, "Recipe collection cannot be null", "Elements of recipes cannot be null");
         Utils.nullCheckRecipeNames(recipes);
-        for (Recipe recipe : recipes) {
-            savedRecipes.put(recipe.getName(), recipe);
-            recipePresentationNames.put(recipe, recipe.getPresentationName());
+
+        recipeWriteLock.lock();
+        try {
+            for (Recipe recipe : recipes) {
+                savedRecipes.put(recipe.getName(), recipe);
+            }
+        } finally {
+            recipeWriteLock.unlock();
         }
     }
 
@@ -216,28 +336,40 @@ public class MockEntitySaveAndLoader implements EntitySaver, EntityLoader {
         Utils.requireAllNotNull(
                 users, "User collection cannot be null", "Elements of users cannot be null");
         Utils.nullCheckUserNames(users);
-        for (User user : users) {
-            savedUsers.put(user.getUsername(), user);
+
+        userWriteLock.lock();
+        try {
+            for (User user : users) {
+                savedUsers.put(user.getUsername(), user);
+            }
+        } finally {
+            userWriteLock.unlock();
         }
     }
 
     @Override
     public @NotNull String generateUniqueRecipeName(@Nullable String presentationName) {
         String baseName;
-        if (presentationName == null) {
-            baseName = "";
-        } else {
-            baseName = presentationName.trim().replaceAll("\\s+", "-");
-            if (!recipeNameExists(baseName)) {
-                return baseName;
-            }
-        }
 
-        for (long i = 0; ; i++) {
-            String generatedName = baseName + i;
-            if (!recipeNameExists(generatedName)) {
-                return generatedName;
+        recipeReadLock.lock();
+        try {
+            if (presentationName == null) {
+                baseName = "";
+            } else {
+                baseName = presentationName.trim().replaceAll("\\s+", "-");
+                if (!recipeNameExists(baseName)) {
+                    return baseName;
+                }
             }
+
+            for (long i = 0; ; i++) {
+                String generatedName = baseName + i;
+                if (!recipeNameExists(generatedName)) {
+                    return generatedName;
+                }
+            }
+        } finally {
+            recipeReadLock.unlock();
         }
     }
 }
