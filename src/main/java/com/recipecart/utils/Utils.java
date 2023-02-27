@@ -2,12 +2,13 @@
 package com.recipecart.utils;
 
 import com.recipecart.entities.*;
+import com.recipecart.storage.EntitySaver;
 import java.util.*;
 import java.util.function.Function;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/** This class contains general utility methods to help with the implementation of RecipeCart. */
+/** This class contains general helper methods to help with the implementation of RecipeCart. */
 public class Utils {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////// Methods for dealing with nulls //////////////////////////////////
@@ -191,7 +192,7 @@ public class Utils {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////// Methods for converting data structures ///////////////////////////////////
+    ///////////////////// Methods for converting entity data structures ////////////////////////////
 
     public static Set<String> fromTagSet(Set<Tag> tags) {
         Set<String> tagNames = new HashSet<>();
@@ -322,5 +323,73 @@ public class Utils {
             sum.put(entry.getKey(), sum.get(entry.getKey()) + entry.getValue());
         }
         return sum;
+    }
+
+    public static void putInMockData(EntitySaver saver) {
+        List<Tag> tags = new ArrayList<>();
+        for (String s : List.of("Tag1", "Tag2", "Tag3", "Tag4", "Tag5")) {
+            tags.add(new Tag(s));
+        }
+
+        saver.updateTags(tags);
+
+        List<Ingredient> igs =
+                List.of(
+                        new Ingredient("Ingredient1", "Units1", "ImageUri1"),
+                        new Ingredient("Ingredient2", "Units2", "ImageUri2"),
+                        new Ingredient("Ingredient3", "Units3", "ImageUri3"),
+                        new Ingredient("Ingredient4", "Units4", "ImageUri4"),
+                        new Ingredient("Ingredient5", "Units5", "ImageUri5"));
+
+        saver.updateIngredients(igs);
+
+        String author1 = "Author1", author2 = "Author2";
+
+        Recipe recipe1 =
+                new Recipe.Builder()
+                        .setName("Recipe1")
+                        .setPresentationName("First recipe x y")
+                        .setAuthorUsername(author1)
+                        .setPrepTime(60)
+                        .setCookTime(10)
+                        .setDirections(
+                                List.of("Preheat oven to 475", "Preheat oven to 300", "etc."))
+                        .build();
+
+        Recipe recipe2 =
+                new Recipe.Builder()
+                        .setName("Recipe2")
+                        .setPresentationName("Second recipe y z")
+                        .setAuthorUsername(author2)
+                        .setImageUri("ImageUri4")
+                        .setNumServings(10)
+                        .setTags(Set.of(tags.get(0), tags.get(1), tags.get(4)))
+                        .build();
+
+        Recipe recipe3 =
+                new Recipe.Builder()
+                        .setName("Recipe3")
+                        .setPresentationName("Third recipe x z")
+                        .setAuthorUsername(author1)
+                        .setAvgRating(4.9)
+                        .setNumRatings(100)
+                        .setRequiredIngredients(Map.of(igs.get(1), .03, igs.get(3), 5.0))
+                        .build();
+
+        saver.updateRecipes(List.of(recipe1, recipe2, recipe3));
+
+        User user1 =
+                new User.Builder()
+                        .setUsername(author1)
+                        .setAuthoredRecipes(List.of(recipe1, recipe3))
+                        .build();
+
+        User user2 =
+                new User.Builder()
+                        .setUsername(author2)
+                        .setAuthoredRecipes(List.of(recipe2))
+                        .build();
+
+        saver.updateUsers(List.of(user1, user2));
     }
 }
