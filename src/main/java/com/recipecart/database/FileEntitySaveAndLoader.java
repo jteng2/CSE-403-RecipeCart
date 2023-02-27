@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
     private final @Nullable String autosaveFilename;
     private final @Nullable Integer maxSaveCounter;
+
+    private final Object saveCounterLock = new Object();
     private Integer saveCounter;
 
     /**
@@ -27,20 +29,21 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
      * autosave its contents to the given file every saveCounter method calls of an EntitySaver
      * method.
      *
-     * @param saveCounter the number of EntitySaver method calls required to autosave
-     * @throws IllegalArgumentException if saveCounter is negative
+     * @param maxSaveCounter the number of EntitySaver method calls required to autosave
+     * @throws IllegalArgumentException if saveCounter is zero or negative
      */
-    public FileEntitySaveAndLoader(@NotNull String filename, @NotNull Integer saveCounter) {
+    public FileEntitySaveAndLoader(
+            @NotNull String autosaveFilename, @NotNull Integer maxSaveCounter) {
         super();
 
-        Objects.requireNonNull(filename);
-        Objects.requireNonNull(saveCounter);
-        if (saveCounter < 0) {
+        Objects.requireNonNull(autosaveFilename);
+        Objects.requireNonNull(maxSaveCounter);
+        if (maxSaveCounter <= 0) {
             throw new IllegalArgumentException("Max save counter cannot be negative");
         }
 
-        this.autosaveFilename = filename;
-        this.maxSaveCounter = saveCounter;
+        this.autosaveFilename = autosaveFilename;
+        this.maxSaveCounter = maxSaveCounter;
         this.saveCounter = 0;
     }
 
@@ -62,40 +65,106 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
         return autosaveFilename;
     }
 
+    private EntityFile loadFromStream(@NotNull InputStream stream)
+            throws IOException, ClassNotFoundException {
+        ObjectInputStream objectReader = new ObjectInputStream(stream);
+        EntityFile fileObject = (EntityFile) objectReader.readObject();
+        objectReader.close();
+
+        return fileObject;
+    }
+
+    private void loadState(EntityFile stateToLoad) {
+        getSavedTags().clear();
+        getSavedTags().putAll(stateToLoad.getTags());
+
+        getSavedIngredients().clear();
+        getSavedIngredients().putAll(stateToLoad.getIngredients());
+
+        Map<String, Recipe> recipes = stateToLoad.getFromRecipeForms();
+        getSavedRecipes().clear();
+        getSavedRecipes().putAll(recipes);
+
+        Map<String, User> user = stateToLoad.getFromUserForms(recipes);
+        getSavedUsers().clear();
+        getSavedUsers().putAll(user);
+    }
+
     /**
-     * Loads the contents of the given file (i.e. the output file from a previous save call from
+     * Loads contents from the given stream (i.e. the output file from a previous save call from
      * some other FileEntitySaveAndLoader) into this FileEntitySaveAndLoader. The loaded contents
      * will overwrite the current contents of this FileEntitySaveAndLoader.
      *
-     * @param filename the file to save/load entities to/from
+     * @param stream the stream to read entity data from
      * @throws FileNotFoundException if the given file cannot be found, or if there's an error with
      *     reading from the file.
-     * @throws ClassNotFoundException if
+     * @throws ClassNotFoundException if the class of the serialized object from the stream can't be
+     *     found.
      */
-    private void load(String filename) throws IOException, ClassNotFoundException {
-        Objects.requireNonNull(filename);
+    public void load(@NotNull InputStream stream) throws IOException, ClassNotFoundException {
+        Objects.requireNonNull(stream);
         tagWriteLock.lock();
         ingredientWriteLock.lock();
         recipeWriteLock.lock();
         userWriteLock.lock();
         try {
-            ObjectInputStream objectReader = new ObjectInputStream(new FileInputStream(filename));
-            EntityFile fileObject = (EntityFile) objectReader.readObject();
-            objectReader.close();
+            EntityFile stateToLoad = loadFromStream(stream);
+            loadState(stateToLoad);
+        } finally {
+            userWriteLock.unlock();
+            recipeWriteLock.unlock();
+            ingredientWriteLock.unlock();
+            tagWriteLock.unlock();
+        }
+    }
 
-            getSavedTags().clear();
-            getSavedTags().putAll(fileObject.getTags());
+    /**
+     * Loads the contents of the given file (i.e. the output file from a previous save call from
+     * some other FileEntitySaveAndLoader) into this FileEntitySaveAndLoader. The loaded contents
+     * will overwrite the current contents of this FileEntitySaveAndLoader.
+     *
+     * @param filename the file to load entities from
+     * @throws FileNotFoundException if the given file cannot be found, or if there's an error with
+     *     reading from the file.
+     * @throws ClassNotFoundException if the class of the serialized object from the stream can't be
+     *     found.
+     */
+    public void load(String filename) throws IOException, ClassNotFoundException {
+        Objects.requireNonNull(filename);
+        load(new FileInputStream(filename));
+    }
 
-            getSavedIngredients().clear();
-            getSavedIngredients().putAll(fileObject.getIngredients());
+    private EntityFile getCurrentState() {
+        return new EntityFile(
+                getSavedTags(),
+                getSavedIngredients(),
+                Utils.toRecipeFormMap(getSavedRecipes()),
+                Utils.toUserFormMap(getSavedUsers()));
+    }
 
-            Map<String, Recipe> recipes = fileObject.getFromRecipeForms();
-            getSavedRecipes().clear();
-            getSavedRecipes().putAll(recipes);
+    private void writeToStream(EntityFile state, OutputStream stream) throws IOException {
+        ObjectOutputStream objectWriter = new ObjectOutputStream(stream);
+        objectWriter.writeObject(state);
+        objectWriter.flush();
+        objectWriter.close();
+    }
 
-            Map<String, User> user = fileObject.getFromUserForms(recipes);
-            getSavedUsers().clear();
-            getSavedUsers().putAll(user);
+    /**
+     * Saves the current contents of this instance to the given stream. The file's original contents
+     * will be overwritten.
+     *
+     * @param stream the stream to write to
+     * @throws IOException if there's an error with writing to the file.
+     */
+    public void save(@NotNull OutputStream stream) throws IOException {
+        Objects.requireNonNull(stream);
+        tagWriteLock.lock();
+        ingredientWriteLock.lock();
+        recipeWriteLock.lock();
+        userWriteLock.lock();
+        try {
+            EntityFile state = getCurrentState();
+            writeToStream(state, stream);
         } finally {
             userWriteLock.unlock();
             recipeWriteLock.unlock();
@@ -111,36 +180,14 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
      * @param filename the name of the file to save to
      * @throws IOException if there's an error with writing to the file.
      */
-    public void save(String filename) throws IOException {
+    public void save(@NotNull String filename) throws IOException {
         Objects.requireNonNull(filename);
-        tagWriteLock.lock();
-        ingredientWriteLock.lock();
-        recipeWriteLock.lock();
-        userWriteLock.lock();
-        try {
-            EntityFile fileObject =
-                    new EntityFile(
-                            getSavedTags(),
-                            getSavedIngredients(),
-                            Utils.toRecipeFormMap(getSavedRecipes()),
-                            Utils.toUserFormMap(getSavedUsers()));
-
-            ObjectOutputStream objectWriter =
-                    new ObjectOutputStream(new FileOutputStream(filename));
-            objectWriter.writeObject(fileObject);
-            objectWriter.flush();
-            objectWriter.close();
-        } finally {
-            userWriteLock.unlock();
-            recipeWriteLock.unlock();
-            ingredientWriteLock.unlock();
-            tagWriteLock.unlock();
-        }
+        save(new FileOutputStream(filename));
     }
 
     private void incrementSaveCounter() {
-        if (maxSaveCounter != null) {
-            synchronized (maxSaveCounter) {
+        if (maxSaveCounter != null && getAutosaveFilename() != null) {
+            synchronized (saveCounterLock) {
                 try {
                     if (Objects.equals(++saveCounter, maxSaveCounter)) {
                         save(getAutosaveFilename());
@@ -148,6 +195,7 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    saveCounter = Math.max(0, saveCounter - 1);
                 }
             }
         }

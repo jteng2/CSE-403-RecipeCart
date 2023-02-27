@@ -3,6 +3,11 @@
 # Introduction
 RecipeCart an application where users can search, save, upload, and rate recipes, and ingredients for these recipes can be added to a built-in shopping list. A common problem that people face when cooking recipes is getting the right amount of ingredients based on what they already have in their selves and fridges. This aims to achieve a seamless integration of finding and cooking recipes, and shopping for (remaining) ingredients needed for these recipes. Technology-wise, the application will be a web app, where the user can login and get recipes and other information from a server.
 
+### Other documents
+- `user_manual.md` contains documentation for a user to run a RecipeCart server.
+- `developer_manual.md` contains documentation for a developer to contribute code to this repository.
+
+(All of these documents are located on the top-level directory of this repository.)
 # Goals
 ## Major Features
 - User-uploaded local storage of ingredients and amounts (manually)
@@ -29,16 +34,19 @@ Main Folders: front-end, back-end, database, and reports
 - bug-tracking: Stores a file that keeps track of all our bugs
 
 ### More info on `src`
-- src/main: back-end source code
-- src/test: back-end tests
-- src/main/com/recipecart/database: code that pertains to connecting to the Mongo database for reading/writing recipe/user/etc. data
-- src/main/com/recipecart/entities: the RecipeCart entities (Recipes, Users, Ingredients, Tags) that each house appropriate information
-- src/main/com/recipecart/execution: code pertaining to receiving, pre-processing, and executing commands for use cases
-- src/main/com/recipecart/requests: code pertaining to handling requests from the front-end
-- src/main/com/recipecart/storage: code that houses general interfaces/classes for the data access layer, not specific to Mongo
-- src/main/com/recipecart/usecases: code that actually executes the RecipeCart use cases and performs their logic
-- src/main/com/recipecart/utils: general utilities used by the other packages
-- src/main/com/recipecart/Main.java: what initializes each layer of the backend architecture (presentation, business logic, data access), connects layers as appropriate, and starts listening for requests from the front-end.
+The file structure of `src` looks like this:
+- `src`
+  - `/main/java`: back-end source code
+    - `/Main.java`: what initializes each layer of the backend architecture (presentation, business logic, data access), connects layers as appropriate, and starts listening for requests from the front-end.
+    - `/com/recipecart`
+      - `/database`: code that pertains to connecting to the Mongo database for reading/writing recipe/user/etc. data
+      - `/entities`: the RecipeCart entities (Recipes, Users, Ingredients, Tags) that each house appropriate information
+      - `/execution`: code pertaining to receiving, pre-processing, and executing commands for use cases
+      - `/requests`: code pertaining to handling requests from the front-end
+      - `/storage`: code that houses general interfaces/classes for the data access layer, not specific to Mongo
+      - `/usecases`: code that actually executes the RecipeCart use cases and performs their logic
+      - `/utils`: general utilities used by the other packages
+  - `/test/java`: back-end tests: tests for each class in `src/main` will be located in a file indicating the same package (see `developer_manual.md` for more details).
 
 # Building the System
 ## First Steps
@@ -46,11 +54,13 @@ Main Folders: front-end, back-end, database, and reports
 - Next follow the steps for "Building the back-end" and "Building the front-end".
 
 ## Building the back-end
-The backend uses the Gradle build system to make sure that the backend builds correctly. Also, the backend uses **Java 11** as its Java version, so make sure you're using the correct version, or there may be errors building.
+The backend uses the Gradle build system to make sure that the backend builds correctly. Also, the backend uses **Java 11** as its Java version, so make sure you're using the correct version, or there may be errors building/running.
 - Run `./gradlew` while on the top-level directory of the repository to run the Gradle wrapper, which installs/sets up Gradle for the project.
 - Run `./gradlew build` to build the back-end.
-- Run `./gradlew run` to start the application's backend. (This will currently fail, as the main method is not yet implemented.)
-On IntelliJ, the Gradle build and run tasks can also be done on the Gradle tab without having to use the command line.  
+#### Running the back-end
+- A JAR file is created when running `./gradlew build`. This file is located in the `build/libs` directory (which is created when running `./gradlew build`), and has a name such as `CSE-403-RecipeCart-1.0-SNAPSHOT.jar`. Run this JAR file with the command `java -jar build/libs/<filename>` (while in the top-level directory), where `<filename>` is the JAR file name.
+  - To exit the running program gracefully, type "quit" into stdin, which will stop the server and save changes as necessary, before exiting.
+  - `./gradlew run` can also be used to run the backend, but typing "quit" will not do anything here as stdin gets "eaten" by Gradle.
 ### Linting
 Also of note is that this Gradle configuration uses the Spotless plugin to lint the code, specifically to conform to the Google Style Guide for Java.
 It's configured so that the build will fail if there's any formatting errors.

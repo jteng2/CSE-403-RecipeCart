@@ -300,13 +300,14 @@ public class TestUtils {
     }
 
     public static List<Supplier<Object[]>> getMockStorageArrayGenerators() {
-        return List.of(TestData::getMockEntityStorages);
+        return List.of(TestData::getMapEntityStorages);
     }
 
     public static List<Supplier<Object[]>> getStorageArrayGenerators() {
         return List.of(
+                TestData::getMapEntityStorages,
                 // TestData::getMongoEntityStorages,
-                TestData::getMockEntityStorages);
+                TestData::getFileEntityStorages);
     }
 
     public static Stream<Arguments> generateArgumentsCombos(
