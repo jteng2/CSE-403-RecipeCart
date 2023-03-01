@@ -4,15 +4,15 @@ package com.recipecart.testutil;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntityStorage;
 import com.recipecart.utils.TwoTuple;
+import com.recipecart.utils.Utils;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -263,41 +263,6 @@ public class TestUtils {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////// Methods for renaming entities ///////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////// Methods for renaming entities ///////////////////////////////////
-
-    @SuppressWarnings("unused") // currently, newName is the only field of tag
-    public static Tag renameTag(@NotNull Tag tag, String newName) {
-        return new Tag(newName);
-    }
-
-    public static Ingredient renameIngredient(Ingredient ingredient, String toRename) {
-        return new Ingredient(toRename, ingredient.getUnits(), ingredient.getImageUri());
-    }
-
-    public static Recipe renameRecipe(Recipe recipe, String toRename) {
-        return new Recipe.Builder(recipe).setName(toRename).build();
-    }
-
-    public static Recipe renameRecipePresentationName(Recipe recipe, String toRename) {
-        return new Recipe.Builder(recipe).setPresentationName(toRename).build();
-    }
-
-    public static Recipe renameRecipeFull(
-            Recipe recipe, String toRename, String toRenamePresentation) {
-        return new Recipe.Builder(recipe)
-                .setName(toRename)
-                .setPresentationName(toRenamePresentation)
-                .build();
-    }
-
-    public static User renameUser(User User, String toRename) {
-        return new User.Builder(User).setUsername(toRename).build();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////// Methods for generating EntityStorage objects //////////////////////////////
 
     public static Stream<Arguments> getStorageParams(
@@ -321,7 +286,7 @@ public class TestUtils {
                 //            new MongoEntityLoader(TestData.TEST_MONGO_ADDRESS_FILE));
                 // },
                 () -> {
-                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
                     return new EntityStorage(saverAndLoader, saverAndLoader);
                 });
     }
@@ -329,29 +294,48 @@ public class TestUtils {
     public static List<Supplier<EntityStorage>> getMockStorageGenerators() {
         return List.of(
                 () -> {
-                    MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+                    MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
                     return new EntityStorage(saverAndLoader, saverAndLoader);
                 });
     }
 
-    public static List<Supplier<Object[]>> getStorageArrayGenerators() {
-        return List.of(
-                // TestData::getMongoEntityStorages,
-                TestData::getMockEntityStorages);
+    public static List<Supplier<Object[]>> getMockStorageArrayGenerators() {
+        return List.of(TestData::getMapEntityStorages);
     }
 
-    public static Stream<Arguments> generateArgumentsWithStorage(
-            List<Supplier<Object[]>> storageGenerators, Supplier<Object[]> generator) {
-        Stream<Arguments> concatenatedArgs = null;
-        for (Supplier<Object[]> storageGenerator : storageGenerators) {
-            Stream<Arguments> toConcatenate =
-                    generateMultiArguments(List.of(storageGenerator, generator), 1, true);
-            concatenatedArgs =
-                    concatenatedArgs == null
-                            ? toConcatenate
-                            : Stream.concat(concatenatedArgs, toConcatenate);
-        }
+    public static List<Supplier<Object[]>> getStorageArrayGenerators() {
+        return List.of(
+                TestData::getMapEntityStorages,
+                // TestData::getMongoEntityStorages,
+                TestData::getFileEntityStorages);
+    }
 
+    public static Stream<Arguments> generateArgumentsCombos(
+            List<Supplier<Object[]>> generators1, List<Supplier<Object[]>> generators2) {
+        Stream<Arguments> concatenatedArgs = Stream.empty();
+        for (Supplier<Object[]> g1 : generators1) {
+            for (Supplier<Object[]> g2 : generators2) {
+                Stream<Arguments> toConcatenate = generateMultiArguments(List.of(g1, g2), 1, true);
+                concatenatedArgs = Stream.concat(concatenatedArgs, toConcatenate);
+            }
+        }
+        return concatenatedArgs;
+    }
+
+    public static Stream<Arguments> generateArgumentsCombos(
+            List<Supplier<Object[]>> generators1,
+            List<Supplier<Object[]>> generators2,
+            List<Supplier<Object[]>> generators3) {
+        Stream<Arguments> concatenatedArgs = Stream.empty();
+        for (Supplier<Object[]> g1 : generators1) {
+            for (Supplier<Object[]> g2 : generators2) {
+                for (Supplier<Object[]> g3 : generators3) {
+                    Stream<Arguments> toConcatenate =
+                            generateMultiArguments(List.of(g1, g2, g3), 1, true);
+                    concatenatedArgs = Stream.concat(concatenatedArgs, toConcatenate);
+                }
+            }
+        }
         return concatenatedArgs;
     }
 
@@ -376,8 +360,8 @@ public class TestUtils {
                 Set.of("Healthy", "Chicken"),
                 Set.of("veggies", "fruit"),
                 Set.of("adobo", "Null", "Mangoes", "user", "withrice", "Tasty", "address"),
-                Set.of(),
-                Set.of("Mangos, hellaveggies", "deleted", "zero"));
+                Set.of("tasty", "healthy", "zero", "fruit"),
+                Set.of("Mangos", "hellaveggies", "deleted", "zero"));
     }
 
     public static List<Set<String>> getExpectedEntityNameSets() {
@@ -394,7 +378,7 @@ public class TestUtils {
                 Set.of("Chicken Adobo", "hella veggies"),
                 Set.of("hella veggies", "Mangoes"),
                 Set.of("Chicken Adobo", "null", "Mangoes", "Deleted User"),
-                Set.of(),
+                Set.of("Chicken Adobo", "hella veggies", "null", "Mangoes"),
                 Set.of("Deleted User", "null"));
     }
 
@@ -479,7 +463,7 @@ public class TestUtils {
                 getTokenSets(),
                 getExpectedEntityNameSets(),
                 (TwoTuple<Tag, String> tagAndString) ->
-                        renameTag(tagAndString.getFirst(), tagAndString.getSecond()),
+                        Utils.renameTag(tagAndString.getFirst(), tagAndString.getSecond()),
                 entityStorageGenerators);
     }
 
@@ -491,7 +475,7 @@ public class TestUtils {
                 getTokenSets(),
                 getExpectedEntityNameSets(),
                 (TwoTuple<Ingredient, String> ingredientAndString) ->
-                        renameIngredient(
+                        Utils.renameIngredient(
                                 ingredientAndString.getFirst(), ingredientAndString.getSecond()),
                 entityStorageGenerators);
     }
@@ -500,10 +484,10 @@ public class TestUtils {
             List<Supplier<EntityStorage>> entityStorageGenerators) {
         Function<TwoTuple<Recipe, String>, Recipe> recipeRenamer =
                 (TwoTuple<Recipe, String> recipeAndString) ->
-                        renameRecipe(recipeAndString.getFirst(), recipeAndString.getSecond());
+                        Utils.renameRecipe(recipeAndString.getFirst(), recipeAndString.getSecond());
         Function<TwoTuple<Recipe, String>, Recipe> recipePresentationRenamer =
                 (TwoTuple<Recipe, String> recipeAndString) ->
-                        renameRecipePresentationName(
+                        Utils.renameRecipePresentationName(
                                 recipeAndString.getFirst(), recipeAndString.getSecond());
 
         return getSearchTestParams(
@@ -523,7 +507,7 @@ public class TestUtils {
                 getTokenSets(),
                 getExpectedEntityNameSets(),
                 (TwoTuple<User, String> userAndString) ->
-                        renameUser(userAndString.getFirst(), userAndString.getSecond()),
+                        Utils.renameUser(userAndString.getFirst(), userAndString.getSecond()),
                 entityStorageGenerators);
     }
 }

@@ -8,7 +8,15 @@ import org.jetbrains.annotations.NotNull;
  * successful, as well as a message output. Each Command instance can only be executed once.
  */
 public interface Command {
-    String OK_GENERAL = "OK", NOT_OK_GENERAL = "Not OK", DEFAULT_MESSAGE = NOT_OK_GENERAL;
+    String OK_GENERAL = "OK",
+            NOT_OK_GENERAL = "Not OK",
+            DEFAULT_MESSAGE = NOT_OK_GENERAL,
+            NOT_OK_ERROR =
+                    "Execution unsuccessful: an internal error has occurred while trying to execute"
+                            + " this task",
+            NOT_OK_IMPOSSIBLE_OUTCOME =
+                    "Execution unsuccessful: an internal error that shouldn't happen has occurred."
+                            + " If you're seeing this, something has gone very wrong.";
 
     /**
      * @return true if this command has finished executing, false otherwise.

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This interface represents the place where entities are loaded into the Business Logic Layer, from
@@ -115,4 +116,13 @@ public interface EntityLoader {
      * @return the saved Users whose names matched, or an empty Set if none matched
      */
     @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens);
+
+    /**
+     * Generates a recipe non-presentation name (based on the given presentation name), such that no
+     * other saved recipe has that same non-presentation name. If
+     *
+     * @param presentationName the name to base the generated name off of
+     * @return the generated name
+     */
+    @NotNull String generateUniqueRecipeName(@Nullable String presentationName);
 }

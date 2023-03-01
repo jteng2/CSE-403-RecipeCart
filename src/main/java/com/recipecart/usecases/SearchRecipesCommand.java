@@ -10,11 +10,11 @@ import org.jetbrains.annotations.Nullable;
 /** This class represents the use case of someone searching for recipes. */
 public final class SearchRecipesCommand extends EntityCommand {
     public static final String
-            OK_MATCHES_FOUND = "Search successful: Recipes that matched were found",
-            OK_NO_MATCHES_FOUND = "Search successful: but no matching Recipes were found",
-            NOT_OK_SEARCH_ERROR = "Search unsuccessful: something went wrong during searching";
+            OK_MATCHES_FOUND = "Search successful: recipes that matched were found",
+            OK_NO_MATCHES_FOUND = "Search successful: but no matching recipes were found",
+            NOT_OK_BAD_SEARCH_TERMS = "Search unsuccessful: search terms were not well-formed";
 
-    private final @NotNull Collection<@NotNull String> searchTerms;
+    private final Set<String> searchTerms;
     private @Nullable Set<@NotNull Recipe> matchingRecipes = null;
 
     /**
@@ -22,16 +22,12 @@ public final class SearchRecipesCommand extends EntityCommand {
      *
      * @param searchTerms the search terms to use when searching.
      */
-    public SearchRecipesCommand(@NotNull Collection<@NotNull String> searchTerms) {
-        Utils.requireAllNotNull(
-                searchTerms,
-                "Search term collection cannot be null",
-                "Individual search terms cannot be null");
-        this.searchTerms = new HashSet<>(searchTerms);
+    public SearchRecipesCommand(Set<String> searchTerms) {
+        this.searchTerms = Utils.allowNull(searchTerms, HashSet::new);
     }
 
-    @NotNull public Collection<@NotNull String> getSearchTerms() {
-        return Collections.unmodifiableCollection(searchTerms);
+    public Set<String> getSearchTerms() {
+        return Utils.allowNull(searchTerms, Collections::unmodifiableSet);
     }
 
     /**
@@ -45,7 +41,7 @@ public final class SearchRecipesCommand extends EntityCommand {
         if (!isFinishedExecuting()) {
             throw new IllegalStateException("Command hasn't finished executing yet");
         }
-        return matchingRecipes == null ? null : Collections.unmodifiableSet(matchingRecipes);
+        return Utils.allowNull(matchingRecipes, Collections::unmodifiableSet);
     }
 
     private void setMatchingRecipes(@NotNull Set<@NotNull Recipe> matches) {
@@ -58,7 +54,7 @@ public final class SearchRecipesCommand extends EntityCommand {
         }
         Utils.requireAllNotNull(
                 matches,
-                "Cannot set matching recipes to null",
+                "Cannot set (non-default) matching recipes to null",
                 "Cannot have null recipes in matches");
         matchingRecipes = matches;
     }
@@ -75,6 +71,24 @@ public final class SearchRecipesCommand extends EntityCommand {
         return super.getExecutionMessage();
     }
 
+    @Override
+    protected String getInvalidCommandMessage() {
+        String baseMessage = super.getInvalidCommandMessage();
+        if (baseMessage != null) {
+            return baseMessage;
+        }
+        if (!areSearchTermsValid()) {
+            return NOT_OK_BAD_SEARCH_TERMS;
+        }
+        return null;
+    }
+
+    private boolean areSearchTermsValid() {
+        return getSearchTerms() != null
+                && !getSearchTerms().isEmpty()
+                && !getSearchTerms().contains(null);
+    }
+
     /**
      * Searches for recipes that match with the given search terms. Only recipes that contain each
      * search term will be matched. The command will be successful if the search was successfully
@@ -84,23 +98,30 @@ public final class SearchRecipesCommand extends EntityCommand {
      */
     @Override
     public void execute() {
-        if (isFinishedExecuting()) {
-            throw new IllegalStateException("Cannot conduct search twice");
+        checkExecutionAlreadyDone();
+        if (finishInvalidCommand()) {
+            return;
         }
-        Objects.requireNonNull(
-                getStorageSource(), "A storage source must be given for this command's execution");
-        try {
-            Set<Recipe> matches =
-                    getStorageSource().getLoader().searchRecipes(new HashSet<>(getSearchTerms()));
-            setMatchingRecipes(matches);
 
-            setExecutionMessage(matches.size() == 0 ? OK_NO_MATCHES_FOUND : OK_MATCHES_FOUND);
-            beSuccessful();
+        Set<Recipe> matches;
+        try {
+            matches = searchRecipes();
         } catch (RuntimeException e) {
-            e.printStackTrace();
-            setExecutionMessage(NOT_OK_SEARCH_ERROR);
-        } finally {
-            finishExecuting();
+            finishExecutingFromError(e);
+            return;
         }
+        finishExecutingSuccessfulSearch(matches);
+    }
+
+    private Set<Recipe> searchRecipes() {
+        assert getStorageSource() != null; // storage source is always valid at this point
+        return getStorageSource().getLoader().searchRecipes(getSearchTerms());
+    }
+
+    private void finishExecutingSuccessfulSearch(Set<Recipe> matches) {
+        setMatchingRecipes(matches);
+        setExecutionMessage(matches.size() == 0 ? OK_NO_MATCHES_FOUND : OK_MATCHES_FOUND);
+        beSuccessful();
+        finishExecuting();
     }
 }

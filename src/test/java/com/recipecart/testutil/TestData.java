@@ -1,7 +1,8 @@
 /* (C)2023 */
 package com.recipecart.testutil;
 
-import com.recipecart.database.MockEntitySaveAndLoader;
+import com.recipecart.database.FileEntitySaveAndLoader;
+import com.recipecart.database.MapEntitySaveAndLoader;
 import com.recipecart.database.MongoEntityLoader;
 import com.recipecart.database.MongoEntitySaver;
 import com.recipecart.entities.Ingredient;
@@ -11,8 +12,10 @@ import com.recipecart.entities.User;
 import com.recipecart.storage.EntityLoader;
 import com.recipecart.storage.EntitySaver;
 import com.recipecart.storage.EntityStorage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This class provides the raw data/objects that the unit tests will use.
@@ -25,7 +28,7 @@ public class TestData {
     // Arguments objects to be fed into ParameterizedTests.
 
     // each method in this class generates an Object[] of this length
-    static final int NUM_PARAM_COMBOS = 5;
+    public static final int NUM_PARAM_COMBOS = 5;
 
     // filename containing address info of the test mongo
     public static final String TEST_MONGO_FILE = "put filename here";
@@ -42,6 +45,12 @@ public class TestData {
                     + "\t(#WRU*H\u8123(*\uD83D\uDE33QH#i238rh9\n"
                     + "https://google.com<script>alert(\"Boo!\");</script>",
             null
+        };
+    }
+
+    public static Object[] getGoodStrings() {
+        return new String[] {
+            "null", "Hello-world67", "EMPTY_STRING", "Integer.MAX_VALUE", "getGoodStrings"
         };
     }
 
@@ -136,6 +145,14 @@ public class TestData {
         return users;
     }
 
+    public static Object[] getRecipesNonEmptyDataStructures() {
+        Object[] recipes = new Recipe[NUM_PARAM_COMBOS];
+        for (int i = 0; i < recipes.length; i++) {
+            recipes[i] = Presets.recipeWithNonEmptyDataStructures(i);
+        }
+        return recipes;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Methods that generate Java-library data structures
     //  - "NoNulls" means that none of the elements in the data structures will be null
@@ -146,6 +163,16 @@ public class TestData {
             List.of("a", "b"),
             List.of("\n", "\0", "\t", "\r"),
             new LinkedList<String>(),
+            List.of("list", "set", "dict", "unordered_dict"),
+            List.of("hello", "world")
+        };
+    }
+
+    public static Object[] getNonEmptyListStringNoNulls() {
+        return new List[] {
+            List.of("a", "b"),
+            List.of("\n", "\0", "\t", "\r"),
+            List.of("a"),
             List.of("list", "set", "dict", "unordered_dict"),
             List.of("hello", "world")
         };
@@ -171,6 +198,16 @@ public class TestData {
         };
     }
 
+    public static Object[] getNonEmptySetStringNoNulls() {
+        return new Set[] {
+            Set.of("a", "b"),
+            Set.of("\n", "\0", "\t", "\r"),
+            Set.of("get", "non", "empty", "set", "string", "no", "nulls"),
+            Set.of("list", "set", "dict", "unordered_dict"),
+            Set.of("hello", "world")
+        };
+    }
+
     public static Object[] getSetStringWithNulls() {
         return new Set[] {
             null,
@@ -181,12 +218,32 @@ public class TestData {
         };
     }
 
+    public static Object[] getInvalidSearchTermSet() {
+        return new Set[] {
+            null,
+            TestUtils.setOfAllowNulls(null, "a"),
+            TestUtils.setOfAllowNulls((Object) null),
+            Set.of(),
+            TestUtils.setOfAllowNulls("\n", "\0", null, "\t", "\r"),
+        };
+    }
+
     public static Object[] getSetTagNoNulls() {
         return new Set[] {
             Set.of(Presets.tag(0)),
             Set.of(Presets.tag(1), Presets.tag(2)),
             Set.of(Presets.tag(4), Presets.tag(2)),
             new HashSet<Tag>(),
+            Set.of(Presets.tag(3), Presets.tag(4), Presets.tag(0))
+        };
+    }
+
+    public static Object[] getNonEmptySetTagNoNulls() {
+        return new Set[] {
+            Set.of(Presets.tag(0)),
+            Set.of(Presets.tag(1), Presets.tag(2)),
+            Set.of(Presets.tag(4), Presets.tag(2)),
+            Set.of(Presets.tag(0), Presets.tag(1), Presets.tag(2), Presets.tag(3), Presets.tag(4)),
             Set.of(Presets.tag(3), Presets.tag(4), Presets.tag(0))
         };
     }
@@ -205,6 +262,26 @@ public class TestData {
         return new Map[] {
             Map.of(Presets.ingredient(0), 2.0),
             Map.of(),
+            Map.of(Presets.ingredient(1), 0.1, Presets.ingredient(2), Double.MAX_VALUE),
+            Map.of(
+                    Presets.ingredient(0),
+                    0.01,
+                    Presets.ingredient(1),
+                    100.0,
+                    Presets.ingredient(2),
+                    2.0,
+                    Presets.ingredient(3),
+                    Double.NaN,
+                    Presets.ingredient(4),
+                    Double.NEGATIVE_INFINITY),
+            Map.of(Presets.ingredient(0), -5.0)
+        };
+    }
+
+    public static Object[] getNonEmptyMapIngredientDoubleNoNulls() {
+        return new Map[] {
+            Map.of(Presets.ingredient(0), 2.0),
+            Map.of(Presets.ingredient(4), 10000000000., Presets.ingredient(3), 0.0),
             Map.of(Presets.ingredient(1), 0.1, Presets.ingredient(2), Double.MAX_VALUE),
             Map.of(
                     Presets.ingredient(0),
@@ -502,10 +579,30 @@ public class TestData {
         return storages;
     }
 
-    public static Object[] getMockEntityStorages() {
+    public static Object[] getMapEntityStorages() {
         EntityStorage[] storages = new EntityStorage[NUM_PARAM_COMBOS];
         for (int i = 0; i < storages.length; i++) {
-            MockEntitySaveAndLoader saverAndLoader = new MockEntitySaveAndLoader();
+            MapEntitySaveAndLoader saverAndLoader = new MapEntitySaveAndLoader();
+            storages[i] = new EntityStorage(saverAndLoader, saverAndLoader);
+        }
+        return storages;
+    }
+
+    public static Object[] getFileEntityStorages() {
+        EntityStorage[] storages = new EntityStorage[NUM_PARAM_COMBOS];
+        for (int i = 0; i < storages.length; i++) {
+            MapEntitySaveAndLoader saverAndLoader;
+            if (i == 0) {
+                saverAndLoader = new FileEntitySaveAndLoader();
+            } else {
+                saverAndLoader =
+                        new FileEntitySaveAndLoader("", i) {
+                            @Override
+                            public void save(@NotNull String filename) throws IOException {
+                                super.save(new ByteArrayOutputStream()); // save to nowhere
+                            }
+                        };
+            }
             storages[i] = new EntityStorage(saverAndLoader, saverAndLoader);
         }
         return storages;

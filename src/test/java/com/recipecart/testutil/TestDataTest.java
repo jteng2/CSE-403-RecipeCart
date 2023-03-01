@@ -17,6 +17,7 @@ public class TestDataTest {
     static Stream<Supplier<Object[]>> getGenerators() {
         return Stream.of(
                 TestData::getStrings,
+                TestData::getGoodStrings,
                 TestData::getNotNullStrings,
                 TestData::getNullStrings,
                 TestData::getIntegers,
@@ -29,13 +30,19 @@ public class TestDataTest {
                 TestData::getInvalidIngredients,
                 TestData::getInvalidRecipes,
                 TestData::getInvalidUsers,
+                TestData::getRecipesNonEmptyDataStructures,
                 TestData::getListStringNoNulls,
+                TestData::getNonEmptyListStringNoNulls,
                 TestData::getListStringWithNulls,
                 TestData::getSetStringNoNulls,
+                TestData::getNonEmptySetStringNoNulls,
                 TestData::getSetStringWithNulls,
+                TestData::getInvalidSearchTermSet,
                 TestData::getSetTagNoNulls,
+                TestData::getNonEmptySetTagNoNulls,
                 TestData::getSetTagWithNulls,
                 TestData::getMapIngredientDoubleNoNulls,
+                TestData::getNonEmptyMapIngredientDoubleNoNulls,
                 TestData::getMapIngredientDoubleWithNulls,
                 TestData::getListRecipeNoNulls,
                 TestData::getListRecipeSomeInvalid,
@@ -54,12 +61,14 @@ public class TestDataTest {
                 TestData::getListUserSomeInvalid,
                 TestData::getListUserWithNulls,
                 // TestData::getMongoEntityStorages,
-                TestData::getMockEntityStorages);
+                TestData::getMapEntityStorages,
+                TestData::getFileEntityStorages);
     }
 
     // all methods in TestData whose return-value elements are always non-null
     static Stream<Supplier<Object[]>> getNotNullGenerators() {
         return Stream.of(
+                TestData::getGoodStrings,
                 TestData::getNotNullStrings,
                 TestData::getInts,
                 TestData::getPrimitiveDoubles,
@@ -70,9 +79,15 @@ public class TestDataTest {
                 TestData::getInvalidIngredients,
                 TestData::getInvalidRecipes,
                 TestData::getInvalidUsers,
+                TestData::getRecipesNonEmptyDataStructures,
                 TestData::getListStringNoNulls,
+                TestData::getNonEmptyListStringNoNulls,
+                TestData::getSetStringNoNulls,
+                TestData::getNonEmptySetStringNoNulls,
                 TestData::getSetTagNoNulls,
+                TestData::getNonEmptySetTagNoNulls,
                 TestData::getMapIngredientDoubleNoNulls,
+                TestData::getNonEmptyMapIngredientDoubleNoNulls,
                 TestData::getListRecipeNoNulls,
                 TestData::getListRecipeSomeInvalid,
                 TestData::getMapIngredientDoubleNoNulls,
@@ -86,7 +101,8 @@ public class TestDataTest {
                 TestData::getListUserNoNulls,
                 TestData::getListUserSomeInvalid,
                 // TestData::getMongoEntityStorages,
-                TestData::getMockEntityStorages);
+                TestData::getMapEntityStorages,
+                TestData::getFileEntityStorages);
     }
 
     @ParameterizedTest

@@ -20,74 +20,94 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class EntitySaverAndLoaderTest {
 
+    static Stream<Arguments> stringParams() {
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getNotNullStrings));
+    }
+
     static Stream<Arguments> listTagParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListTagNoNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListTagNoNulls));
     }
 
     static Stream<Arguments> listIngredientParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListIngredientNoNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListIngredientNoNulls));
     }
 
     static Stream<Arguments> listRecipeParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListRecipeNoNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListRecipeNoNulls));
     }
 
     static Stream<Arguments> listUserParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListUserNoNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListUserNoNulls));
     }
 
     static Stream<Arguments> nullableCollectionTagParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListTagWithNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListTagWithNulls));
     }
 
     static Stream<Arguments> nullableCollectionIngredientParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListIngredientWithNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListIngredientWithNulls));
     }
 
     static Stream<Arguments> nullableCollectionRecipeParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListRecipeWithNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListRecipeWithNulls));
     }
 
     static Stream<Arguments> nullableCollectionUserParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListUserWithNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListUserWithNulls));
     }
 
     static Stream<Arguments> nullableListStringParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListStringWithNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListStringWithNulls));
     }
 
     static Stream<Arguments> nullableSetStringParams() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getSetStringWithNulls);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getSetStringWithNulls));
     }
 
     static Stream<Arguments> listTagParamsSomeInvalid() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListTagSomeInvalid);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListTagSomeInvalid));
     }
 
     static Stream<Arguments> listIngredientParamsSomeInvalid() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListIngredientSomeInvalid);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListIngredientSomeInvalid));
     }
 
     static Stream<Arguments> listRecipeParamsSomeInvalid() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListRecipeSomeInvalid);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListRecipeSomeInvalid));
     }
 
     static Stream<Arguments> listUserParamsSomeInvalid() {
-        return generateArgumentsWithStorage(
-                getStorageArrayGenerators(), TestData::getListUserSomeInvalid);
+        return generateArgumentsCombos(
+                getStorageArrayGenerators(),
+                Collections.singletonList(TestData::getListUserSomeInvalid));
     }
 
     private static <T, U> List<T> functionOutputForEach(List<U> source, Function<U, T> toApply) {
@@ -409,6 +429,18 @@ public class EntitySaverAndLoaderTest {
     @MethodSource("listUserParamsSomeInvalid")
     void testSaveUsersSomeInvalid(EntityStorage storage, List<User> users) {
         assertThrows(IllegalArgumentException.class, () -> storage.getSaver().updateUsers(users));
+    }
+
+    @ParameterizedTest
+    @MethodSource("stringParams")
+    void testGenerateUniqueRecipeName(EntityStorage storage, String baseName) {
+        Recipe toAdd = new Recipe.Builder().setName(baseName).build();
+        storage.getSaver().updateRecipes(Collections.singletonList(toAdd));
+
+        String generatedName = storage.getLoader().generateUniqueRecipeName(baseName);
+        assertNotNull(generatedName);
+        assertFalse(storage.getLoader().recipeNameExists(generatedName));
+        assertNotEquals(baseName, generatedName);
     }
 
     // This unchecked exception exists so that Function objects can have functions that

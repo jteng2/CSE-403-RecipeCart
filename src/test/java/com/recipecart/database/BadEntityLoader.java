@@ -80,4 +80,9 @@ public class BadEntityLoader implements EntityLoader {
     public @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
         throw new RuntimeException();
     }
+
+    @Override
+    public @NotNull String generateUniqueRecipeName(String presentationName) {
+        throw new RuntimeException();
+    }
 }
