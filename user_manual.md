@@ -17,16 +17,15 @@ To use the software, simply visit `http://attu2.cs.washington.edu:8000/`.
 - Rate a Recipe
     - After logging in, rate a recipe from your Saved Recipes page (WIP)
 ## How to report a bug
-(NEED TO IMPLEMENT TEMPLATE)
 Currently, we are using GitHub Issues to track known bugs. To report a new bug, simply navigate to the Issues tab on the RecipeCart repository and create a new issue.
 
 Information required to report a bug:
 - Description of the bug
-- Where did the bug happen?
+- Steps to reproduce the bug
 - Expected outcome
-- Actual outcome
-- Steps to reproduce the unexpected outcome
-- Any files they want to attach such as visual outcome of the bug
+- Actual outcome (such as screenshots of the behavior, if applicable)
+- What desktop/smartphone is being used (if applicable)
+- Any additional context surrounding the bug
 
 ## Known bugs
 For a detailed description of our known bugs, visit the GitHub Issues page of the repository.
