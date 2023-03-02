@@ -32,14 +32,14 @@ The frontend made progress on starting to implement some of the routes created b
 ### Progress and Issues
 
 - Charles: This week I designed more API routes to cover all 5 of our original use cases, as well as some more basic routes (such as retrieving a recipe, creating an ingredient, etc.). There are now 12 total API routes. I also implemented and tested all not-yet-implemented API routes in the backend, and the tests pass. I also provided a file-system implementation for the data access layer, so that permanent recipe/user/etc. storage is possible before Mongo connection is implemented. Also, I did write tests for the backend-frontend connector, and they do pass when ran in IntelliJ, but I'm having trouble getting them to pass in `./gradlew` and remotely (these tests are temporarily disabled for now).
-- Devi:
+- Devi: This week I did login researh pertaining to the information we store into the Mongo Database. I also implemented the document links that were causing issues earlier. Currently working on a script that will make data entry easier for Mongo.
 - Ricky: This week I started to look at some of the API routes that we will need and figuring out how they will be used. I didn't get as much work done as I was hoping but the goal this week is to get more of these routes implemented in the front end.
 - Caleb: This week I worked on hosting the website on a variety of remote services. After deciding vergil would not fit our needs, we turned to Attu. This was much more difficult than anticipated, as webpack seemed to have some issues serving the React App. With a workaround suggested by Apollo, we finally were able to host RecipeCart on Attu, making it accessible remotely.
 - Jason: I worked on helping setup the server on attu and wrote mode code for connecting/interacting with mongo.
 ### This week's goals
 
 - Charles: Implement login validation. If possible, figure out a way to test the backend-frontend connector that works with `./gradlew`. 
-- Devi:
+- Devi: Finish the mongo data entry script. Work with others in the backend to do the database connections.
 - Ricky: This week I plan to get these API routes implemented in the front end so that the front end is populated with dynamic data.
 - Caleb: This week I will work to implement the API routes into the frontend and finish off the list of features our website is expected to have.
 - Jason: Work towards whatever else needs to be completed and help finish connecting to mongo.
