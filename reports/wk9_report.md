@@ -35,11 +35,11 @@ The frontend made progress on starting to implement some of the routes created b
 - Devi:
 - Ricky: This week I started to look at some of the API routes that we will need and figuring out how they will be used. I didn't get as much work done as I was hoping but the goal this week is to get more of these routes implemented in the front end.
 - Caleb: This week I worked on hosting the website on a variety of remote services. After deciding vergil would not fit our needs, we turned to Attu. This was much more difficult than anticipated, as webpack seemed to have some issues serving the React App. With a workaround suggested by Apollo, we finally were able to host RecipeCart on Attu, making it accessible remotely.
-- Jason:
+- Jason: I worked on helping setup the server on attu and wrote mode code for connecting/interacting with mongo.
 ### This week's goals
 
 - Charles: Implement login validation. If possible, figure out a way to test the backend-frontend connector that works with `./gradlew`. 
 - Devi:
 - Ricky: This week I plan to get these API routes implemented in the front end so that the front end is populated with dynamic data.
 - Caleb: This week I will work to implement the API routes into the frontend and finish off the list of features our website is expected to have.
-- Jason:
+- Jason: Work towards whatever else needs to be completed and help finish connecting to mongo.
