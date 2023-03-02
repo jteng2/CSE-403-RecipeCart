@@ -316,6 +316,10 @@ public class Utils {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////// Misc. methods ////////////////////////////////////////////////
 
+    public static boolean isNumber(String string) {
+        return string.matches("\\d+");
+    }
+
     public static <T> Map<T, Double> addMaps(Map<T, Double> map1, Map<T, Double> map2) {
         Map<T, Double> sum = new HashMap<>(map1);
         for (Map.Entry<T, Double> entry : map2.entrySet()) {
