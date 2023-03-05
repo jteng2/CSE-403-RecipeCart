@@ -37,13 +37,20 @@ public class MongoConnector {
      *
      * @param filename the file with the database address details
      */
+    private MongoClient mongoClient;
+
+    private String databaseName;
+
     public MongoConnector(String filename) throws FileNotFoundException {
         Gson gson = new Gson();
         JsonObject json = gson.fromJson(new FileReader(filename), JsonObject.class);
 
         String hostname = json.get("hostname").getAsString();
         int port = json.get("port").getAsInt();
-        String databaseName = json.get("database").getAsString();
+        this.databaseName = json.get("database").getAsString();
+
+        this.mongoClient = MongoClients.create("mongodb://" + hostname + ":" + port);
+
         List<String> tagCollectionName = gson.fromJson(json.get("tags"), List.class);
         List<String> ingredientCollectionName = gson.fromJson(json.get("ingredients"), List.class);
         List<String> recipeCollectionName = gson.fromJson(json.get("recipes"), List.class);
@@ -91,5 +98,9 @@ public class MongoConnector {
             database = mongoClient.getDatabase("myDatabase");
         }
         return database.getCollection("users");
+    }
+
+    protected MongoDatabase getDatabase() {
+        return mongoClient.getDatabase(databaseName);
     }
 }
