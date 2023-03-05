@@ -2,6 +2,7 @@
 package com.recipecart.utils;
 
 import com.recipecart.entities.Recipe;
+import java.io.Serializable;
 import java.util.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * representing their (unique) names. Creating instances of this class is mainly done through
  * deserialization.
  */
-public final class RecipeForm {
+public final class RecipeForm implements Serializable {
     private final String name; // EntityStorage's "unique identifier" for Recipe
     private final String presentationName;
     private final String authorUsername;

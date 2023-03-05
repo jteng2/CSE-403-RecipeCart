@@ -3,12 +3,14 @@ package com.recipecart.database;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.List;
 import org.bson.Document;
 
@@ -37,24 +39,18 @@ public class MongoConnector {
      *
      * @param filename the file with the database address details
      */
-    private MongoClient mongoClient;
-
-    private String databaseName;
-
     public MongoConnector(String filename) throws FileNotFoundException {
         Gson gson = new Gson();
         JsonObject json = gson.fromJson(new FileReader(filename), JsonObject.class);
 
         String hostname = json.get("hostname").getAsString();
         int port = json.get("port").getAsInt();
-        this.databaseName = json.get("database").getAsString();
-
-        this.mongoClient = MongoClients.create("mongodb://" + hostname + ":" + port);
-
-        List<String> tagCollectionName = gson.fromJson(json.get("tags"), List.class);
-        List<String> ingredientCollectionName = gson.fromJson(json.get("ingredients"), List.class);
-        List<String> recipeCollectionName = gson.fromJson(json.get("recipes"), List.class);
-        List<String> userCollectionName = gson.fromJson(json.get("users"), List.class);
+        String databaseName = json.get("database").getAsString();
+        Type listType = new TypeToken<List<String>>() {}.getType();
+        List<String> tagCollectionName = gson.fromJson(json.get("tags"), listType);
+        List<String> ingredientCollectionName = gson.fromJson(json.get("ingredients"), listType);
+        List<String> recipeCollectionName = gson.fromJson(json.get("recipes"), listType);
+        List<String> userCollectionName = gson.fromJson(json.get("users"), listType);
 
         MongoClient mongoClient = MongoClients.create("mongodb://" + hostname + ":" + port);
         MongoDatabase database = mongoClient.getDatabase(databaseName);
@@ -98,9 +94,5 @@ public class MongoConnector {
             database = mongoClient.getDatabase("myDatabase");
         }
         return database.getCollection("users");
-    }
-
-    protected MongoDatabase getDatabase() {
-        return mongoClient.getDatabase(databaseName);
     }
 }
