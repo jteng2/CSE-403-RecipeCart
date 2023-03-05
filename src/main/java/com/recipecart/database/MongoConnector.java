@@ -2,14 +2,13 @@
 package com.recipecart.database;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.List;
 import org.bson.Document;
 
 /**
@@ -17,6 +16,7 @@ import org.bson.Document;
  * that houses such entities.
  */
 public class MongoConnector {
+    private final MongoCollection<Document> tags, ingredients, recipes, users;
 
     /**
      * Creates a MongoConnector that's connected to the database whose address is in the given file.
@@ -25,8 +25,7 @@ public class MongoConnector {
      * <pre>{@code
      * {
      *      ...
-     *      "hostname": "host address of the db goes here",
-     *      "port": "port of the db goes here",
+     *      "connection": "connection string to the db goes here",
      *      "tags": ["database name", "collection name"],
      *      "ingredients": ["database name", "collection name"],
      *      "recipes": ["database name", "collection name"],
@@ -37,70 +36,41 @@ public class MongoConnector {
      *
      * @param filename the file with the database address details
      */
-    private MongoClient mongoClient;
-
-    private String databaseName;
-
     public MongoConnector(String filename) throws FileNotFoundException {
         Gson gson = new Gson();
-        JsonObject json = gson.fromJson(new FileReader(filename), JsonObject.class);
+        JsonObject dbDetails = gson.fromJson(new FileReader(filename), JsonObject.class);
 
-        String hostname = json.get("hostname").getAsString();
-        int port = json.get("port").getAsInt();
-        this.databaseName = json.get("database").getAsString();
+        ConnectionString host = new ConnectionString(dbDetails.get("connection").getAsString());
+        MongoClient client = MongoClientKeeper.getInstance().getConnectionTo(host);
 
-        this.mongoClient = MongoClients.create("mongodb://" + hostname + ":" + port);
-
-        List<String> tagCollectionName = gson.fromJson(json.get("tags"), List.class);
-        List<String> ingredientCollectionName = gson.fromJson(json.get("ingredients"), List.class);
-        List<String> recipeCollectionName = gson.fromJson(json.get("recipes"), List.class);
-        List<String> userCollectionName = gson.fromJson(json.get("users"), List.class);
-
-        MongoClient mongoClient = MongoClients.create("mongodb://" + hostname + ":" + port);
-        MongoDatabase database = mongoClient.getDatabase(databaseName);
-        MongoCollection<Document> tagCollection = database.getCollection(tagCollectionName.get(1));
-        MongoCollection<Document> ingredientCollection =
-                database.getCollection(ingredientCollectionName.get(1));
-        MongoCollection<Document> recipeCollection =
-                database.getCollection(recipeCollectionName.get(1));
-        MongoCollection<Document> userCollection =
-                database.getCollection(userCollectionName.get(1));
-    }
-    // possible helper functions that can help with implementations of MongoConnector
-
-    MongoCollection<Document> getTagCollection() {
-        MongoDatabase database;
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
-            database = mongoClient.getDatabase("myDatabase");
-        }
-        return database.getCollection("tags");
+        tags = getCollectionFromJson(dbDetails, client, "tags");
+        ingredients = getCollectionFromJson(dbDetails, client, "ingredients");
+        recipes = getCollectionFromJson(dbDetails, client, "recipes");
+        users = getCollectionFromJson(dbDetails, client, "users");
     }
 
-    MongoCollection<Document> getIngredientCollection() {
-        MongoDatabase database;
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
-            database = mongoClient.getDatabase("myDatabase");
-        }
-        return database.getCollection("ingredients");
+    private static MongoCollection<Document> getCollectionFromJson(
+            JsonObject dbDetails, MongoClient client, String key) {
+        JsonArray dbAndCollection = dbDetails.get(key).getAsJsonArray();
+        String database = dbAndCollection.get(0).getAsString();
+        String collection = dbAndCollection.get(1).getAsString();
+
+        return client.getDatabase(database).getCollection(collection);
     }
 
-    MongoCollection<Document> getRecipeCollection() {
-        MongoDatabase database;
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
-            database = mongoClient.getDatabase("myDatabase");
-        }
-        return database.getCollection("recipes");
+    protected MongoCollection<Document> getTagCollection() {
+        return tags;
     }
 
-    MongoCollection<Document> getUserCollection() {
-        MongoDatabase database;
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
-            database = mongoClient.getDatabase("myDatabase");
-        }
-        return database.getCollection("users");
+    protected MongoCollection<Document> getIngredientCollection() {
+        return ingredients;
     }
 
-    protected MongoDatabase getDatabase() {
-        return mongoClient.getDatabase(databaseName);
+    protected MongoCollection<Document> getRecipeCollection() {
+        return recipes;
+    }
+
+    protected MongoCollection<Document> getUserCollection() {
+        return users;
     }
 }

@@ -39,7 +39,7 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
                 throw new IllegalArgumentException("Tag name cannot be null");
             }
             Document doc = tagToDocument(tag);
-            getTagsCollection()
+            getTagCollection()
                     .replaceOne(
                             new Document("_id", doc.get("_id")),
                             doc,
@@ -60,7 +60,7 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
                 throw new IllegalArgumentException("Ingredient name cannot be null");
             }
             Document doc = ingredientToDocument(ingredient);
-            getIngredientsCollection()
+            getIngredientCollection()
                     .replaceOne(
                             new Document("_id", doc.get("_id")),
                             doc,
@@ -173,7 +173,7 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
     }
 
     private @NotNull ObjectId ingredientToId(@NotNull Ingredient ingredient) {
-        MongoCollection<Document> ingredients = getIngredientsCollection();
+        MongoCollection<Document> ingredients = getIngredientCollection();
         Document query = new Document("name", ingredient.getName());
         Document result = ingredients.find(query).first();
         if (result != null) {
@@ -198,13 +198,5 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
                     "User with username " + user.getUsername() + " not found");
         }
         return doc.getObjectId("_id");
-    }
-
-    private MongoCollection<Document> getTagsCollection() {
-        return getDatabase().getCollection("tags");
-    }
-
-    private MongoCollection<Document> getIngredientsCollection() {
-        return getDatabase().getCollection("ingredients");
     }
 }
