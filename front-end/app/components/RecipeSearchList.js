@@ -35,7 +35,7 @@ function RecipeSearchList(props) {
 
     let found_recipes = find_recipes();
     return (
-        <div>
+        <div className="search">
             <SearchBar updateSearch={props.updateSearch} />
             <p>{props.search ?
                 populated + props.search + "\"" :

@@ -1,3 +1,23 @@
+.search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  width: 100%;
+}
+
+.recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+}
+
 .recipe-item {
-  list-style: none
+  flex: 1 1 50%;
+  max-width: 50%;
+  margin: 10px;
+  list-style: none;
 }
