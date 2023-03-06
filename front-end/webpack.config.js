@@ -41,6 +41,7 @@ module.exports = {
     },
     devServer: {
         historyApiFallback: true,
+        allowedHosts: "all",
     },
     output: {
         filename: 'transformed.js',
