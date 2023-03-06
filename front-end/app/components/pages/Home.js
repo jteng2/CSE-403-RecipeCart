@@ -8,10 +8,10 @@ import RecipeEntryList from "../RecipeEntryList";
 function Home() {
     let navigate = useNavigate();
     const updateSearch = (input) => {
-        navigate("/recipe-search", { state: {result : input} });
+        navigate("/recipe-search", { state: { result: input } });
     }
-    
-    return(
+
+    return (
         <Grid container>
             <Grid item container alignItems="center" justifyContent="center" direction="column">
                 <Grid item>
@@ -24,7 +24,7 @@ function Home() {
                     paddingTop: "3rem",
                     paddingBottom: "2rem",
                 }}>
-                    <SearchBar updateSearch = {updateSearch}/>
+                    <SearchBar updateSearch={updateSearch} />
                 </Grid>
                 <Grid item>
                     <RecipeEntryList />

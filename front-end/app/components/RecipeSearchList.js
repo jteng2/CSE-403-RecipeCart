@@ -1,7 +1,7 @@
 import React from "react";
 import SearchBar from "./SearchBar";
 import RecipeEntry from "./RecipeEntry";
-import RecipeSmallBox from "./RecipeSmallBox";
+import RecipeSmallTile from "./RecipeSmallTile";
 
 function RecipeSearchList(props) {
     const populated = "Showing search results for: \"";
@@ -27,10 +27,10 @@ function RecipeSearchList(props) {
             const ingredients = matching_recipes[i]["ingredients"];
             const time_to_cook = matching_recipes[i]["time to cook"];
             matching_recipes[i] = <RecipeEntry key={name}
-                                     recipeNumber={name}
-                                     ingredients={ingredients}
-                                     time_to_cook={time_to_cook}
-                                     component={<RecipeSmallBox name={name}/>}/>;
+                recipeNumber={name}
+                ingredients={ingredients}
+                time_to_cook={time_to_cook}
+                component={<RecipeSmallTile name={name} />} />;
         }
         return matching_recipes;
     };
@@ -38,8 +38,8 @@ function RecipeSearchList(props) {
 
     return (
         <div>
-            <SearchBar updateSearch = {props.updateSearch}/>
-            <p>{props.search ? 
+            <SearchBar updateSearch={props.updateSearch} />
+            <p>{props.search ?
                 populated + props.search + "\"" :
                 "Enter a recipe to search"}
             </p>
