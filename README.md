@@ -60,10 +60,38 @@ The backend uses the Gradle build system to make sure that the backend builds co
 - Run `./gradlew build` to build the back-end.
   - If the build fails due to linting (i.e. in a task that starts with "`:spotless`"), then the "Linting" section below has more info on correcting formatting errors.
   - Though, build failures due to linting shouldn't happen on the `main` branch
-#### Running the back-end
-- A JAR file is created when running `./gradlew build`. This file is located in the `build/libs` directory (which is created when running `./gradlew build`), and has a name such as `CSE-403-RecipeCart-1.0-SNAPSHOT.jar`. Run this JAR file with the command `java -jar build/libs/<filename>` (while in the top-level directory), where `<filename>` is the JAR file name.
-  - To exit the running program gracefully, type "quit" into stdin, which will stop the server and save changes as necessary, before exiting.
-  - `./gradlew run` can also be used to run the backend, but typing "quit" will not do anything here as stdin gets "eaten" by Gradle.
+### Running the back-end
+- A JAR file is created when running `./gradlew build`.
+  - This file is located in the `build/libs` directory (which is created when running `./gradlew build`), and has a name such as `CSE-403-RecipeCart-1.0-SNAPSHOT.jar`.
+  - Run this JAR file with the command `java -jar build/libs/<filename>` (while in the top-level directory), where `<filename>` is the JAR file name.
+    - This JAR executable also has optional command-line arguments, specified in the section below.
+    - To exit the running program gracefully, type "quit" into stdin, which will stop the server and save changes as necessary, before exiting.
+    - `./gradlew run` can also be used to run the backend, but typing "quit" will not do anything here as stdin gets "eaten" by Gradle.
+
+#### Backend JAR executable command line arguments
+```
+usage: recipecart
+ -d,--disable-final-save           Disable the final save to file when
+                                   quitting this program
+ -f,--filename <file>              The location/name of the file the
+                                   entity data are saved in. Defaults to
+                                   src/main/resources/entities.ser. If the
+                                   file doesn't exist, the server starts
+                                   with no entity data, and the file is
+                                   created upon saving.
+ -h,--help                         Print this message and exit.
+ -m,--mock-data                    Pre-populate the entity data with some
+                                   mock entity data. Pre-population can
+                                   cause autosaving
+ -p,--port <portnum>               The port for this server to listen in
+                                   on. Defaults to 4567. Must be between
+                                   1024 and 65535 inclusive.
+ -u,--updates-per-autosave <num>   Entity data is autosaved to the file
+                                   every [this argument] number of times.
+                                   Must be a integer. Defaults to 1.
+                                   Autosaving is disabled if set to 0.
+```
+
 ### Linting
 Also of note is that this Gradle configuration uses the Spotless plugin to lint the code, specifically to conform to the Google Style Guide for Java.
 It's configured so that the build will fail if there's any formatting errors.
