@@ -139,6 +139,8 @@ public abstract class ShoppingListCommand extends EntityCommand {
 
     /**
      * @return the saved User associated with the username given to this command.
+     * @throws IOException if the username given into this command has no associated user in the
+     *     entity storage given into this command.
      */
     protected User getShopper() throws IOException {
         assert getStorageSource() != null;
