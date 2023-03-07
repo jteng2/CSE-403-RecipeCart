@@ -202,24 +202,58 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
         }
     }
 
+    /**
+     * Saves the given Tags to this saver, in-memory. Already-saved Tags with the same names as the
+     * given Tags will be replaced in this saver's storage. May trigger an autosave to file, based
+     * on how this FileEntitySaverAndLoader was configured upon construction.
+     *
+     * @param tags Tags that need to be saved
+     * @throws IllegalArgumentException if any names of the Tags are null
+     */
     @Override
     public void updateTags(@NotNull Collection<@NotNull Tag> tags) {
         super.updateTags(tags);
         incrementSaveCounter();
     }
 
+    /**
+     * Saves the given Ingredients to this saver, in-memory. Already-saved Ingredients with the same
+     * names as the given Ingredients will be replaced in this saver's storage. May trigger an
+     * autosave to file, based on how this FileEntitySaverAndLoader was configured upon
+     * construction.
+     *
+     * @param ingredients Ingredients that need to be saved
+     * @throws IllegalArgumentException if any names of the Ingredients are null
+     */
     @Override
     public void updateIngredients(@NotNull Collection<@NotNull Ingredient> ingredients) {
         super.updateIngredients(ingredients);
         incrementSaveCounter();
     }
 
+    /**
+     * Saves the given Recipes to this saver, in-memory. Already-saved Recipes with the same
+     * (non-presentation) names as the given Recipes will be replaced in this saver's storage. May
+     * trigger an autosave to file, based on how this FileEntitySaverAndLoader was configured upon
+     * construction.
+     *
+     * @param recipes Recipes that need to be saved
+     * @throws IllegalArgumentException if any (non-presentation) names of the Recipes are null
+     */
     @Override
     public void updateRecipes(@NotNull Collection<@NotNull Recipe> recipes) {
         super.updateRecipes(recipes);
         incrementSaveCounter();
     }
 
+    /**
+     * Saves the given Users to this saver, in-memory. Already-saved Users with the same usernames
+     * as the given Users will be replaced in this saver's storage. May trigger an autosave to file,
+     * based on how this FileEntitySaverAndLoader was configured upon construction.
+     *
+     * @param users Users that need to be saved
+     * @throws IllegalArgumentException if any usernames of the Users are null
+     */
     @Override
     public void updateUsers(@NotNull Collection<@NotNull User> users) {
         super.updateUsers(users);
@@ -234,7 +268,7 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
         private final @NotNull Map<String, RecipeForm> recipeForms;
         private final @NotNull Map<String, UserForm> userForms;
 
-        public EntityFile(
+        EntityFile(
                 @NotNull Map<String, Tag> tags,
                 @NotNull Map<String, Ingredient> ingredients,
                 @NotNull Map<String, RecipeForm> recipes,
@@ -245,23 +279,23 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
             this.userForms = new HashMap<>(users);
         }
 
-        public Map<String, Tag> getTags() {
+        Map<String, Tag> getTags() {
             return Collections.unmodifiableMap(tags);
         }
 
-        public Map<String, Ingredient> getIngredients() {
+        Map<String, Ingredient> getIngredients() {
             return Collections.unmodifiableMap(ingredients);
         }
 
-        public Map<String, RecipeForm> getRecipeForms() {
+        Map<String, RecipeForm> getRecipeForms() {
             return Collections.unmodifiableMap(recipeForms);
         }
 
-        public Map<String, UserForm> getUserForms() {
+        Map<String, UserForm> getUserForms() {
             return Collections.unmodifiableMap(userForms);
         }
 
-        public Map<String, Recipe> getFromRecipeForms() {
+        Map<String, Recipe> getFromRecipeForms() {
             Map<String, Recipe> recipes = new HashMap<>();
             for (Map.Entry<String, RecipeForm> entry : recipeForms.entrySet()) {
                 Recipe recipe = Utils.fromRecipeForm(entry.getValue(), tags, ingredients);
@@ -270,7 +304,7 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
             return recipes;
         }
 
-        public Map<String, User> getFromUserForms(Map<String, Recipe> recipes) {
+        Map<String, User> getFromUserForms(Map<String, Recipe> recipes) {
             Map<String, User> users = new HashMap<>();
             for (Map.Entry<String, UserForm> entry : userForms.entrySet()) {
                 User user = Utils.fromUserForm(entry.getValue(), ingredients, recipes);

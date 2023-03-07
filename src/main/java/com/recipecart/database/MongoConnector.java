@@ -59,18 +59,30 @@ public class MongoConnector {
         return client.getDatabase(database).getCollection(collection);
     }
 
+    /**
+     * @return the storage of Tags of the database this connector is connected to
+     */
     protected MongoCollection<Document> getTagCollection() {
         return tags;
     }
 
+    /**
+     * @return the storage of Ingredients of the database this connector is connected to
+     */
     protected MongoCollection<Document> getIngredientCollection() {
         return ingredients;
     }
 
+    /**
+     * @return the storage of Recipes of the database this connector is connected to
+     */
     protected MongoCollection<Document> getRecipeCollection() {
         return recipes;
     }
 
+    /**
+     * @return the storage of Users of the database this connector is connected to
+     */
     protected MongoCollection<Document> getUserCollection() {
         return users;
     }
