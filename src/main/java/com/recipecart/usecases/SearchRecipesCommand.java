@@ -5,12 +5,13 @@ import com.recipecart.entities.Recipe;
 import com.recipecart.storage.EntityLoader;
 import java.util.*;
 
-/** This class represents the use case of someone searching for recipes. */
+/** This class represents the use case of a user searching for recipes using given search terms. */
 public final class SearchRecipesCommand extends AbstractSearchCommand<Recipe> {
     public static final String
             OK_MATCHES_FOUND = "Search successful: recipes that matched were found",
             OK_NO_MATCHES_FOUND = "Search successful: but no matching recipes were found",
-            NOT_OK_BAD_SEARCH_TERMS = "Search unsuccessful: search terms were not well-formed";
+            NOT_OK_BAD_SEARCH_TERMS =
+                    "Search unsuccessful: recipe search terms were not well-formed";
 
     /**
      * Creates the action item of searching for a Recipe(s).

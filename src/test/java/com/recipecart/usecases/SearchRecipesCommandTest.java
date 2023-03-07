@@ -2,8 +2,6 @@
 package com.recipecart.usecases;
 
 import static com.recipecart.testutil.TestUtils.*;
-import static com.recipecart.usecases.SearchRecipesCommand.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.recipecart.entities.Recipe;
 import com.recipecart.storage.EntitySaver;
