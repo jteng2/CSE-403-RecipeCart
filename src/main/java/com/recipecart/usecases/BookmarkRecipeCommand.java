@@ -41,14 +41,21 @@ public final class BookmarkRecipeCommand extends EntityCommand {
         this.recipeName = recipeName;
     }
 
+    /**
+     * @return the username of the user that will bookmark the recipe.
+     */
     @Nullable public String getBookmarkerUsername() {
         return bookmarkerUsername;
     }
 
+    /**
+     * @return the (non-presentation) name of the recipe that will be bookmarked.
+     */
     @Nullable public String getRecipeName() {
         return recipeName;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();

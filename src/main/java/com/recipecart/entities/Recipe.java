@@ -73,14 +73,14 @@ public final class Recipe {
     }
 
     /**
-     * @return the amount of time required to prepare to cook this Recipe
+     * @return the amount of time required to prepare to cook this Recipe, in minutes
      */
     @Nullable public Integer getPrepTime() {
         return prepTime;
     }
 
     /**
-     * @return the amount of time required to cook this Recipe
+     * @return the amount of time required to cook this Recipe, in minutes
      */
     @Nullable public Integer getCookTime() {
         return cookTime;
@@ -240,51 +240,111 @@ public final class Recipe {
                     new HashMap<>(requiredIngredients));
         }
 
+        /**
+         * Sets the "true" name of the Recipe that is to be built
+         *
+         * @param name the "true" name
+         * @return this
+         */
         public Builder setName(@Nullable String name) {
             this.name = name;
             return this;
         }
 
+        /**
+         * Sets the name that appears for the Recipe that is to be built
+         *
+         * @param presentationName the presentation name
+         * @return this
+         */
         public Builder setPresentationName(@Nullable String presentationName) {
             this.presentationName = presentationName;
             return this;
         }
 
+        /**
+         * Sets the username of the author of the Recipe that is to be built
+         *
+         * @param authorUsername the author's username
+         * @return this
+         */
         public Builder setAuthorUsername(@Nullable String authorUsername) {
             this.authorUsername = authorUsername;
             return this;
         }
 
+        /**
+         * Sets the prep time of the Recipe that is to be built
+         *
+         * @param prepTime the prep time, in minutes
+         * @return this
+         */
         public Builder setPrepTime(@Nullable Integer prepTime) {
             this.prepTime = prepTime;
             return this;
         }
 
+        /**
+         * Sets the cook time for the Recipe that is to be built
+         *
+         * @param cookTime the cook time, in minutes
+         * @return this
+         */
         public Builder setCookTime(@Nullable Integer cookTime) {
             this.cookTime = cookTime;
             return this;
         }
 
+        /**
+         * Sets the URI of the image of the Recipe that is to be built
+         *
+         * @param imageUri the image URI
+         * @return this
+         */
         public Builder setImageUri(@Nullable String imageUri) {
             this.imageUri = imageUri;
             return this;
         }
 
+        /**
+         * Sets the number of servings of the Recipe that is to be built
+         *
+         * @param numServings the number of servings
+         * @return this
+         */
         public Builder setNumServings(@Nullable Integer numServings) {
             this.numServings = numServings;
             return this;
         }
 
+        /**
+         * Sets the average rating of the Recipe that is to be built
+         *
+         * @param avgRating the average rating
+         * @return this
+         */
         public Builder setAvgRating(double avgRating) {
             this.avgRating = avgRating;
             return this;
         }
 
+        /**
+         * Sets the number of ratings of the Recipe that is to be built
+         *
+         * @param numRatings the total number of ratings
+         * @return this
+         */
         public Builder setNumRatings(int numRatings) {
             this.numRatings = numRatings;
             return this;
         }
 
+        /**
+         * Sets the directions of the Recipe that is to be built
+         *
+         * @param directions the directions to make the recipe; cannot be null or have null elements
+         * @return this
+         */
         public Builder setDirections(@NotNull List<@NotNull String> directions) {
             Utils.requireAllNotNull(
                     directions,
@@ -294,6 +354,12 @@ public final class Recipe {
             return this;
         }
 
+        /**
+         * Sets the associated tags of the Recipe that is to be built
+         *
+         * @param tags the associated tags of the Recipe; cannot be null or have null elements
+         * @return this
+         */
         public Builder setTags(@NotNull Set<@NotNull Tag> tags) {
             Utils.requireAllNotNull(
                     tags, "Tags set cannot be null", "Individual Tags cannot be null");
@@ -301,6 +367,13 @@ public final class Recipe {
             return this;
         }
 
+        /**
+         * Sets the ingredients required for the Recipe that is to be built
+         *
+         * @param requiredIngredients the ingredients (with amounts) to make the recipe; cannot be
+         *     null or have null elements
+         * @return this
+         */
         public Builder setRequiredIngredients(
                 @NotNull Map<@NotNull Ingredient, @NotNull Double> requiredIngredients) {
             Utils.requireAllMapNotNull(

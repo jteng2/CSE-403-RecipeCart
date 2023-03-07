@@ -169,6 +169,7 @@ public class MongoEntityLoader extends MongoConnector implements EntityLoader {
         throw new NotImplementedException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull String generateUniqueRecipeName(@Nullable String presentationName) {
         throw new NotImplementedException();

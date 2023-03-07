@@ -24,26 +24,31 @@ public final class GetTagCommand extends SimpleGetCommand<Tag> {
         super(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkEntityRetrievedMessage() {
         return OK_TAG_RETRIEVED;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkNotFoundMessage() {
         return NOT_OK_TAG_NOT_FOUND;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return Tag.class.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected boolean entityNameExists(EntityLoader loader, String entityName) {
         return loader.tagNameExists(entityName);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected Tag retrieveEntity(EntityLoader loader, String entityName) throws IOException {
         return loader.getTagsByNames(Collections.singletonList(entityName)).get(0);
