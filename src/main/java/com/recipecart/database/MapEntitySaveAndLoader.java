@@ -21,6 +21,11 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
             ingredientLock = new ReentrantReadWriteLock(),
             recipeLock = new ReentrantReadWriteLock(),
             userLock = new ReentrantReadWriteLock();
+
+    /**
+     * Locks for ensuring thread-safety of save/load operations. Meant to also be used by
+     * subclasses.
+     */
     protected final Lock tagReadLock = tagLock.readLock(),
             ingredientReadLock = ingredientLock.readLock(),
             recipeReadLock = recipeLock.readLock(),
@@ -35,6 +40,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
     private final Map<String, Recipe> savedRecipes;
     private final Map<String, User> savedUsers;
 
+    /** Initializes this saver/loader, with no entities saved. */
     public MapEntitySaveAndLoader() {
         this.savedTags = new ConcurrentHashMap<>();
         this.savedIngredients = new ConcurrentHashMap<>();
@@ -42,18 +48,30 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         this.savedUsers = new ConcurrentHashMap<>();
     }
 
+    /**
+     * @return Tag names mapping to Tags currently saved by this saver
+     */
     protected Map<String, Tag> getSavedTags() {
         return savedTags;
     }
 
+    /**
+     * @return Ingredient names mapping to Ingredients currently saved by this saver
+     */
     protected Map<String, Ingredient> getSavedIngredients() {
         return savedIngredients;
     }
 
+    /**
+     * @return Recipe non-presentation names mapping to Recipes currently saved by this saver
+     */
     protected Map<String, Recipe> getSavedRecipes() {
         return savedRecipes;
     }
 
+    /**
+     * @return User usernames mapping to Users currently saved by this saver
+     */
     protected Map<String, User> getSavedUsers() {
         return savedUsers;
     }
@@ -74,6 +92,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return matched;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull List<@NotNull Tag> getTagsByNames(@NotNull List<@NotNull String> names)
             throws IOException {
@@ -87,6 +106,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return tags;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull List<@NotNull Ingredient> getIngredientsByNames(
             @NotNull List<@NotNull String> names) throws IOException {
@@ -100,6 +120,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return ingredients;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull List<@NotNull Recipe> getRecipesByNames(@NotNull List<@NotNull String> names)
             throws IOException {
@@ -113,6 +134,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return recipes;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull List<@NotNull User> getUsersByNames(@NotNull List<@NotNull String> usernames)
             throws IOException {
@@ -126,6 +148,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return users;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean tagNameExists(@NotNull String name) {
         Objects.requireNonNull(name);
@@ -140,6 +163,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return exists;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean ingredientNameExists(@NotNull String name) {
         Objects.requireNonNull(name);
@@ -154,6 +178,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return exists;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean recipeNameExists(@NotNull String name) {
         Objects.requireNonNull(name);
@@ -168,6 +193,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return exists;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean usernameExists(@NotNull String name) {
         Objects.requireNonNull(name);
@@ -222,6 +248,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return values;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull Set<@NotNull Tag> searchTags(@NotNull Set<@NotNull String> tokens) {
         Set<Tag> matchedTags;
@@ -235,6 +262,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return matchedTags;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull Set<@NotNull Ingredient> searchIngredients(
             @NotNull Set<@NotNull String> tokens) {
@@ -261,6 +289,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull Set<@NotNull Recipe> searchRecipes(@NotNull Set<@NotNull String> tokens) {
         Set<Recipe> matchedRecipes;
@@ -281,6 +310,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return matchedRecipes;
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull Set<@NotNull User> searchUsers(@NotNull Set<@NotNull String> tokens) {
         Set<User> matchedUsers;
@@ -294,6 +324,13 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         return matchedUsers;
     }
 
+    /**
+     * Saves the given Tags to this saver, in-memory. Already-saved Tags with the same names as the
+     * given Tags will be replaced in this saver's storage.
+     *
+     * @param tags Tags that need to be saved
+     * @throws IllegalArgumentException if any names of the Tags are null
+     */
     @Override
     public void updateTags(@NotNull Collection<@NotNull Tag> tags) {
         Utils.requireAllNotNull(
@@ -310,6 +347,13 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         }
     }
 
+    /**
+     * Saves the given Ingredients to this saver, in-memory. Already-saved Ingredients with the same
+     * names as the given Ingredients will be replaced in this saver's storage.
+     *
+     * @param ingredients Ingredients that need to be saved
+     * @throws IllegalArgumentException if any names of the Ingredients are null
+     */
     @Override
     public void updateIngredients(@NotNull Collection<@NotNull Ingredient> ingredients) {
         Utils.requireAllNotNull(
@@ -328,6 +372,13 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         }
     }
 
+    /**
+     * Saves the given Recipes to this saver, in-memory. Already-saved Recipes with the same
+     * (non-presentation) names as the given Recipes will be replaced in this saver's storage.
+     *
+     * @param recipes Recipes that need to be saved
+     * @throws IllegalArgumentException if any (non-presentation) names of the Recipes are null
+     */
     @Override
     public void updateRecipes(@NotNull Collection<@NotNull Recipe> recipes) {
         Utils.requireAllNotNull(
@@ -344,6 +395,13 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         }
     }
 
+    /**
+     * Saves the given Users to this saver, in-memory. Already-saved Users with the same usernames
+     * as the given Users will be replaced in this saver's storage.
+     *
+     * @param users Users that need to be saved
+     * @throws IllegalArgumentException if any usernames of the Users are null
+     */
     @Override
     public void updateUsers(@NotNull Collection<@NotNull User> users) {
         Utils.requireAllNotNull(
@@ -360,6 +418,7 @@ public class MapEntitySaveAndLoader implements EntitySaver, EntityLoader {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public @NotNull String generateUniqueRecipeName(@Nullable String presentationName) {
         String baseName;

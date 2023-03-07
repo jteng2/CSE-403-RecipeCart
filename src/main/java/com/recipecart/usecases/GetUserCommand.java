@@ -24,26 +24,31 @@ public final class GetUserCommand extends SimpleGetCommand<User> {
         super(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkEntityRetrievedMessage() {
         return OK_USER_RETRIEVED;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkNotFoundMessage() {
         return NOT_OK_USER_NOT_FOUND;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return User.class.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected boolean entityNameExists(EntityLoader loader, String entityName) {
         return loader.usernameExists(entityName);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected User retrieveEntity(EntityLoader loader, String entityName) throws IOException {
         return loader.getUsersByNames(Collections.singletonList(entityName)).get(0);

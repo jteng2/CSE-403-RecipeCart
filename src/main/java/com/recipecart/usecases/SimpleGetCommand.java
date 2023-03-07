@@ -24,6 +24,9 @@ public abstract class SimpleGetCommand<T> extends EntityCommand {
         this.name = name;
     }
 
+    /**
+     * @return the name of the entity to retrieve.
+     */
     public String getEntityName() {
         return name;
     }
@@ -57,6 +60,7 @@ public abstract class SimpleGetCommand<T> extends EntityCommand {
         this.retrievedEntity = retrievedEntity;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();
@@ -121,13 +125,40 @@ public abstract class SimpleGetCommand<T> extends EntityCommand {
         finishExecuting();
     }
 
+    /**
+     * @return a message saying that the command's execution was successful; the entity with the
+     *     given name was retrieved.
+     */
     protected abstract String getOkEntityRetrievedMessage();
 
+    /**
+     * @return a message saying that the command's execution was unsuccessful, as the entity (of the
+     *     same type) with the given name was not found.
+     */
     protected abstract String getNotOkNotFoundMessage();
 
+    /**
+     * @return the class name of the entities being searched for.
+     */
     protected abstract String getEntityClassName();
 
+    /**
+     * Checks the storage corresponding to the given loader, if an entity (of the same type) with
+     * the given name exists there.
+     *
+     * @param loader the loader to do the check with
+     * @param entityName the name of the entity to check for
+     * @return true if an entity with the given name was found, false otherwise
+     */
     protected abstract boolean entityNameExists(EntityLoader loader, String entityName);
 
+    /**
+     * Retrieves the entity with the given name from the storage corresponding to the given loader.
+     *
+     * @param loader the loader to do the retrieval with
+     * @param entityName the name of the entity to retrieve
+     * @return the retrieved entity
+     * @throws IOException if an entity with the given name could not be found
+     */
     protected abstract T retrieveEntity(EntityLoader loader, String entityName) throws IOException;
 }

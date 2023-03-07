@@ -56,6 +56,7 @@ public interface EntityLoader {
     /**
      * Checks if a tag with the given name exists.
      *
+     * @param name the name of the tag to check the existence of
      * @return true if a saved tag with the given name exists, false otherwise
      */
     boolean tagNameExists(@NotNull String name);
@@ -63,6 +64,7 @@ public interface EntityLoader {
     /**
      * Checks if an ingredient with the given name exists.
      *
+     * @param name the name of the ingredient to check the existence of
      * @return true if a saved ingredient with the given name exists, false otherwise
      */
     boolean ingredientNameExists(@NotNull String name);
@@ -70,6 +72,7 @@ public interface EntityLoader {
     /**
      * Checks if a recipe with the given name (not presentation name) exists.
      *
+     * @param name the name of the recipe to check the existence of
      * @return true if a saved recipe with the given name exists, false otherwise
      */
     boolean recipeNameExists(@NotNull String name);
@@ -77,6 +80,7 @@ public interface EntityLoader {
     /**
      * Checks if a user with the given username exists.
      *
+     * @param name the name of the user to check the existence of
      * @return true if a saved user with the given username exists, false otherwise
      */
     boolean usernameExists(@NotNull String name);

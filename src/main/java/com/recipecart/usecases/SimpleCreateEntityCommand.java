@@ -58,10 +58,14 @@ public abstract class SimpleCreateEntityCommand<T> extends EntityCommand {
         this.createdEntity = createdEntity;
     }
 
+    /**
+     * @return the entity to save into the storage given into this command.
+     */
     public T getEntityToAdd() {
         return toAdd;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();
@@ -128,17 +132,52 @@ public abstract class SimpleCreateEntityCommand<T> extends EntityCommand {
         finishExecuting();
     }
 
+    /**
+     * @return a message saying that the command's execution was successful; the entity was
+     *     successfully added.
+     */
     protected abstract String getOkEntityCreatedMessage();
 
+    /**
+     * @return a message saying that the command's execution was unsuccessful due to the given
+     *     entity being invalid.
+     */
     protected abstract String getNotOkInvalidEntityMessage();
 
+    /**
+     * @return a message saying that the command's execution was unsuccessful due to an entity with
+     *     the same name as the given entity already existing in the storage.
+     */
     protected abstract String getNotOkEntityNameAlreadyTakenMessage();
 
+    /**
+     * Gets the (unique) name of the given entity.
+     *
+     * @param entity the entity to get the name of
+     * @return the entity's name.
+     */
     protected abstract String getEntityName(T entity);
 
+    /**
+     * @return the class name of the entities being searched for.
+     */
     protected abstract String getEntityClassName();
 
+    /**
+     * Saves the given entities into the given storage.
+     *
+     * @param saver the storage to save the entities into.
+     * @param entities the entities to save.
+     */
     protected abstract void updateEntities(EntitySaver saver, Collection<T> entities);
 
+    /**
+     * Checks the storage corresponding to the given loader, if an entity (of the same type) with
+     * the given name exists there.
+     *
+     * @param loader the loader to do the check with
+     * @param entityName the name of the entity to check for
+     * @return true if an entity with the given name was found, false otherwise
+     */
     protected abstract boolean entityNameExists(EntityLoader loader, String entityName);
 }

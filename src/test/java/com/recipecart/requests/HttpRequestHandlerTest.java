@@ -161,6 +161,18 @@ public class HttpRequestHandlerTest {
         return TestUtils.getSearchRecipes(getMockStorageGenerators());
     }
 
+    private static Stream<Arguments> getSearchUsers() {
+        return TestUtils.getSearchUsers(getMockStorageGenerators());
+    }
+
+    private static Stream<Arguments> getSearchIngredients() {
+        return TestUtils.getSearchIngredients(getMockStorageGenerators());
+    }
+
+    private static Stream<Arguments> getSearchTags() {
+        return TestUtils.getSearchTags(getMockStorageGenerators());
+    }
+
     // @ParameterizedTest
     @MethodSource("getRecipe")
     void testGetRecipe(Recipe recipe) throws IOException {
@@ -173,7 +185,7 @@ public class HttpRequestHandlerTest {
 
         assertEquals(OK, retrieval.getFirst());
         assertEquals(GetRecipeCommand.OK_RECIPE_RETRIEVED, retrieval.getSecond().getMessage());
-        assertEquals(expectedRecipe, retrieval.getSecond().getRetrievedRecipe());
+        assertEquals(expectedRecipe, retrieval.getSecond().getRecipe());
     }
 
     // @ParameterizedTest
@@ -188,7 +200,7 @@ public class HttpRequestHandlerTest {
 
         assertEquals(OK, retrieval.getFirst());
         assertEquals(GetUserCommand.OK_USER_RETRIEVED, retrieval.getSecond().getMessage());
-        assertEquals(expectedUser, retrieval.getSecond().getRetrievedUser());
+        assertEquals(expectedUser, retrieval.getSecond().getUser());
     }
 
     // @ParameterizedTest
@@ -203,7 +215,7 @@ public class HttpRequestHandlerTest {
         assertEquals(OK, retrieval.getFirst());
         assertEquals(
                 GetIngredientCommand.OK_INGREDIENT_RETRIEVED, retrieval.getSecond().getMessage());
-        assertEquals(ingredient, retrieval.getSecond().getRetrievedIngredient());
+        assertEquals(ingredient, retrieval.getSecond().getIngredient());
     }
 
     // @ParameterizedTest
@@ -217,7 +229,7 @@ public class HttpRequestHandlerTest {
 
         assertEquals(OK, retrieval.getFirst());
         assertEquals(GetTagCommand.OK_TAG_RETRIEVED, retrieval.getSecond().getMessage());
-        assertEquals(tag, retrieval.getSecond().getRetrievedTag());
+        assertEquals(tag, retrieval.getSecond().getTag());
     }
 
     // @ParameterizedTest
@@ -437,6 +449,91 @@ public class HttpRequestHandlerTest {
         assertNotNull(matchesList);
         Set<RecipeForm> matches = new HashSet<>(matchesList);
         assertEquals(expectedRecipeForms, matches);
+    }
+
+    // @ParameterizedTest
+    @MethodSource("getSearchUsers")
+    void testSearchUsers(
+            EntityStorage storage, List<User> users, Set<String> tokens, Set<User> expected)
+            throws IOException {
+        storage.getSaver().updateUsers(users);
+        commander.setStorageSource(storage);
+        Set<UserForm> expectedUserForms = new HashSet<>();
+        for (User r : expected) {
+            expectedUserForms.add(new UserForm(r));
+        }
+
+        String query = String.join("+", tokens);
+        String url = getFullUrl("/search/users?terms=" + query);
+        TwoTuple<Integer, ResponseBodies.UserSearch> response =
+                performGetRequestJson(url, ResponseBodies.UserSearch.class);
+
+        assertEquals(OK, response.getFirst());
+        String expectedMessage =
+                expected.isEmpty()
+                        ? SearchUsersCommand.OK_NO_MATCHES_FOUND
+                        : SearchUsersCommand.OK_MATCHES_FOUND;
+        assertEquals(expectedMessage, response.getSecond().getMessage());
+        List<UserForm> matchesList = response.getSecond().getMatches();
+        assertEquals(expected.size(), matchesList.size());
+        assertNotNull(matchesList);
+        Set<UserForm> matches = new HashSet<>(matchesList);
+        assertEquals(expectedUserForms, matches);
+    }
+
+    // @ParameterizedTest
+    @MethodSource("getSearchIngredients")
+    void testSearchIngredients(
+            EntityStorage storage,
+            List<Ingredient> ingredients,
+            Set<String> tokens,
+            Set<Ingredient> expected)
+            throws IOException {
+        storage.getSaver().updateIngredients(ingredients);
+        commander.setStorageSource(storage);
+
+        String query = String.join("+", tokens);
+        String url = getFullUrl("/search/ingredients?terms=" + query);
+        TwoTuple<Integer, ResponseBodies.IngredientSearch> response =
+                performGetRequestJson(url, ResponseBodies.IngredientSearch.class);
+
+        assertEquals(OK, response.getFirst());
+        String expectedMessage =
+                expected.isEmpty()
+                        ? SearchIngredientsCommand.OK_NO_MATCHES_FOUND
+                        : SearchIngredientsCommand.OK_MATCHES_FOUND;
+        assertEquals(expectedMessage, response.getSecond().getMessage());
+        List<Ingredient> matchesList = response.getSecond().getMatches();
+        assertEquals(expected.size(), matchesList.size());
+        assertNotNull(matchesList);
+        Set<Ingredient> matches = new HashSet<>(matchesList);
+        assertEquals(expected, matches);
+    }
+
+    // @ParameterizedTest
+    @MethodSource("getSearchTags")
+    void testSearchTags(
+            EntityStorage storage, List<Tag> tags, Set<String> tokens, Set<Tag> expected)
+            throws IOException {
+        storage.getSaver().updateTags(tags);
+        commander.setStorageSource(storage);
+
+        String query = String.join("+", tokens);
+        String url = getFullUrl("/search/tags?terms=" + query);
+        TwoTuple<Integer, ResponseBodies.TagSearch> response =
+                performGetRequestJson(url, ResponseBodies.TagSearch.class);
+
+        assertEquals(OK, response.getFirst());
+        String expectedMessage =
+                expected.isEmpty()
+                        ? SearchTagsCommand.OK_NO_MATCHES_FOUND
+                        : SearchTagsCommand.OK_MATCHES_FOUND;
+        assertEquals(expectedMessage, response.getSecond().getMessage());
+        List<Tag> matchesList = response.getSecond().getMatches();
+        assertEquals(expected.size(), matchesList.size());
+        assertNotNull(matchesList);
+        Set<Tag> matches = new HashSet<>(matchesList);
+        assertEquals(expected, matches);
     }
 
     private static class ModifiableCommander extends EntityCommander {

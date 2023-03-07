@@ -104,11 +104,11 @@ class RequestBodies {
             this.recipe = recipe;
         }
 
-        public String getUsername() {
+        String getUsername() {
             return username;
         }
 
-        public String getRecipeName() {
+        String getRecipeName() {
             return recipe;
         }
     }
@@ -125,11 +125,11 @@ class RequestBodies {
             this.ingredients = ingredients;
         }
 
-        public String getUsername() {
+        String getUsername() {
             return username;
         }
 
-        public Map<String, Double> getIngredients() {
+        Map<String, Double> getIngredients() {
             return Utils.allowNull(ingredients, Collections::unmodifiableMap);
         }
     }
@@ -151,15 +151,15 @@ class RequestBodies {
             this.addOnlyMissingIngredients = addOnlyMissingIngredients;
         }
 
-        public String getUsername() {
+        String getUsername() {
             return username;
         }
 
-        public String getRecipeName() {
+        String getRecipeName() {
             return recipe;
         }
 
-        public Boolean isAddOnlyMissingIngredients() {
+        Boolean isAddOnlyMissingIngredients() {
             return addOnlyMissingIngredients;
         }
     }

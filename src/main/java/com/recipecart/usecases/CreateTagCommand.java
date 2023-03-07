@@ -30,36 +30,43 @@ public final class CreateTagCommand extends SimpleCreateEntityCommand<Tag> {
         this(new Tag(tagName));
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkEntityCreatedMessage() {
         return OK_TAG_CREATED;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkInvalidEntityMessage() {
         return NOT_OK_INVALID_TAG;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkEntityNameAlreadyTakenMessage() {
         return NOT_OK_TAG_NAME_TAKEN;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityName(Tag entity) {
         return entity.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return Tag.class.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void updateEntities(EntitySaver saver, Collection<Tag> entities) {
         saver.updateTags(entities);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected boolean entityNameExists(EntityLoader loader, String entityName) {
         return loader.tagNameExists(entityName);
