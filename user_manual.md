@@ -21,10 +21,11 @@ Currently, we are using GitHub Issues to track known bugs. To report a new bug, 
 
 Information required to report a bug:
 - Description of the bug
+- Where the bug is in the repository, if known
 - Steps to reproduce the bug
 - Expected outcome
-- Actual outcome (such as screenshots of the behavior, if applicable)
-- What desktop/smartphone is being used (if applicable)
+- Screenshots of the behavior, if applicable
+- What desktop/smartphone is being used, if applicable
 - Any additional context surrounding the bug
 
 ## Known bugs
