@@ -237,6 +237,18 @@ public class Utils {
         return userFormMap;
     }
 
+    public static Collection<RecipeForm> fromRecipes(Collection<Recipe> recipes) {
+        Collection<RecipeForm> forms = new ArrayList<>();
+        recipes.forEach(recipe -> forms.add(new RecipeForm(recipe)));
+        return forms;
+    }
+
+    public static Collection<UserForm> fromUsers(Collection<User> users) {
+        Collection<UserForm> forms = new ArrayList<>();
+        users.forEach(user -> forms.add(new UserForm(user)));
+        return forms;
+    }
+
     public static Recipe fromRecipeForm(
             RecipeForm form, Map<String, Tag> allTags, Map<String, Ingredient> allIngredients) {
         List<String> directions =

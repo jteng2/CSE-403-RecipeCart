@@ -9,7 +9,6 @@ import com.recipecart.entities.Recipe;
 import com.recipecart.entities.Tag;
 import com.recipecart.execution.EntityCommander;
 import com.recipecart.usecases.*;
-import com.recipecart.utils.RecipeForm;
 import com.recipecart.utils.Utils;
 import java.util.*;
 import java.util.function.BiFunction;
@@ -62,6 +61,13 @@ public class HttpRequestHandler {
     public void startHandler() {
         port(listenPort);
         get("/search/recipes", APPLICATION_JSON, this::handleSearchRecipesRequest, gson::toJson);
+        get("/search/users", APPLICATION_JSON, this::handleSearchUsersRequest, gson::toJson);
+        get(
+                "/search/ingredients",
+                APPLICATION_JSON,
+                this::handleSearchIngredientsRequest,
+                gson::toJson);
+        get("/search/tags", APPLICATION_JSON, this::handleSearchTagsRequest, gson::toJson);
         post("/create/recipe", APPLICATION_JSON, this::handleCreateRecipeRequest, gson::toJson);
         post("/create/user", APPLICATION_JSON, this::handleCreateUserRequest, gson::toJson);
         post(
@@ -125,13 +131,13 @@ public class HttpRequestHandler {
             Response response,
             String paramName,
             Function<String, ? extends SimpleGetCommand<T>> commandMaker,
-            BiFunction<String, ? super T, ? extends ResponseBodies.WithMessage> retrieval) {
+            BiFunction<String, ? super T, ? extends ResponseBodies.WithMessage> responseMaker) {
         String entityName = request.params(paramName);
 
         SimpleGetCommand<T> command = commandMaker.apply(entityName);
         String executionMessage = handleCommand(command, response);
 
-        return retrieval.apply(executionMessage, command.getRetrievedEntity());
+        return responseMaker.apply(executionMessage, command.getRetrievedEntity());
     }
 
     private <T> Object handleSimplePostRequest(
@@ -154,21 +160,41 @@ public class HttpRequestHandler {
         return new ResponseBodies.WithMessage(executionMessage);
     }
 
-    private Object handleSearchRecipesRequest(Request request, Response response) {
+    private <T> Object handleSearchRequest(
+            Request request,
+            Response response,
+            Function<? super Set<String>, ? extends AbstractSearchCommand<T>> commandMaker,
+            BiFunction<String, ? super Collection<T>, ? extends ResponseBodies.SearchResponse<?>>
+                    responseMaker) {
         Set<String> searchTerms = getQueryArgumentWords(request, "terms");
 
-        SearchRecipesCommand searchRecipesCommand = new SearchRecipesCommand(searchTerms);
-        String message = handleCommand(searchRecipesCommand, response);
+        AbstractSearchCommand<T> searchCommand = commandMaker.apply(searchTerms);
+        String executionMessage = handleCommand(searchCommand, response);
 
-        if (searchRecipesCommand.getMatchingEntities() != null) {
-            List<RecipeForm> matches = new ArrayList<>();
-            searchRecipesCommand
-                    .getMatchingEntities()
-                    .forEach((match) -> matches.add(new RecipeForm(match)));
-            return new ResponseBodies.RecipeSearch(message, matches);
-        } else {
-            return new ResponseBodies.RecipeSearch(message, null);
-        }
+        return responseMaker.apply(executionMessage, searchCommand.getMatchingEntities());
+    }
+
+    private Object handleSearchRecipesRequest(Request request, Response response) {
+        return handleSearchRequest(
+                request, response, SearchRecipesCommand::new, ResponseBodies.RecipeSearch::new);
+    }
+
+    private Object handleSearchUsersRequest(Request request, Response response) {
+        return handleSearchRequest(
+                request, response, SearchUsersCommand::new, ResponseBodies.UserSearch::new);
+    }
+
+    private Object handleSearchIngredientsRequest(Request request, Response response) {
+        return handleSearchRequest(
+                request,
+                response,
+                SearchIngredientsCommand::new,
+                ResponseBodies.IngredientSearch::new);
+    }
+
+    private Object handleSearchTagsRequest(Request request, Response response) {
+        return handleSearchRequest(
+                request, response, SearchTagsCommand::new, ResponseBodies.TagSearch::new);
     }
 
     private Object handleCreateRecipeRequest(Request request, Response response) {
@@ -298,6 +324,18 @@ public class HttpRequestHandler {
         map.put(SearchRecipesCommand.NOT_OK_BAD_SEARCH_TERMS, BAD_REQUEST);
         map.put(SearchRecipesCommand.OK_MATCHES_FOUND, OK);
         map.put(SearchRecipesCommand.OK_NO_MATCHES_FOUND, OK);
+
+        map.put(SearchUsersCommand.NOT_OK_BAD_SEARCH_TERMS, BAD_REQUEST);
+        map.put(SearchUsersCommand.OK_MATCHES_FOUND, OK);
+        map.put(SearchUsersCommand.OK_NO_MATCHES_FOUND, OK);
+
+        map.put(SearchIngredientsCommand.NOT_OK_BAD_SEARCH_TERMS, BAD_REQUEST);
+        map.put(SearchIngredientsCommand.OK_MATCHES_FOUND, OK);
+        map.put(SearchIngredientsCommand.OK_NO_MATCHES_FOUND, OK);
+
+        map.put(SearchTagsCommand.NOT_OK_BAD_SEARCH_TERMS, BAD_REQUEST);
+        map.put(SearchTagsCommand.OK_MATCHES_FOUND, OK);
+        map.put(SearchTagsCommand.OK_NO_MATCHES_FOUND, OK);
 
         map.put(CreateRecipeCommand.OK_RECIPE_CREATED_WITH_GIVEN_NAME, CREATED);
         map.put(CreateRecipeCommand.OK_RECIPE_CREATED_NAME_ASSIGNED, CREATED);
