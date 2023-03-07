@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "63ed3808d76025a9d970fcf0"
+  },
+  "username": "test_username",
+  "authored_recipes": [
+    "a_recipe_1d1",
+    "a_recipe_id2"
+  ],
+  "saved_recipes": [
+    "s_recipe_id1",
+    "s_recipe_id2"
+  ],
+  "ingredients_owned": [
+    "o_ingredient_id1",
+    "o_ingredient_id2",
+    "o_ingredient_id3"
+  ],
+  "rated_recipes": [
+    {
+      "recipe_id": "r_recipe_id1",
+      "rating": 4.5
+    },
+    {
+      "recipe_id": "r_recipe_id2",
+      "rating": 5
+    }
+  ],
+  "shopping_list": [
+    {
+      "ingredient_id": "s_ingredient_id1",
+      "count": 2
+    },
+    {
+      "ingredient_id": "s_ingredient_id2",
+      "count": "5"
+    }
+  ],
+  "email_address": "testemail@gmail.com"
+}]

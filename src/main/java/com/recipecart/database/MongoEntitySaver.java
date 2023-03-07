@@ -1,7 +1,10 @@
 /* (C)2023 */
 package com.recipecart.database;
 
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.ReplaceOptions;
 import com.recipecart.entities.*;
 import com.recipecart.storage.EntitySaver;
@@ -169,12 +172,20 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
     }
 
     private @NotNull ObjectId tagToId(@NotNull Tag tags) {
-        throw new NotImplementedException();
+        MongoCollection<Document> tag = getTagCollection();
+        Document query = new Document("name", tags.getName());
+        Document result = tag.find(query).first();
+        if (result != null) {
+            return result.getObjectId("_id");
+        } else {
+            return new ObjectId();
+        }
     }
 
     private @NotNull ObjectId ingredientToId(@NotNull Ingredient ingredient) {
         MongoCollection<Document> ingredients = getIngredientCollection();
         Document query = new Document("name", ingredient.getName());
+        // check for all units to match
         Document result = ingredients.find(query).first();
         if (result != null) {
             return result.getObjectId("_id");
@@ -184,10 +195,18 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
     }
 
     private @NotNull ObjectId recipeToId(@NotNull Recipe recipe) {
-        throw new NotImplementedException();
+        MongoCollection<Document> recipes = getRecipeCollection();
+        Document query = new Document("name", recipe.getName());
+        // check for all components to match
+        Document result = recipes.find(query).first();
+        if (result != null) {
+            return result.getObjectId("_id");
+        } else {
+            return new ObjectId();
+        }
     }
 
-    private ObjectId userToId(@NotNull User user) {
+    /*private ObjectId userToId(@NotNull User user) {
         if (user.getUsername() == null) {
             throw new IllegalArgumentException("Username cannot be null");
         }
@@ -198,5 +217,5 @@ public class MongoEntitySaver extends MongoConnector implements EntitySaver {
                     "User with username " + user.getUsername() + " not found");
         }
         return doc.getObjectId("_id");
-    }
+    }*/
 }
