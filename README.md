@@ -58,6 +58,8 @@ The file structure of `src` looks like this:
 The backend uses the Gradle build system to make sure that the backend builds correctly. Also, the backend uses **Java 11** as its Java version, so make sure you're using the correct version, or there may be errors building/running.
 - Run `./gradlew` while on the top-level directory of the repository to run the Gradle wrapper, which installs/sets up Gradle for the project.
 - Run `./gradlew build` to build the back-end.
+  - If the build fails due to linting (i.e. in a task that starts with "`:spotless`"), then the "Linting" section below has more info on correcting formatting errors.
+  - Though, build failures due to linting shouldn't happen on the `main` branch
 #### Running the back-end
 - A JAR file is created when running `./gradlew build`. This file is located in the `build/libs` directory (which is created when running `./gradlew build`), and has a name such as `CSE-403-RecipeCart-1.0-SNAPSHOT.jar`. Run this JAR file with the command `java -jar build/libs/<filename>` (while in the top-level directory), where `<filename>` is the JAR file name.
   - To exit the running program gracefully, type "quit" into stdin, which will stop the server and save changes as necessary, before exiting.
