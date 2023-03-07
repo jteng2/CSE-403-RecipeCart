@@ -68,10 +68,14 @@ usage: recipecart
 ```
 
 ### Linting
-Also of note is that this Gradle configuration uses the Spotless plugin to lint the code, specifically to conform to the Google Style Guide for Java.
+Also of note, is that this Gradle configuration uses the Spotless plugin to lint the code, specifically to conform to the Google Style Guide for Java.
 It's configured so that the build will fail if there's any formatting errors.
 There's a Gradle task `./gradlew spotlessApply` that automatically corrects these formatting errors.
-Typically when editing code, this task is done right before building.
+Typically, when editing code, this task is done right before building.
+
+### Javadoc
+The Java classes the backend uses are documented with Javadoc notation. The Javadoc pages for these classes can be generated using `./gradlew javadoc` while in the top-level directory of this repository. The Javadocs are outputted in the `build/docs/javadoc` folder. In this folder, there will be an `index.html` file. Open this file in your web browser (recent versions of Firefox, Chrome, and Edge will work with this) to get the top-level page of the Javadocs.
+
 ## Building the front-end
 - Install Node (v18) from [Node.js](https://nodejs.org/en/download/)
 - Navigate to the `/front-end/` directory
@@ -92,7 +96,7 @@ Typically when editing code, this task is done right before building.
 ## Testing the back-end
 - Running `./gradlew build` also runs the backend tests.
 - Also, running `./gradlew test` just runs the tests without the other build steps.
-- One other thing to note is that some exception stacktraces may be printed when running these tests, even if all tests pass. Do not be alarmed of this, as some tests test for if an exception is being handled, and printing the stacktrace of the exception is one of the behaviors that those exception handlers do. Just note if the tests pass or not.
+- One other thing to note is that some exception stack-traces may be printed when running these tests, even if all tests pass. Do not be alarmed of this, as some tests test for if an exception is being handled, and printing the stacktrace of the exception is one of the behaviors that those exception handlers do. Just note if the tests pass or not.
 
 ## Testing the front-end
 - Navigate to `/front-end/` directory

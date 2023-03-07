@@ -455,7 +455,7 @@ Note that `prepTime` and `cookTime` are in minutes.
 <div id="bookmark-recipe"></div>
 
 ## Bookmark recipe
-This route is for having a user bookmark a recipe, so they can more easily retrive it later.
+This route is for having a user bookmark a recipe, so they can more easily retrieve it later.
 ### Header
 ```
 POST /bookmark/recipe HTTP/1.1
