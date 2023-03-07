@@ -22,26 +22,31 @@ public final class SearchRecipesCommand extends AbstractSearchCommand<Recipe> {
         super(searchTerms);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected Set<Recipe> searchEntities(EntityLoader loader) {
         return loader.searchRecipes(getSearchTerms());
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return Recipe.class.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkMatchesFoundMessage() {
         return OK_MATCHES_FOUND;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkNoMatchesFoundMessage() {
         return OK_NO_MATCHES_FOUND;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkBadSearchTermsMessage() {
         return NOT_OK_BAD_SEARCH_TERMS;

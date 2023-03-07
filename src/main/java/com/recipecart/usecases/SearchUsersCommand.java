@@ -21,26 +21,31 @@ public final class SearchUsersCommand extends AbstractSearchCommand<User> {
         super(searchTerms);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected Set<User> searchEntities(EntityLoader loader) {
         return loader.searchUsers(getSearchTerms());
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return User.class.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkMatchesFoundMessage() {
         return OK_MATCHES_FOUND;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkNoMatchesFoundMessage() {
         return OK_NO_MATCHES_FOUND;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkBadSearchTermsMessage() {
         return NOT_OK_BAD_SEARCH_TERMS;

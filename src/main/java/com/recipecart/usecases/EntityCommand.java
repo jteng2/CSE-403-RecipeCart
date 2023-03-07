@@ -6,7 +6,30 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/** This abstract class represents an action item that represents a use case involving entities. */
+/**
+ * This abstract class represents an action item that represents a use case involving entities. The
+ * general workflow for an implementer of EntityCommand (internally) is:
+ *
+ * <ul>
+ *   <li>Have the command be constructed with the arguments needed for its execution
+ *   <li>Have the <code>execute</code> method be called
+ *   <li>Perform whatever execution the implementer's spec calls for until execution is finished
+ *   <li>Call <code>setExecutionMessage</code>, giving a message describing how the command executed
+ *       (un)successfully
+ *   <li>Call <code>beSuccessful</code> if the execution was successful according to the
+ *       implementer's spec
+ *   <li>Call any other output setter methods corresponding to output of the command according to
+ *       the implementer's spec
+ *   <li>Call <code>finishExecuting</code>
+ * </ul>
+ *
+ * <code>finishExecuting</code> is meant for "finalizing" the command's state. <code>
+ * setExecutionMessage</code> and <code>beSuccessful</code> cannot be called after <code>
+ * finishExecuting</code> has been called, and they can only be called once. The other output setter
+ * methods in implementations of this class should also follow this convention. But <code>
+ * beSuccessful</code>, <code>setExecutionMessage</code>, and these other output setter methods can
+ * be called in any order.
+ */
 public abstract class EntityCommand implements Command {
     public static final String NOT_OK_BAD_STORAGE =
             "Execution unsuccessful: an internal error has occurred while trying to execute this"
@@ -114,9 +137,12 @@ public abstract class EntityCommand implements Command {
         executionMessage = message;
     }
 
+    /**
+     * @throws IllegalStateException if this command has already finished executing
+     */
     protected void checkExecutionAlreadyDone() {
         if (isFinishedExecuting()) {
-            throw new IllegalStateException("Cannot conduct search twice");
+            throw new IllegalStateException("Cannot execute command twice");
         }
     }
 
@@ -136,7 +162,8 @@ public abstract class EntityCommand implements Command {
     }
 
     /**
-     * Gets a message that explains what's invalid about this command. Meant to be overridden.
+     * Gets a message that explains what's invalid about this command (i.e. what was inputted into
+     * it) or its execution.
      *
      * @return the message, or null if the command is valid.
      */
@@ -147,10 +174,20 @@ public abstract class EntityCommand implements Command {
         return null;
     }
 
+    /**
+     * @return true if the EntityStorage this command was given is valid (i.e. not-null); false
+     *     otherwise
+     */
     protected boolean isStorageSourceValid() {
         return getStorageSource() != null;
     }
 
+    /**
+     * Performs the necessary method calls to set this command's visible state to where its
+     * execution was unsuccessful due to the given error. Assumes beSuccessful hasn't been called.
+     *
+     * @param e the exception whose stacktrace to print
+     */
     protected void finishExecutingFromError(Exception e) {
         if (e != null) {
             e.printStackTrace();
@@ -159,10 +196,21 @@ public abstract class EntityCommand implements Command {
         finishExecuting();
     }
 
+    /**
+     * Performs the necessary method calls to set this command's visible state to where its
+     * execution was unsuccessful due to an error. Assumes beSuccessful hasn't been called.
+     */
     protected void finishExecutingFromError() {
         finishExecutingFromError(null);
     }
 
+    /**
+     * Performs the necessary method calls to set this command's visible state to where its
+     * execution was unsuccessful due to an exception that's thought to be impossible to be thrown.
+     * Assumes beSuccessful hasn't been called.
+     *
+     * @param e the exception that's thought to be impossible to be thrown
+     */
     protected void finishExecutingImpossibleOutcome(Exception e) {
         e.printStackTrace();
         setExecutionMessage(NOT_OK_IMPOSSIBLE_OUTCOME);

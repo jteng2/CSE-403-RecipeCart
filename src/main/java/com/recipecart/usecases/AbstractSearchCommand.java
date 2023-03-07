@@ -28,6 +28,9 @@ public abstract class AbstractSearchCommand<T> extends EntityCommand {
         this.searchTerms = Utils.allowNull(searchTerms, HashSet::new);
     }
 
+    /**
+     * @return an unmodifiable view of the search terms this command will do its search with.
+     */
     public Set<String> getSearchTerms() {
         return Utils.allowNull(searchTerms, Collections::unmodifiableSet);
     }
@@ -76,6 +79,7 @@ public abstract class AbstractSearchCommand<T> extends EntityCommand {
         return super.getExecutionMessage();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();
@@ -127,13 +131,35 @@ public abstract class AbstractSearchCommand<T> extends EntityCommand {
         finishExecuting();
     }
 
+    /**
+     * Searches the storage corresponding to the given loader, for entities this command's search
+     * term matches with.
+     *
+     * @param loader the loader to do the search with
+     * @return the matching entities based on the search done with the loader
+     */
     protected abstract Set<T> searchEntities(EntityLoader loader);
 
+    /**
+     * @return the class name of the entities being searched for.
+     */
     protected abstract String getEntityClassName();
 
+    /**
+     * @return a message saying that the command's execution was successful, and matching entities
+     *     were found.
+     */
     protected abstract String getOkMatchesFoundMessage();
 
+    /**
+     * @return a message saying that the command's execution was successful, but no matching
+     *     entities were found.
+     */
     protected abstract String getOkNoMatchesFoundMessage();
 
+    /**
+     * @return a message saying that the command's execution was unsuccessful due to the given
+     *     search terms being invalid.
+     */
     protected abstract String getNotOkBadSearchTermsMessage();
 }
