@@ -35,6 +35,7 @@ public class MongoConnector {
      * }</pre>
      *
      * @param filename the file with the database address details
+     * @throws FileNotFoundException if no file with the given name exists
      */
     public MongoConnector(String filename) throws FileNotFoundException {
         Gson gson = new Gson();

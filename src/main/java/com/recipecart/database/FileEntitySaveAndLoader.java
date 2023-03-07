@@ -29,6 +29,7 @@ public class FileEntitySaveAndLoader extends MapEntitySaveAndLoader {
      * autosave its contents to the given file every saveCounter method calls of an EntitySaver
      * method.
      *
+     * @param autosaveFilename the file to autosave contents to
      * @param maxSaveCounter the number of EntitySaver method calls required to autosave
      * @throws IllegalArgumentException if saveCounter is zero or negative
      */

@@ -99,6 +99,7 @@ public abstract class EntityCommand implements Command {
      * command finishes executing, then the command's message will default to
      * Command.DEFAULT_MESSAGE.
      *
+     * @param message the execution message to give this command
      * @throws IllegalStateException if this method has been called before, or if it's called after
      *     finishExecuting() was called.
      */
