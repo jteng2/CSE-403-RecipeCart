@@ -81,8 +81,19 @@ The Java classes the backend uses are documented with Javadoc notation. The Java
 - Navigate to the `/front-end/` directory
 - Run `npm install` to install all the dependencies.
 - Run `npm run build` to build the front end.
-- Run `npm run start` to start the application.
-- Access the website at http://localhost:8080
+
+### Running the front-end (development server)
+- First, make sure the steps for building the front-end have been performed.
+- Run `npm run start` (while in the `front-end` directory) to start the application.
+- Access the website at `http://localhost:8080`
+
+### Running the front-end (production server)
+You will need to install Python 3 to run a production server.
+- First, make sure the steps for building the front-end have been performed.
+- Go to the `build` subdirectory within the `front-end` directory.
+- Run `python -m http.server` to start the server. Depending on how Python is installed, the `python` keyword might need to be replaced with `python3`, `py`, or `py -3`.
+- The program output will say where the website can be accessed (usually `http://localhost:8000`)
+
 
 ## Continuous Integration (CI)
 - This repository uses GitHub Actions to perform continuous integration, in order to make sure that builds in the remote repository pass (for both the frontend and backend).
@@ -118,6 +129,8 @@ More info on JUnit parameterized tests (and JUnit tests in general) [here](https
 The tests for the frontend are located in the `/front-end/tests/` directory. These tests are for JavaScript code and are run via Jest. The naming convention of `filename.test.js` must be followed for the tests to be run properly. To add a test, create a new file or add to an existing test file if relevant. Ensure React is imported, then create a test using the format `test('testName', () => {TEST HERE});`.
 
 # How to build a release of the software
-Building a release of the software involves the same steps as building the software, and running it on the server of your choice.
-But the build does have to pass on both the machine running it and the remote repository on the corresponding branch (primarily `main`).
+Building a release of the software involves the same steps as building the software (both frontend and backend), and running it on the server of your choice.
+- For running the front-end, follow the steps for building a production server, not a development server.
+- The server can be accessed remotely using the hostname of the machine running the server, and the port number given when running the frontend production server.
+- The build does have to pass on both the machine running it and the remote repository on the corresponding branch (primarily `main`).
 If it doesn't pass, the appropriate fixes must be made.
