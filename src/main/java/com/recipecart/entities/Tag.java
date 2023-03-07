@@ -22,6 +22,9 @@ public final class Tag implements Serializable {
         this.name = name;
     }
 
+    /**
+     * @return the name of the Tag
+     */
     @Nullable public String getName() {
         return name;
     }

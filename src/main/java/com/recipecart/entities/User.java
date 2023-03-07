@@ -64,7 +64,8 @@ public final class User {
     }
 
     /**
-     * @return an unmodifiable map with the Recipes this User has rated, with associated ratings
+     * @return an unmodifiable map with the Recipes this User has rated, with the associated ratings
+     *     the User has given
      */
     @NotNull public Map<@NotNull Recipe, @NotNull Double> getRatedRecipes() {
         return Collections.unmodifiableMap(ratedRecipes);
@@ -167,16 +168,35 @@ public final class User {
                     new HashMap<>(shoppingList));
         }
 
+        /**
+         * Sets the username of the User that is to be built
+         *
+         * @param username the username
+         * @return this
+         */
         public Builder setUsername(@Nullable String username) {
             this.username = username;
             return this;
         }
 
+        /**
+         * Sets the known email address of the User that is to be built
+         *
+         * @param emailAddress the email address
+         * @return this
+         */
         public Builder setEmailAddress(@Nullable String emailAddress) {
             this.emailAddress = emailAddress;
             return this;
         }
 
+        /**
+         * Sets the authored recipes of the User that is to be built
+         *
+         * @param authoredRecipes the recipes the User authored; cannot be null or have null
+         *     elements
+         * @return this
+         */
         public Builder setAuthoredRecipes(@NotNull List<@NotNull Recipe> authoredRecipes) {
             Utils.requireAllNotNull(
                     authoredRecipes,
@@ -186,6 +206,12 @@ public final class User {
             return this;
         }
 
+        /**
+         * Sets the saved recipes of the User that is to be built
+         *
+         * @param savedRecipes the recipes the User saved; cannot be null or have null elements
+         * @return this
+         */
         public Builder setSavedRecipes(@NotNull List<@NotNull Recipe> savedRecipes) {
             Utils.requireAllNotNull(
                     savedRecipes,
@@ -195,6 +221,13 @@ public final class User {
             return this;
         }
 
+        /**
+         * Sets the rated recipes of the User that is to be built
+         *
+         * @param ratedRecipes the recipes the User rated (with what ratings the User gave); cannot
+         *     be null or have null elements
+         * @return this
+         */
         public Builder setRatedRecipes(
                 @NotNull Map<@NotNull Recipe, @NotNull Double> ratedRecipes) {
             Utils.requireAllMapNotNull(
@@ -206,6 +239,13 @@ public final class User {
             return this;
         }
 
+        /**
+         * Sets the owned ingredients of the User that is to be built
+         *
+         * @param ownedIngredients the ingredients this User owns; cannot be null or have null
+         *     elements
+         * @return this
+         */
         public Builder setOwnedIngredients(@NotNull Set<@NotNull Ingredient> ownedIngredients) {
             Utils.requireAllNotNull(
                     ownedIngredients,
@@ -215,6 +255,13 @@ public final class User {
             return this;
         }
 
+        /**
+         * Sets the ingredients in the shopping list of the User that is to be built
+         *
+         * @param shoppingList the User's shopping list ingredients (with amounts); cannot be null
+         *     or have null elements
+         * @return this
+         */
         public Builder setShoppingList(
                 @NotNull Map<@NotNull Ingredient, @NotNull Double> shoppingList) {
             Utils.requireAllMapNotNull(
