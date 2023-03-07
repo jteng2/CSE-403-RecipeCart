@@ -17,9 +17,36 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * This is the class that runs the backend server. The general workflow for the backend server is:
+ *
+ * <ul>
+ *   <li>Backend gets started up, and listens for requests from the front-end.
+ *   <li>HttpRequestHandler takes that request and translates it into an EntityCommand pass into the
+ *       business logic layer (through EntityCommander).
+ *   <li>Command is executed in business logic layer, performing the use case outlined by the
+ *       original request.
+ *   <li>During the execution of this use case, the command may save and load entities from the data
+ *       access layer.
+ *   <li>After the command has finished executing, HttpRequestHandler looks at the output and sends
+ *       the appropriate HTTP response back to the front-end.
+ * </ul>
+ */
 public class Main {
     public static final String SERVER_STOP_STRING = "quit";
 
+    /**
+     * Starts up the backend server. Initializes the EntityStorage (which currently uses the
+     * EntitySaver/EntityLoader implemented by FileEntitySaverAndLoader, which also means that
+     * entities are loaded through a file), gives it to an EntityCommander that is initialized,
+     * gives that to a HttpRequestHandler that is initialized, and has the HttpRequestHandler listen
+     * for requests from the front-end.
+     *
+     * @param args raw command-line arguments passed into this program
+     * @throws IOException if an error occurs when loading entities from file
+     * @throws ClassNotFoundException if an error occurs with finding a class when deserializing the
+     *     file entities are stored in
+     */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         CommandLineArguments commandArgs = new CommandLineArguments(args);
         checkArgumentsValidity(commandArgs);
