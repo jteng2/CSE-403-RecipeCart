@@ -37,10 +37,14 @@ public final class AddIngredientsToShoppingListCommand extends ShoppingListComma
         this.ingredientsToAdd = Utils.allowNull(ingredientsToAdd, HashMap::new);
     }
 
+    /**
+     * @return an unmodifiable view of the ingredients (with amounts) to add to the shopping list.
+     */
     public Map<String, Double> getIngredientsToAdd() {
         return Utils.allowNull(ingredientsToAdd, Collections::unmodifiableMap);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();
@@ -86,6 +90,13 @@ public final class AddIngredientsToShoppingListCommand extends ShoppingListComma
         super.execute();
     }
 
+    /**
+     * Add the ingredients, that were given into this command, into the user's shopping list.
+     *
+     * @return the updated shopping list
+     * @throws IOException (shouldn't happen, since entity names are checked before retrieval)
+     */
+    @Override
     protected Map<Ingredient, Double> performShoppingListUpdate() throws IOException {
         User shopper = getShopper();
         Map<Ingredient, Double> updatedShoppingList =

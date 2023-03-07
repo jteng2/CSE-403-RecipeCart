@@ -8,6 +8,7 @@ import com.recipecart.utils.Utils;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -36,6 +37,7 @@ public abstract class ShoppingListCommand extends EntityCommand {
         return shopperUsername;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();
@@ -102,14 +104,21 @@ public abstract class ShoppingListCommand extends EntityCommand {
      */
     protected abstract Map<Ingredient, Double> performShoppingListUpdate() throws IOException;
 
-    static User getUserWithUpdatedShoppingList(
+    private static User getUserWithUpdatedShoppingList(
             User user, Map<Ingredient, Double> shoppingListUpdate) {
         return new User.Builder(user).setShoppingList(shoppingListUpdate).build();
     }
 
+    /**
+     * Saves the given user into the storage, except with their shopping list updated to the given
+     * one.
+     *
+     * @param shopper the user whose shopping list is to be updated; remains unmodified
+     * @param updatedShoppingList the new shopping list to give the user
+     */
     protected void saveUpdatedShoppingList(
-            User originalUser, Map<Ingredient, Double> updatedShoppingList) {
-        User updatedShopper = getUserWithUpdatedShoppingList(originalUser, updatedShoppingList);
+            User shopper, Map<Ingredient, Double> updatedShoppingList) {
+        User updatedShopper = getUserWithUpdatedShoppingList(shopper, updatedShoppingList);
         assert getStorageSource() != null;
         saveUser(updatedShopper, getStorageSource().getSaver());
     }
@@ -128,6 +137,9 @@ public abstract class ShoppingListCommand extends EntityCommand {
         return Utils.allowNull(resultShoppingList, Collections::unmodifiableMap);
     }
 
+    /**
+     * @return the saved User associated with the username given to this command.
+     */
     protected User getShopper() throws IOException {
         assert getStorageSource() != null;
         return getStorageSource()
@@ -136,11 +148,19 @@ public abstract class ShoppingListCommand extends EntityCommand {
                 .get(0);
     }
 
-    static void saveUser(User user, EntitySaver saver) {
+    private static void saveUser(User user, EntitySaver saver) {
         saver.updateUsers(Collections.singleton(user));
     }
 
-    protected void setResultShoppingList(Map<Ingredient, Double> resultShoppingList) {
+    /**
+     * Sets this command's output state so that its result shopping list is the given one.
+     *
+     * @param resultShoppingList the shopping list to put in the command's output
+     * @throws IllegalStateException if this method has been called before, or if it's called after
+     *     finishExecuting() was called.
+     */
+    protected void setResultShoppingList(
+            @NotNull Map<@NotNull Ingredient, @NotNull Double> resultShoppingList) {
         if (isFinishedExecuting()) {
             throw new IllegalStateException(
                     "Cannot set shopping list after command finished executing");
@@ -156,6 +176,13 @@ public abstract class ShoppingListCommand extends EntityCommand {
         this.resultShoppingList = resultShoppingList;
     }
 
+    /**
+     * Performs necessary steps to set the command's visible state to where its execution is
+     * finished and successful and has the proper output shopping list.
+     *
+     * @param resultShoppingList the resulting shopping list, to set the command's output shopping
+     *     list to.
+     */
     protected void finishExecutingSuccessfulShoppingListUpdate(
             Map<Ingredient, Double> resultShoppingList) {
         setResultShoppingList(resultShoppingList);
