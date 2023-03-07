@@ -1,5 +1,5 @@
 # User Manual
-RecipeCart is a website that can manage recipes for many users. It can hold various information for different recipes, such as what ingredients and amounts are required, etc. It can also hold various information on users, such as the recipes they've saved, what ingredients and amounts they have in their shopping list, etc. A user would want to use this software in order to keep track of recipes better.
+RecipeCart is a website that can manage recipes for many users. It can hold various information for different recipes, such as what ingredients and amounts are required, directions to make the recipe, etc. It can also hold various information on users, such as the recipes they've saved, what ingredients and amounts they have in their shopping list, etc. A user would want to use this software in order to keep track of recipes better. So, the target user for RecipeCart (i.e. someone visiting the website (not running their own RecipeCart server)) would be anyone who cooks.
 ## How to install the software
 There is no installation necessary for using this software.
 ## How to use the software:
