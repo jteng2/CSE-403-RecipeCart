@@ -4,8 +4,9 @@
 RecipeCart an application where users can search, save, upload, and rate recipes, and ingredients for these recipes can be added to a built-in shopping list. A common problem that people face when cooking recipes is getting the right amount of ingredients based on what they already have in their selves and fridges. This aims to achieve a seamless integration of finding and cooking recipes, and shopping for (remaining) ingredients needed for these recipes. Technology-wise, the application will be a web app, where the user can login and get recipes and other information from a server.
 
 ### Other documents
-- `user_manual.md` contains documentation for a user to run a RecipeCart server.
-- `developer_manual.md` contains documentation for a developer to contribute code to this repository.
+- [`user_manual.md`](https://github.com/jteng2/CSE-403-RecipeCart/blob/main/user_manual.md) contains documentation for a user to run a RecipeCart server.
+- [`developer_manual.md`](https://github.com/jteng2/CSE-403-RecipeCart/blob/main/developer_manual.md) contains documentation for a developer to contribute code to this repository.
+- [`api_routes.md`](https://github.com/jteng2/CSE-403-RecipeCart/blob/main/api_routes.md) contains documentation on the protocols for communication between the frontend and backend
 
 (All of these documents are located on the top-level directory of this repository.)
 # Goals
