@@ -73,6 +73,13 @@ Typically when editing code, this task is done right before building.
 - Run `npm run build` to build the front end.
 - Run `npm run start` to start the application.
 - Access the website at http://localhost:8080
+
+# Continuous Integration (CI)
+- This repository uses GitHub Actions to perform continuous integration, in order to make sure that builds in the remote repository pass (for both the frontend and backend).
+- A CI build occurs whenever there's a push or a pull request in the remote repository (that affects the frontend or backend files), on any branch. When merging a pull request, we make sure that the CI build passes before doing so.
+- There are two GitHub Actions workflows used by our CI:
+  - Backend workflow (`.github/workflows/gradle.yml`): this uses Gradle to build the back-end files, run tests on them, lint, etc. to make sure everything works there. Only changes that affect the back-end or Gradle will cause this workflow to run, and this workflow only looks at backend files (i.e. Gradle files and the `src` folder). This workflow runs all backend tests each time it's run.
+  - Frontend workflow (`.github/workflows/node.js.yml`): this uses npm to build the front-end files, run tests on them, lint, etc. to make sure everything works there. Only changes that affect the front-end will cause this workflow to run, and this workflow only looks at frontend files (i.e. `front-end` folder). This workflow runs all frontend tests each time it's run.
  
 # Testing the System
 ## Testing the back-end
