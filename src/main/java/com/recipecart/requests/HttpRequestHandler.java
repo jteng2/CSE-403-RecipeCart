@@ -32,6 +32,7 @@ public class HttpRequestHandler {
     private static final String APPLICATION_JSON = "application/json";
     private static final String UNAUTHORIZED_MESSAGE =
             "User is not properly authorized to do this task";
+    private static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     private static final Map<String, Integer> messageToStatusCode =
             initializeExecutionMessageToStatusCodeTranslator();
 
@@ -114,6 +115,7 @@ public class HttpRequestHandler {
         commander.execute(command);
         String message = command.getExecutionMessage();
         response.status(messageToStatusCode.get(message));
+        response.header(ACCESS_CONTROL_ALLOW_ORIGIN, "*"); // allow requests from all origins
         response.type(APPLICATION_JSON);
         return message;
     }
