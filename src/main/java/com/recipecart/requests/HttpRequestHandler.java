@@ -160,10 +160,10 @@ public class HttpRequestHandler {
         SearchRecipesCommand searchRecipesCommand = new SearchRecipesCommand(searchTerms);
         String message = handleCommand(searchRecipesCommand, response);
 
-        if (searchRecipesCommand.getMatchingRecipes() != null) {
+        if (searchRecipesCommand.getMatchingEntities() != null) {
             List<RecipeForm> matches = new ArrayList<>();
             searchRecipesCommand
-                    .getMatchingRecipes()
+                    .getMatchingEntities()
                     .forEach((match) -> matches.add(new RecipeForm(match)));
             return new ResponseBodies.RecipeSearch(message, matches);
         } else {

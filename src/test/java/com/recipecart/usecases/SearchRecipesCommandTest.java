@@ -58,7 +58,7 @@ public class SearchRecipesCommandTest {
     void testGetMatchesBeforeExecution(Set<String> tokens) {
         SearchRecipesCommand search = new SearchRecipesCommand(tokens);
 
-        assertThrows(IllegalStateException.class, search::getMatchingRecipes);
+        assertThrows(IllegalStateException.class, search::getMatchingEntities);
     }
 
     @ParameterizedTest
@@ -70,7 +70,7 @@ public class SearchRecipesCommandTest {
 
         assertTrue(search.isFinishedExecuting());
         assertFalse(search.isSuccessful());
-        assertNull(search.getMatchingRecipes());
+        assertNull(search.getMatchingEntities());
         assertEquals(EntityCommand.NOT_OK_BAD_STORAGE, search.getExecutionMessage());
     }
 
@@ -84,7 +84,7 @@ public class SearchRecipesCommandTest {
 
         assertTrue(search.isFinishedExecuting());
         assertFalse(search.isSuccessful());
-        assertNull(search.getMatchingRecipes());
+        assertNull(search.getMatchingEntities());
         assertEquals(NOT_OK_BAD_SEARCH_TERMS, search.getExecutionMessage());
     }
 
@@ -101,7 +101,7 @@ public class SearchRecipesCommandTest {
         assertTrue(search.isFinishedExecuting());
         assertTrue(search.isSuccessful());
 
-        Set<Recipe> matches = search.getMatchingRecipes();
+        Set<Recipe> matches = search.getMatchingEntities();
         assertNotNull(matches);
         assertEquals(expected.size(), matches.size());
         assertEquals(expected, matches);
@@ -119,7 +119,7 @@ public class SearchRecipesCommandTest {
 
         assertTrue(search.isFinishedExecuting());
         assertFalse(search.isSuccessful());
-        assertNull(search.getMatchingRecipes());
+        assertNull(search.getMatchingEntities());
         assertEquals(NOT_OK_ERROR, search.getExecutionMessage());
     }
 
@@ -134,7 +134,7 @@ public class SearchRecipesCommandTest {
         search.execute();
 
         assertThrows(IllegalStateException.class, search::execute);
-        assertNotNull(search.getMatchingRecipes());
-        assertThrows(UnsupportedOperationException.class, search.getMatchingRecipes()::clear);
+        assertNotNull(search.getMatchingEntities());
+        assertThrows(UnsupportedOperationException.class, search.getMatchingEntities()::clear);
     }
 }
