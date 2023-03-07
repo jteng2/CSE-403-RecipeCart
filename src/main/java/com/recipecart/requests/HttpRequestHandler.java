@@ -32,7 +32,8 @@ public class HttpRequestHandler {
     private static final String APPLICATION_JSON = "application/json";
     private static final String UNAUTHORIZED_MESSAGE =
             "User is not properly authorized to do this task";
-    private static final Map<String, Integer> messageToStatusCode = initializeMessageToStatusCode();
+    private static final Map<String, Integer> messageToStatusCode =
+            initializeExecutionMessageToStatusCodeTranslator();
 
     private final @NotNull EntityCommander commander;
     private final @NotNull JwtValidator loginChecker;
@@ -313,7 +314,7 @@ public class HttpRequestHandler {
                                 bodyDetails.isAddOnlyMissingIngredients()));
     }
 
-    private static Map<String, Integer> initializeMessageToStatusCode() {
+    private static Map<String, Integer> initializeExecutionMessageToStatusCodeTranslator() {
         Map<String, Integer> map = new HashMap<>();
 
         map.put(UNAUTHORIZED_MESSAGE, UNAUTHORIZED);
