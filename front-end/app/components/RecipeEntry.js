@@ -73,7 +73,7 @@ export default function RecipeEntry(props) {
         <DialogContent dividers>
           <Typography gutterBottom>
             Ingredients: {props.ingredients ?
-               props.ingredients :
+               Object.keys(props.ingredients) :
                "Food, food, food, food, food, food, food, food"}
           </Typography>
           <Typography gutterBottom>
