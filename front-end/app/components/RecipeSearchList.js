@@ -5,9 +5,6 @@ import RecipeEntry from "./RecipeEntry";
 import RecipeBigTile from "./RecipeBigTile";
 import "../resources/styles/RecipeSearchList.css"
 
-
-
-
 function RecipeSearchList(props) {
     const [matching, setMatching] = useState([]);
 
