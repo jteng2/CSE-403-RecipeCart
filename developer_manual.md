@@ -91,7 +91,10 @@ The Java classes the backend uses are documented with Javadoc notation. The Java
 You will need to install Python 3 to run a production server.
 - First, make sure the steps for building the front-end have been performed.
 - Go to the `build` subdirectory within the `front-end` directory.
-- Run `python -m http.server` to start the server. Depending on how Python is installed, the `python` keyword might need to be replaced with `python3`, `py`, or `py -3`.
+- Run `python -m http.server <port>` to start the server.
+  - `<port>` is an optional argument, where the port number the server listens on is specified.
+    - For example, `python -m http.server 8001` runs the frontend server and has it listen in on port 8001.
+  - Depending on how Python is installed, the `python` keyword might need to be replaced with `python3`, `py`, or `py -3`.
 - The program output will say where the website can be accessed (usually `http://localhost:8000`)
 
 
