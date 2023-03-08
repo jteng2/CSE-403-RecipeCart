@@ -1,6 +1,8 @@
 # API Routes for front-end and back-end communication
 ### General notes
 * Access these API routes by connecting to `localhost:4567` while running the backend.
+  * If running the backend with a non-default port (i.e. not 4567), then connect to `localhost` with the port used instead.
+* The frontend sends these requests, and the backend returns the responses to these requests
 * Each request body and response body is in JSON.
 * Each request's response body will contain a `"message"` field with some details about what happened when handling the request (i.e. what error occurred if any, etc.)
 ## Table of Contents
@@ -589,7 +591,7 @@ Content-type: application/json
 <div id="bookmark-recipe"></div>
 
 ## Bookmark recipe
-This route is for having a user bookmark a recipe, so they can more easily retrive it later.
+This route is for having a user bookmark a recipe, so they can more easily retrieve it later.
 ### Header
 ```
 POST /bookmark/recipe HTTP/1.1
