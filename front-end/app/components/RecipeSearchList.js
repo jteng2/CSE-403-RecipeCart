@@ -22,7 +22,7 @@ function RecipeSearchList(props) {
         let recipe_name = matching[i]["name"];
         let presentation_name = matching[i]["presentationName"];
         let time_to_cook = matching[i]["cookTime"];
-        // let ingredients = matching[i]["requiredIngredients"];
+        let ingredients = Object.keys(matching[i]["requiredIngredients"]).join(", ");
         let directions = matching[i]["directions"].join(", ");
 
         recipe_components[i] = <RecipeEntry key={recipe_name}
@@ -30,6 +30,7 @@ function RecipeSearchList(props) {
             time_to_cook={time_to_cook}
             component={<RecipeBigTile name={presentation_name} />}
             directions={directions}
+            ingredients={ingredients}
         />
     }
 
