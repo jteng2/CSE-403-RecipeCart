@@ -74,7 +74,7 @@ export default function RecipeEntry(props) {
         <DialogContent dividers>
           <Typography gutterBottom>
             Ingredients: {props.ingredients ?
-               Object.keys(props.ingredients) :
+               Object.keys(props.ingredients).join(", ") :
               "No ingredients"}
           </Typography>
           <Typography gutterBottom>
