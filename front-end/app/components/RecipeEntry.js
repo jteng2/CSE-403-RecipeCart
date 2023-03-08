@@ -74,11 +74,11 @@ export default function RecipeEntry(props) {
         <DialogContent dividers>
           <Typography gutterBottom>
             Ingredients: {props.ingredients ?
-               Object.keys(props.ingredients) :
+               Object.keys(props.ingredients).join(", ") :
               "No ingredients"}
           </Typography>
           <Typography gutterBottom>
-            Directions: {props.directions ? props.directions : "No directions"}
+            Directions: {props.directions ? props.directions.join(", ") : "No directions"}
           </Typography>
           <Typography gutterBottom>
             Prep: {props.time_to_cook ? props.time_to_cook + " minutes" : "20 minutes"}          </Typography>
