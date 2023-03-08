@@ -25,26 +25,31 @@ public final class GetRecipeCommand extends SimpleGetCommand<Recipe> {
         super(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkEntityRetrievedMessage() {
         return OK_RECIPE_RETRIEVED;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkNotFoundMessage() {
         return NOT_OK_RECIPE_NOT_FOUND;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return Recipe.class.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected boolean entityNameExists(EntityLoader loader, String entityName) {
         return loader.recipeNameExists(entityName);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected Recipe retrieveEntity(EntityLoader loader, String entityName) throws IOException {
         return loader.getRecipesByNames(Collections.singletonList(entityName)).get(0);

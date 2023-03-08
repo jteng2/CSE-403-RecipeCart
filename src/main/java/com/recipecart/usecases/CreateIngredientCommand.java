@@ -34,36 +34,43 @@ public final class CreateIngredientCommand extends SimpleCreateEntityCommand<Ing
         this(new Ingredient(ingredientName, units, imageUri));
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkEntityCreatedMessage() {
         return OK_INGREDIENT_CREATED;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkInvalidEntityMessage() {
         return NOT_OK_INVALID_INGREDIENT;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkEntityNameAlreadyTakenMessage() {
         return NOT_OK_INGREDIENT_NAME_TAKEN;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityName(Ingredient entity) {
         return entity.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return Ingredient.class.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void updateEntities(EntitySaver saver, Collection<Ingredient> entities) {
         saver.updateIngredients(entities);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected boolean entityNameExists(EntityLoader loader, String entityName) {
         return loader.ingredientNameExists(entityName);

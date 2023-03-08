@@ -25,26 +25,31 @@ public final class GetIngredientCommand extends SimpleGetCommand<Ingredient> {
         super(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkEntityRetrievedMessage() {
         return OK_INGREDIENT_RETRIEVED;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkNotFoundMessage() {
         return NOT_OK_INGREDIENT_NOT_FOUND;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return Ingredient.class.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected boolean entityNameExists(EntityLoader loader, String entityName) {
         return loader.ingredientNameExists(entityName);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected Ingredient retrieveEntity(EntityLoader loader, String entityName) throws IOException {
         return loader.getIngredientsByNames(Collections.singletonList(entityName)).get(0);

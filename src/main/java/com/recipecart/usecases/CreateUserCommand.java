@@ -23,36 +23,43 @@ public final class CreateUserCommand extends SimpleCreateEntityCommand<User> {
         super(new User.Builder().setUsername(username).setEmailAddress(emailAddress).build());
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getOkEntityCreatedMessage() {
         return OK_USER_CREATED;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkInvalidEntityMessage() {
         return NOT_OK_INVALID_USER;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getNotOkEntityNameAlreadyTakenMessage() {
         return NOT_OK_USERNAME_TAKEN;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityName(User entity) {
         return entity.getUsername();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getEntityClassName() {
         return User.class.getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void updateEntities(EntitySaver saver, Collection<User> entities) {
         saver.updateUsers(entities);
     }
 
+    /** {@inheritDoc} */
     @Override
     protected boolean entityNameExists(EntityLoader loader, String entityName) {
         return loader.usernameExists(entityName);

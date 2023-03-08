@@ -13,9 +13,12 @@
 7. [Create ingredient](#create-ingredient)
 8. [Create tag](#create-tag)
 9. [Search for recipe](#search-for-recipe)
-10. [Bookmark recipe](#bookmark-recipe)
-11. [Add ingredients to shopping list](#add-ingredients-to-shopping-list)
-12. [Add recipe ingredients to shopping list](#add-recipe-ingredients-to-shopping-list)
+10. [Search for user](#search-for-user)
+11. [Search for ingredient](#search-for-ingredient)
+12. [Search for tag](#search-for-tag)
+13. [Bookmark recipe](#bookmark-recipe)
+14. [Add ingredients to shopping list](#add-ingredients-to-shopping-list)
+15. [Add recipe ingredients to shopping list](#add-recipe-ingredients-to-shopping-list)
 
 <div id="get-recipe"></div>
 
@@ -149,7 +152,7 @@ Content-type: application/json
     "ingredient": {
         "name": "milk"
         "units": "cups"
-        "imageUri": milk/image/resource/here.png
+        "imageUri": "milk/image/resource/here.png"
     }
 }
 ```
@@ -179,7 +182,7 @@ Content-type: application/json
 
 {
     "message": "Tag retrieval successful",
-    "ingredient": {
+    "tag": {
         "name": "breakfast"
     }
 }
@@ -381,7 +384,7 @@ Content-type: application/json
 <div id="search-for-recipe"></div>
 
 ## Search for recipe
-This route is for searching for recipes (that aren't known yet to the user) based on given search terms.
+This route is for searching for recipes (that aren't known yet to the user) based on given search terms. The search will match with recipes in which any (whitespace-separated) word in its name or presentation name matches with any search term, exactly and case-insensitively.
 ### Header
 ```
 GET /search/recipes HTTP/1.1
@@ -396,7 +399,7 @@ Accept: application/json
 ### Response
 A 200 status code will be returned if the search was successful, even if no recipes matched with the search terms.
 
-A 400 status code will be returned if no search terms are given (ex. just `search/recipes`). The body will be in JSON.
+A 400 status code will be returned if no search terms are given (ex. just `/search/recipes`). The body will be in JSON.
 ### Example responses
 ```
 HTTP/1.1 200 OK
@@ -450,6 +453,139 @@ Content-type: application/json
 }
 ```
 Note that `prepTime` and `cookTime` are in minutes.
+<div id="search-for-user"></div>
+
+## Search for user
+This route is for searching for users (that aren't known yet to the user) based on given search terms. The search will match with users in which any (whitespace-separated) word in their username matches with any search term, exactly and case-insensitively.
+### Header
+```
+GET /search/users HTTP/1.1
+...
+Accept: application/json
+...
+```
+### Query parameters
+`terms`: what the search terms are. Each search term is separated by a "+".
+### Example request
+`/search/users?terms=OmeletteLover2000` will perform a search with the terms "OmeletteLover2000".
+### Response
+A 200 status code will be returned if the search was successful, even if no users matched with the search terms.
+
+A 400 status code will be returned if no search terms are given (ex. just `/search/users`). The body will be in JSON.
+### Example responses
+```
+HTTP/1.1 200 OK
+...
+Content-type: application/json
+...
+
+{
+    "message": "Search successful: users that matched were found",
+    "matches": [
+        {
+            "username": "OmeletteLover2000",
+            "emailAddress": "ExampleEmail@aol.com",
+            "authoredRecipes": ["tasty-cheese-omelette2", "egg-surprise", "egg-in-baskets", ...],
+            "savedRecipes": ["lovely-omelette", "zesty-omelette", ...],
+            "ratedRecipes": {
+                "lovely-omelette": 5.0,
+                "over-easy-eggs": 1.0,
+                ...
+            },
+            "ownedIngredients": ["eggs", "cheddar-cheese", ...],
+            "shoppingList": {
+                "eggs": 1000,
+                "milk": 6,
+                ...
+            }
+        }
+        ...
+    ]
+}
+```
+<div id="search-for-ingredient"></div>
+
+## Search for ingredient
+This route is for searching for ingredients (that aren't known yet to the user) based on given search terms. The search will match with ingredients in which any (whitespace-separated) word in its name matches with any search term, exactly and case-insensitively.
+### Header
+```
+GET /search/ingredients HTTP/1.1
+...
+Accept: application/json
+...
+```
+### Query parameters
+`terms`: what the search terms are. Each search term is separated by a "+".
+### Example request
+`/search/ingredients?terms=cheese+milk` will perform a search with the terms "cheese" and "milk".
+### Response
+A 200 status code will be returned if the search was successful, even if no ingredients matched with the search terms.
+
+A 400 status code will be returned if no search terms are given (ex. just `/search/ingredients`). The body will be in JSON.
+### Example responses
+```
+HTTP/1.1 200 OK
+...
+Content-type: application/json
+...
+
+{
+    "message": "Search successful: ingredients that matched were found",
+    "matches": [
+        {
+            "name": "cheddar cheese"
+            "units": "cups"
+            "imageUri": "cheddar/cheese/resource/here.png"
+        },
+        {
+            "name": "milk chocolate"
+            "units": "grams"
+            "imageUri": "milk/choco/image/resource/here.png"
+        },
+        ...
+    ]
+}
+```
+<div id="search-for-tag"></div>
+
+## Search for tag
+This route is for searching for tags (that aren't known yet to the user) based on given search terms. The search will match with tags in which any (whitespace-separated) word in its name matches with any search term, exactly and case-insensitively.
+### Header
+```
+GET /search/tags HTTP/1.1
+...
+Accept: application/json
+...
+```
+### Query parameters
+`terms`: what the search terms are. Each search term is separated by a "+".
+### Example request
+`/search/tags?terms=veggie+American` will perform a search with the terms "veggie" and "American".
+### Response
+A 200 status code will be returned if the search was successful, even if no tags matched with the search terms.
+
+A 400 status code will be returned if no search terms are given (ex. just `/search/tags`). The body will be in JSON.
+### Example responses
+```
+HTTP/1.1 200 OK
+...
+Content-type: application/json
+...
+
+{
+    "message": "Search successful: tags that matched were found",
+    "matches": [
+        {
+            "name": "tons of veggies"
+        },
+        {
+            "name": "Southern American"
+        },
+        ...
+    ]
+}
+```
+
 <div id="bookmark-recipe"></div>
 
 ## Bookmark recipe

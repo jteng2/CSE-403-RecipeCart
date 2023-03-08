@@ -1,0 +1,15 @@
+[{
+  "_id": {
+    "$oid": "63ed3966d76025a9d970fcfa"
+  },
+  "img": "img_1",
+  "ingredient_id": "ingredient_id1",
+  "units": "units_1"
+},{
+  "_id": {
+    "$oid": "63f5820e11c26151ee03c586"
+  },
+  "img": "img_2",
+  "ingredient_id": "ingredient_id2",
+  "units": "units_2"
+}]

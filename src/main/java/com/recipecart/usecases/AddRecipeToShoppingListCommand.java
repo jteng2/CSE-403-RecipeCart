@@ -41,14 +41,22 @@ public final class AddRecipeToShoppingListCommand extends ShoppingListCommand {
         this.addOnlyMissingIngredients = addOnlyMissingIngredients;
     }
 
+    /**
+     * @return the name of the recipe whose ingredients are to be added to the shopping list.
+     */
     public String getRecipeName() {
         return recipeName;
     }
 
+    /**
+     * @return true if the command will only add recipe ingredients, that the user doesn't currently
+     *     have, to their shopping list; false otherwise.
+     */
     public boolean isAddOnlyMissingIngredients() {
         return addOnlyMissingIngredients;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();
@@ -90,6 +98,13 @@ public final class AddRecipeToShoppingListCommand extends ShoppingListCommand {
         super.execute();
     }
 
+    /**
+     * Add the ingredients of the recipe, that was given into this command, into the user's shopping
+     * list.
+     *
+     * @return the updated shopping list
+     * @throws IOException (shouldn't happen, since entity names are checked before retrieval)
+     */
     @Override
     protected Map<Ingredient, Double> performShoppingListUpdate() throws IOException {
         User shopper = getShopper();

@@ -43,6 +43,9 @@ public final class CreateRecipeCommand extends EntityCommand {
         this.recipeFormToAdd = recipeToAdd;
     }
 
+    /**
+     * @return the RecipeForm corresponding to the recipe to be added.
+     */
     public RecipeForm getToAdd() {
         return recipeFormToAdd;
     }
@@ -106,6 +109,7 @@ public final class CreateRecipeCommand extends EntityCommand {
         this.createdTags = tags;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected String getInvalidCommandMessage() {
         String baseMessage = super.getInvalidCommandMessage();

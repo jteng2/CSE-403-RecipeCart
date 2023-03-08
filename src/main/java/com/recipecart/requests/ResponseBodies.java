@@ -43,17 +43,44 @@ class ResponseBodies {
         }
     }
 
-    /** Follows the "Search for recipe" API route. */
-    static class RecipeSearch extends WithMessage {
-        private final List<RecipeForm> matches;
+    static class SearchResponse<T> extends WithMessage {
+        private final List<T> matches;
 
-        RecipeSearch(String message, Collection<RecipeForm> matches) {
+        SearchResponse(String message, Collection<T> matches) {
             super(message);
             this.matches = Utils.allowNull(matches, ArrayList::new);
         }
 
-        List<RecipeForm> getMatches() {
-            return Collections.unmodifiableList(matches);
+        List<T> getMatches() {
+            return Utils.allowNull(matches, Collections::unmodifiableList);
+        }
+    }
+
+    /** Follows the "Search for recipe" API route. */
+    static class RecipeSearch extends SearchResponse<RecipeForm> {
+        RecipeSearch(String message, Collection<Recipe> matches) {
+            super(message, Utils.allowNull(matches, Utils::fromRecipes));
+        }
+    }
+
+    /** Follows the "Search for ingredient" API route. */
+    static class IngredientSearch extends SearchResponse<Ingredient> {
+        IngredientSearch(String message, Collection<Ingredient> matches) {
+            super(message, matches);
+        }
+    }
+
+    /** Follows the "Search for user" API route. */
+    static class UserSearch extends SearchResponse<UserForm> {
+        UserSearch(String message, Collection<User> matches) {
+            super(message, Utils.allowNull(matches, Utils::fromUsers));
+        }
+    }
+
+    /** Follows the "Search for tag" API route. */
+    static class TagSearch extends SearchResponse<Tag> {
+        TagSearch(String message, Collection<Tag> matches) {
+            super(message, matches);
         }
     }
 
@@ -77,63 +104,67 @@ class ResponseBodies {
         }
     }
 
+    /** Follows the "Get tag" API route. */
     static class TagRetrieval extends WithMessage {
-        private final Tag retrievedTag;
+        private final Tag tag;
 
         TagRetrieval(@NotNull String message, Tag retrievedTag) {
             super(message);
-            this.retrievedTag = retrievedTag;
+            this.tag = retrievedTag;
         }
 
-        Tag getRetrievedTag() {
-            return retrievedTag;
+        Tag getTag() {
+            return tag;
         }
     }
 
+    /** Follows the "Get ingredient" API route. */
     static class IngredientRetrieval extends WithMessage {
-        private final Ingredient retrievedIngredient;
+        private final Ingredient ingredient;
 
         IngredientRetrieval(@NotNull String message, Ingredient retrievedIngredient) {
             super(message);
-            this.retrievedIngredient = retrievedIngredient;
+            this.ingredient = retrievedIngredient;
         }
 
-        Ingredient getRetrievedIngredient() {
-            return retrievedIngredient;
+        Ingredient getIngredient() {
+            return ingredient;
         }
     }
 
+    /** Follows the "Get recipe" API route. */
     static class RecipeRetrieval extends WithMessage {
-        private final RecipeForm retrievedRecipe;
+        private final RecipeForm recipe;
 
         RecipeRetrieval(@NotNull String message, RecipeForm retrievedRecipeForm) {
             super(message);
-            this.retrievedRecipe = retrievedRecipeForm;
+            this.recipe = retrievedRecipeForm;
         }
 
         RecipeRetrieval(@NotNull String message, Recipe retrievedRecipe) {
             this(message, (RecipeForm) Utils.allowNull(retrievedRecipe, RecipeForm::new));
         }
 
-        RecipeForm getRetrievedRecipe() {
-            return retrievedRecipe;
+        RecipeForm getRecipe() {
+            return recipe;
         }
     }
 
+    /** Follows the "Get user" API route. */
     static class UserRetrieval extends WithMessage {
-        private final UserForm retrievedUser;
+        private final UserForm user;
 
         UserRetrieval(@NotNull String message, UserForm retrievedUserForm) {
             super(message);
-            this.retrievedUser = retrievedUserForm;
+            this.user = retrievedUserForm;
         }
 
         UserRetrieval(@NotNull String message, User retrievedUser) {
             this(message, (UserForm) Utils.allowNull(retrievedUser, UserForm::new));
         }
 
-        UserForm getRetrievedUser() {
-            return retrievedUser;
+        UserForm getUser() {
+            return user;
         }
     }
 }

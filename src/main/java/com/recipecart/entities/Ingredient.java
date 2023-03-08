@@ -27,14 +27,23 @@ public final class Ingredient implements Serializable {
         this.imageUri = imageUri;
     }
 
+    /**
+     * @return the name of the Ingredient
+     */
     @Nullable public String getName() {
         return name;
     }
 
+    /**
+     * @return what units of measurement this Ingredient uses
+     */
     @Nullable public String getUnits() {
         return units;
     }
 
+    /**
+     * @return a URI leading to an image of this Ingredient
+     */
     @Nullable public String getImageUri() {
         return imageUri;
     }
