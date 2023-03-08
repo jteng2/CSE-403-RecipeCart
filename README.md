@@ -7,6 +7,7 @@ RecipeCart an application where users can search, save, upload, and rate recipes
 - [`user_manual.md`](https://github.com/jteng2/CSE-403-RecipeCart/blob/main/user_manual.md) contains documentation for a user to use RecipeCart as a client and to report bugs.
 - [`developer_manual.md`](https://github.com/jteng2/CSE-403-RecipeCart/blob/main/developer_manual.md) contains documentation for a developer to run their own RecipeCart server, as well as contribute code to this repository.
 - [`api_routes.md`](https://github.com/jteng2/CSE-403-RecipeCart/blob/main/api_routes.md) contains documentation on the protocols for communication between the frontend and backend
+- [`living document`](https://docs.google.com/document/d/e/2PACX-1vRe5bQJEMBAKRMNmrCXKuBe0CadF6ZS7QtM3aIoFExhSKj5kbj3A7bX-mArycqu1TfkpEi0GgFuv4cI/pub) is an in-depth document about all aspects of the project.
 
 (All of these documents are located on the top-level directory of this repository.)
 # Goals
