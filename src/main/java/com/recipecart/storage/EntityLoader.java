@@ -11,7 +11,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * This interface represents the place where entities are loaded into the Business Logic Layer, from
  * when they were saved. This interface is implemented by classes outside this layer, where they
- * deal with the underlying data representation of what's "saved" in this layer.
+ * deal with the underlying data representation of what's "saved" in this layer. This interface
+ * upholds the invariants stated by EntityStorage.
  */
 public interface EntityLoader {
     /**

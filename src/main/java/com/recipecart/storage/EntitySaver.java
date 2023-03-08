@@ -8,7 +8,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * This interface represents the place where entities are saved in the Business Logic Layer. This
  * interface is implemented by classes outside this layer, where they deal with the underlying data
- * representation of what's "saved" in this layer.
+ * representation of what's "saved" in this layer. This interface upholds the invariants stated by
+ * EntityStorage.
  */
 public interface EntitySaver {
 
