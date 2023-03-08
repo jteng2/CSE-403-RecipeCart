@@ -36,7 +36,7 @@ The [`developer_manual.md`](https://github.com/jteng2/CSE-403-RecipeCart/blob/ma
 The [`developer_manual.md`](https://github.com/jteng2/CSE-403-RecipeCart/blob/main/developer_manual.md) file contains steps and information for testing (both the frontend and backend of) this software, in the "How to test the software" section. The section also covers how to add new tests to the system.
 
 # Functional Use Cases
-- Users can search by recipe, users, tags, or ingredients.
+- Users can search by recipe name.
 - Users can create a recipe.
 - Users can bookmark a recipe.
 - Users can login and create a new user.
