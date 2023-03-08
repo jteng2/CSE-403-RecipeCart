@@ -57,6 +57,7 @@ export default function RecipeEntry(props) {
     setOpen(false);
   };
 
+
   return (
     <div>
       <Button onClick={handleClickOpen}>
@@ -68,16 +69,16 @@ export default function RecipeEntry(props) {
         open={open}
       >
         <RecipeDialogTitle id="recipe-dialogue-name" onClose={handleClose}>
-          Recipe Name: {props.recipeNumber}
+          Recipe Name: {props.recipeName}
         </RecipeDialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
             Ingredients: {props.ingredients ?
-               props.ingredients :
-               "Food, food, food, food, food, food, food, food"}
+              props.ingredients :
+              "No ingredients"}
           </Typography>
           <Typography gutterBottom>
-            Directions: Step 1, Step 2, Step 3, Step 4, Step 5, Step 6
+            Directions: {props.directions ? props.directions : "No directions"}
           </Typography>
           <Typography gutterBottom>
             Prep: {props.time_to_cook ? props.time_to_cook + " minutes" : "20 minutes"}          </Typography>
