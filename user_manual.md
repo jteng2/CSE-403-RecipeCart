@@ -3,7 +3,7 @@ RecipeCart is a website that can manage recipes for many users. It can hold vari
 ## How to install the software
 There is no installation necessary for using this software.
 ## How to use the software:
-To use the software, simply visit `http://attu2.cs.washington.edu:8000/`.
+To use the software, simply visit `http://attu2.cs.washington.edu:23432/`.
 
 ## How to use the software
 - Connect to the website address that's specified above via web browser. This will take you to the RecipeCart website, where the various use cases can be performed. Currently, the only use cases that are functional are searching for recipes and creating new recipes (the rest of the use-cases are not yet functional). The use cases we will have in the future include:
