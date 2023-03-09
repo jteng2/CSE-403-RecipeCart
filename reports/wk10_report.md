@@ -2,9 +2,9 @@
 
 ### Last week's goals
 
-- Back-end (Devi, Charles, Jason): Finish coding use-cases and connecting to mongo
-- Front-end (Caleb, Ricky): Continue working on building out the different pages of the website.
-- UI design (Devi, Charles, Jason): 
+- Back-end (Devi, Charles, Jason): Implement Mongo connection in data access layer. Implement login validation for the routes that need it.
+- Front-end (Caleb, Ricky): Start working on implementing the API routes provided by the back end team.
+- UI design (Devi, Charles, Jason):
 
 Also, establish some protocol for communication between the front-end and back-end parts of the system (i.e. how to structure HTTP requests/responses), and document this protocol.
 
@@ -15,21 +15,19 @@ Also, establish some protocol for communication between the front-end and back-e
 working on the front end.
 - UI design (Devi, Charles, Jason):
 
-
 ### This week's goals
 
-- Back-end (Devi, Charles, Jason):
-- Front-end (Caleb, Ricky):
-- UI design (Devi, Charles, Jason):
+N/A
 
 # Individual Contributions
 
 ### Last week's goals
-- Charles: Write tests for the backend part of the frontend-backend connector. Implement and write tests for more use cases.
-- Devi: Next week, I hope to be working on a remaining use cases and do research for the login component.
-- Ricky: Work on more of the use cases and build out more of the features.
-- Caleb: This week I will finalize user authentication and update our existing use cases to properly access the database via our RESTful API. Additionally, I will finalize the user profile page to work with user login.
-- Jason: Finish connecting to mongo and help with any tests.
+
+- Charles: Implement login validation. If possible, figure out a way to test the backend-frontend connector that works with `./gradlew`. 
+- Devi: Finish the mongo data entry script. Work with others in the backend to do the database connections.
+- Ricky: This week I plan to get these API routes implemented in the front end so that the front end is populated with dynamic data.
+- Caleb: This week I will work to implement the API routes into the frontend and finish off the list of features our website is expected to have.
+- Jason: Work towards whatever else needs to be completed and help finish connecting to mongo.
 
 ### Progress and Issues
 
@@ -40,9 +38,4 @@ working on the front end.
 - Jason: Helped mongo related things for backend such as saving/loading entities and connection.
 
 ### This week's goals
-
-- Charles: 
-- Devi: 
-- Ricky: 
-- Caleb: 
-- Jason:
+N/A (aside from individual reflections)
