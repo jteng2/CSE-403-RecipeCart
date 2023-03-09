@@ -6,11 +6,11 @@
 - Front-end (Caleb, Ricky): Start working on implementing the API routes provided by the back end team.
 - UI design (Devi, Charles, Jason):
 
-Also, establish some protocol for communication between the front-end and back-end parts of the system (i.e. how to structure HTTP requests/responses), and document this protocol.
-
 ### Progress and Issues
 
-- Back-end (Devi, Charles, Jason):
+Generally, we addressed the feedback given by our peer reviewers, which mainly involved adding more details in the documentation.
+
+- Back-end (Devi, Charles, Jason): While we did work on Mongo, we unfortunately didn't finish the implementation on time, so the final released used the (working, tested, and documented) hash-table/file-system implementation of the data access layer. Also, login validation was implemented in the frontend.
 - Front-end (Caleb, Ricky): For the front end, we ended up getting some of the use cases working and having the various pages connected to the back end. Additonally, we got authentication
 working on the front end.
 - UI design (Devi, Charles, Jason):
@@ -31,7 +31,7 @@ N/A
 
 ### Progress and Issues
 
-- Charles: 
+- Charles: Added a couple more API routes/use cases (e.g. "Search for ingredient"), supplementary to the main use cases. Addressed user feedback by adding more documentation, in the top-level `*.md` files and in the Javadocs. Helped with the Mongo implementation, even if implementation of it wasn't finished.
 - Devi: 
 - Ricky: Implemented search onto the search page. Build/Designed the tile that would be on the recipe search page and saved recipes page.
 - Caleb: This week I finalized user login and tracking throughout the website. Additionally, I connected the saved recipes page with the backend and finished the profile page and the add recipe page.
