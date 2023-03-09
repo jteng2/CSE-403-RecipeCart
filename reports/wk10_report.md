@@ -36,7 +36,7 @@ working on the front end.
 - Charles: 
 - Devi: 
 - Ricky: Implemented search onto the search page. Build/Designed the tile that would be on the recipe search page and saved recipes page.
-- Caleb: 
+- Caleb: This week I finalized user login and tracking throughout the website. Additionally, I connected the saved recipes page with the backend and finished the profile page and the add recipe page.
 - Jason: 
 
 ### This week's goals
