@@ -37,7 +37,7 @@ working on the front end.
 - Devi: 
 - Ricky: Implemented search onto the search page. Build/Designed the tile that would be on the recipe search page and saved recipes page.
 - Caleb: This week I finalized user login and tracking throughout the website. Additionally, I connected the saved recipes page with the backend and finished the profile page and the add recipe page.
-- Jason: 
+- Jason: Helped mongo related things for backend such as saving/loading entities and connection.
 
 ### This week's goals
 
